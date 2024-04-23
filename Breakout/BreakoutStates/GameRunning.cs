@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace Breakout.BreakoutStates {
     public class GameRunning : IGameState {
-        private static GameRunning instance = null;
+        private static GameRunning? instance = null;
         private Entity backGroundImage;
         private Player player;
 
