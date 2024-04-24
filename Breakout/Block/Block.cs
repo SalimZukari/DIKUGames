@@ -13,7 +13,7 @@ using DIKUArcade.Physics;
 namespace Breakout.IBlock;
 public class Block : Entity, IBlock {
     private Vec2F startPos; 
-    private int health = 30;
+    private int health;
     private IBaseImage blocksImage;
 
     public int Health {
@@ -23,6 +23,7 @@ public class Block : Entity, IBlock {
     public Block(DynamicShape shape, IBaseImage blocksImage) : base(shape, blocksImage) {
         this.blocksImage = blocksImage;
         this.startPos = shape.Position;
+        health = 30;
     }
 
     public void Damage() {

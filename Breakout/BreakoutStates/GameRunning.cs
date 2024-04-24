@@ -35,12 +35,6 @@ namespace Breakout.BreakoutStates {
                 new DynamicShape(new Vec2F(0.45f, 0.1f), new Vec2F(0.2f, 0.04f)),
                 new Image(Path.Combine("Assets", "Images", "player.png")));
             blocks = new LevelSetUp();
-            /* blocks = new EntityContainer<Block>(8);
-            for (int i = 0; i < 8; i++) {
-                blocks.AddEntity(new Block(
-                    new DynamicShape(new Vec2F(0.1f + i * 0.1f, 0.9f), new Vec2F(0.1f, 0.1f)), 
-                    new Image (Path.Combine("Assets", "Images", "red-block.png"))));
-            } */
             BreakoutBus.GetBus().Subscribe(GameEventType.PlayerEvent, player);
         }
 
