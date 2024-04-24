@@ -1,5 +1,6 @@
 using System.IO;
 using System;
+using System.Linq;
 
 namespace Breakout {
     public class InterpretData {
@@ -13,22 +14,22 @@ namespace Breakout {
 
         public IDictionary<string, List<string>> OrganizingData() {
             List<string> mapData = new List<string>();
-            for (int i = 2; i < GetMapIndex(); i++) {
+            for (int i = 1; i < GetMapIndex(); i++) {
                 mapData.Add(levelContents[i]);
             }
-            organizedData.Add("Map", mapData);
+            organizedData.TryAdd("Map", mapData);
 
             List<string> metaData = new List<string>();
             for (int i = GetMapIndex() + 2; i < GetMetaIndex(); i++) {
                 metaData.Add(levelContents[i]);
             }
-            organizedData.Add("Meta", metaData);
+            organizedData.TryAdd("Meta", metaData);
 
             List<string> legendData = new List<string>();
             for (int i = GetMetaIndex() + 2; i < GetLegendIndex(); i++) {
                 legendData.Add(levelContents[i]);
             }
-            organizedData.Add("Legend", legendData);
+            organizedData.TryAdd("Legend", legendData);
 
             return organizedData;
         }
@@ -56,25 +57,28 @@ namespace Breakout {
             return legendOrganized;
         }
 
-        public IDictionary<string, (float, float)> ReadMap() {
-            IDictionary<string, (float, float)> mapOrganized = 
-                                            new Dictionary<string, (float, float)>();
+        public IDictionary<string, List<(float, float)>> ReadMap() {
+            IDictionary<string, List<(float, float)>> mapOrganized = 
+                                            new Dictionary<string, List<(float, float)>>();
             List<string> map = OrganizingData()["Map"];
-            
-            map.ForEach(delegate(string data) {
-                foreach (char c in data) {
-                    if (ReadLegend().ContainsKey(c)) {
-                        mapOrganized.Add(ReadLegend()[c], (
-                            (float)map.IndexOf(data) / 12.0f, (float)data.IndexOf(c) / 24.0f
-                            ));
+            List<(float, float)> emptyPositions = new List<(float, float)>();
+            for (int j = 0; j < map.Count; j++) {
+                for (int i = 0; i < map[i].Length; i++) {
+                    // Console.WriteLine(map[j]);
+                    if (ReadLegend().ContainsKey(map[j][i])) {
+                        string legendKey = ReadLegend()[map[j][i]];
+                        if (!mapOrganized.ContainsKey(legendKey)) {
+                            mapOrganized[legendKey] = new List<(float, float)>();
+                        } 
+
+                        mapOrganized[legendKey].Add(((float)i / 12.0f, 0.95f - ((float)j / 24.0f)));
                     } else {
-                        mapOrganized.Add("Empty", (
-                            (float)map.IndexOf(data) / 12.0f, (float)data.IndexOf(c) / 24.0f
-                        ));
+                        emptyPositions.Add(((float)i / 12.0f, 0.95f - ((float)j / 24.0f)));
                     }
                 }
-            });
-            
+            }
+
+            mapOrganized["Empty"] = emptyPositions;
             return mapOrganized;
         }
     }

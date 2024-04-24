@@ -16,7 +16,7 @@ namespace Breakout.BreakoutStates {
         private static GameRunning? instance = null;
         private Entity backGroundImage;
         private Player player;
-        private EntityContainer<Block> blocks;
+        private LevelSetUp blocks;
 
         public static GameRunning GetInstance() {
             if (GameRunning.instance == null) {
@@ -34,12 +34,13 @@ namespace Breakout.BreakoutStates {
             player = new Player(
                 new DynamicShape(new Vec2F(0.45f, 0.1f), new Vec2F(0.2f, 0.04f)),
                 new Image(Path.Combine("Assets", "Images", "player.png")));
-            blocks = new EntityContainer<Block>(8);
+            blocks = new LevelSetUp();
+            /* blocks = new EntityContainer<Block>(8);
             for (int i = 0; i < 8; i++) {
                 blocks.AddEntity(new Block(
                     new DynamicShape(new Vec2F(0.1f + i * 0.1f, 0.9f), new Vec2F(0.1f, 0.1f)), 
                     new Image (Path.Combine("Assets", "Images", "red-block.png"))));
-            }
+            } */
             BreakoutBus.GetBus().Subscribe(GameEventType.PlayerEvent, player);
         }
 
@@ -94,7 +95,7 @@ namespace Breakout.BreakoutStates {
         public void RenderState() {
             backGroundImage.RenderEntity();
             player.Render();
-            blocks.RenderEntities();
+            blocks.SetUp().RenderEntities();
         }
 
         public void ResetState() {
