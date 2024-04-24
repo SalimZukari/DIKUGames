@@ -13,16 +13,17 @@ namespace Breakout {
         public LevelSetUp() {
             layout = new InterpretData("Assets/Levels/level3.txt");
             blocks = new EntityContainer<Block>();
+
+            SetUp();
         }
 
-        public EntityContainer<Block> SetUp() {
-            var colors = layout.ReadLegend().Values;
-            var positions = layout.ReadMap();
+        public void SetUp() {
+            var colors = layout.GetLegendOrganized().Values;
+            var positions = layout.GetMapOrganized();
 
             foreach (var colorEntry in colors) {
                 if (positions.TryGetValue(colorEntry, out List<(float, float)> positionsList)) {
                     foreach ((float x, float y) in positionsList) {
-                        // Console.WriteLine("{0} {1}", x, y);
                         blocks.AddEntity(new Block(
                             new DynamicShape(new Vec2F(x, y), new Vec2F(0.1f, 0.05f)),
                             new Image(Path.Combine("Assets", "Images", colorEntry))
@@ -30,7 +31,9 @@ namespace Breakout {
                     }
                 } 
             }
+        }
 
+        public EntityContainer<Block> GetBlocks() {
             return blocks;
         }
     }

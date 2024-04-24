@@ -4,15 +4,23 @@ using System.Linq;
 
 namespace Breakout {
     public class InterpretData {
-        string[] levelContents;
-        IDictionary<string, List<string>> organizedData;
+        private readonly string[] levelContents;
+        readonly IDictionary<string, List<string>> organizedData;
+        readonly IDictionary<char, string> legendOrganized;
+        readonly IDictionary<string, List<(float, float)>> mapOrganized;
 
         public InterpretData(string file) {
             levelContents = File.ReadAllLines(file);
             organizedData = new Dictionary<string, List<string>>();
+            legendOrganized = new Dictionary<char, string>();
+            mapOrganized = new Dictionary<string, List<(float, float)>>();
+
+            OrganizingData();
+            ReadLegend();
+            ReadMap();
         }
 
-        public IDictionary<string, List<string>> OrganizingData() {
+        public void OrganizingData() {
             List<string> mapData = new List<string>();
             for (int i = 1; i < GetMapIndex(); i++) {
                 mapData.Add(levelContents[i]);
@@ -30,8 +38,6 @@ namespace Breakout {
                 legendData.Add(levelContents[i]);
             }
             organizedData.TryAdd("Legend", legendData);
-
-            return organizedData;
         }
 
         private int GetMapIndex() {
@@ -46,27 +52,23 @@ namespace Breakout {
             return Array.IndexOf(levelContents, "Legend/");
         }
 
-        public IDictionary<char, string> ReadLegend() {
-            IDictionary<char, string> legendOrganized = new Dictionary<char, string>();
-            List<string> legend = OrganizingData()["Legend"];
+        public void ReadLegend() {
+            List<string> legend = organizedData["Legend"];
             
             legend.ForEach(delegate(string data) {
-                legendOrganized.Add(data[0], data.Substring(3));
+                legendOrganized.TryAdd(data[0], data.Substring(3));
             });
             
-            return legendOrganized;
         }
 
-        public IDictionary<string, List<(float, float)>> ReadMap() {
-            IDictionary<string, List<(float, float)>> mapOrganized = 
-                                            new Dictionary<string, List<(float, float)>>();
-            List<string> map = OrganizingData()["Map"];
+        public void ReadMap() {
+            
+            List<string> map = organizedData["Map"];
             List<(float, float)> emptyPositions = new List<(float, float)>();
             for (int j = 0; j < map.Count; j++) {
                 for (int i = 0; i < map[i].Length; i++) {
-                    // Console.WriteLine(map[j]);
-                    if (ReadLegend().ContainsKey(map[j][i])) {
-                        string legendKey = ReadLegend()[map[j][i]];
+                    if (legendOrganized.ContainsKey(map[j][i])) {
+                        string legendKey = legendOrganized[map[j][i]];
                         if (!mapOrganized.ContainsKey(legendKey)) {
                             mapOrganized[legendKey] = new List<(float, float)>();
                         } 
@@ -79,6 +81,13 @@ namespace Breakout {
             }
 
             mapOrganized["Empty"] = emptyPositions;
+        }
+
+        public IDictionary<char, string> GetLegendOrganized() {
+            return legendOrganized;
+        }
+
+        public IDictionary<string, List<(float, float)>> GetMapOrganized() {
             return mapOrganized;
         }
     }

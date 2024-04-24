@@ -95,7 +95,7 @@ namespace Breakout.BreakoutStates {
         public void RenderState() {
             backGroundImage.RenderEntity();
             player.Render();
-            blocks.SetUp().RenderEntities();
+            blocks.GetBlocks().RenderEntities();
         }
 
         public void ResetState() {
