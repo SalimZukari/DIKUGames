@@ -4,6 +4,7 @@ using DIKUArcade.Graphics;
 using System;
 using System.Linq;
 using DIKUArcade.Math;
+using Breakout.IBlock;
 
 namespace Breakout {
     public class LevelSetUp {
