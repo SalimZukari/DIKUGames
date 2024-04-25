@@ -13,41 +13,33 @@ namespace BreakoutTests {
 
         [SetUp]
         public void Setup() {
-            levelSetUp = new LevelSetUp();
-            
-        }
-
-        [Test]
-        public void TestSetUp() {
-
-            Assert.IsNotNull(levelSetUp.GetBlocks());
-            Assert.AreEqual(0, levelSetUp.GetBlocks().CountEntities());
+            levelSetUp = new LevelSetUp(Path.Combine(
+                    "..", "..", "..", "..", "Assets", "Levels", "level1.txt"
+                ));
         }
 
         [Test]
         public void TestGetBlocks() {
             // Arrange
-
-            // Act
-            levelSetUp.SetUp();
             var blocks = levelSetUp.GetBlocks();
             int count = 0;
-
-            // Assert
+            
+            // Act
             foreach(var block in blocks) {
                 count++;
             }
-            Assert.AreEqual(0, count);
-            Assert.AreEqual(0, blocks);
 
-            
+            // Assert
+            Assert.AreEqual(76, count);
         }
+
         [Test]
-        public void TestGetBlock1() {
+        public void TestSetUp() {
+            // This should double the number of blocks in the container
             levelSetUp.SetUp();
 
-
-            Assert.AreEqual(0, levelSetUp.GetBlocks().CountEntities());
+            Assert.IsNotNull(levelSetUp.GetBlocks());
+            Assert.AreEqual(152, levelSetUp.GetBlocks().CountEntities());
         }
     }
 }

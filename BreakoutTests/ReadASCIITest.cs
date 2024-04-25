@@ -2,10 +2,14 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
 using Breakout;
+using System;
 
 namespace BreakoutTests {
     public class InterpretDataTests {
-        private string testFilePath = "/home/student/SU23Guest/DIKUGames/Assets/Levels/level1.txt";
+        string testFilePath = Path.Combine(
+            "..", "..", "..", "..", "Assets", "Levels", "level1.txt"
+        );
+        InterpretData interpretData;
     
         [SetUp]
         public void SetUp() {
@@ -13,7 +17,7 @@ namespace BreakoutTests {
 
         [Test]
         public void TestOrganizingData() {
-            var interpretData = new InterpretData(testFilePath);
+            interpretData = new InterpretData(testFilePath);
             var organizedData = interpretData.GetOrganizedData();
             Assert.That(organizedData.ContainsKey("Map"), Is.True);
             Assert.That(organizedData.ContainsKey("Meta"), Is.True);
@@ -22,7 +26,7 @@ namespace BreakoutTests {
 
         [Test]
         public void TestReadLegend() {
-            var interpretData = new InterpretData(testFilePath);
+            interpretData = new InterpretData(testFilePath);
             var legendOrganized = interpretData.GetLegendOrganized();
             Assert.That(legendOrganized.ContainsKey('%'), Is.True);
             Assert.That(legendOrganized['%'], Is.EqualTo("blue-block.png"));
@@ -51,7 +55,7 @@ namespace BreakoutTests {
             Assert.That(metaOrganized["Time"], Is.EqualTo(" 300"));
             Assert.That(metaOrganized["Hardened"], Is.EqualTo(" #"));
             Assert.That(metaOrganized["PowerUp"], Is.EqualTo(" 2"));
-        }
+        } 
 
         // Test file not found
         [Test]

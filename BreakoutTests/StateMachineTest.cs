@@ -29,7 +29,7 @@ public class StateMachineTest {
                 GameEventType.InputEvent,
                 GameEventType.GameStateEvent
             });
-        } catch (InvalidOperationException e) {
+        } catch {
             Console.WriteLine("Event bus already initialized");
         } 
 

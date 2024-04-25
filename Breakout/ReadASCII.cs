@@ -15,7 +15,7 @@ namespace Breakout {
             try {
                 levelContents = File.ReadAllLines(file);
             } catch {
-                Console.WriteLine("Could not find file");
+                Console.WriteLine("Could not find file at location: {0}", file);
                 levelContents = Array.Empty<string>();
             } 
 

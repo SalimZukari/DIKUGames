@@ -17,6 +17,7 @@ namespace Breakout.BreakoutStates {
         private Entity backGroundImage;
         private Player player;
         private LevelSetUp blocks;
+        private string levelFile = "../Assets/Levels/level1.txt";
 
         public static GameRunning GetInstance() {
             if (GameRunning.instance == null) {
@@ -24,7 +25,7 @@ namespace Breakout.BreakoutStates {
                 GameRunning.instance.ResetState();
 
                 }
-                return GameRunning.instance;
+            return GameRunning.instance;
             }
 
 
@@ -34,7 +35,7 @@ namespace Breakout.BreakoutStates {
             player = new Player(
                 new DynamicShape(new Vec2F(0.45f, 0.1f), new Vec2F(0.2f, 0.04f)),
                 new Image(Path.Combine("..", "Assets", "Images", "player.png")));
-            blocks = new LevelSetUp();
+            blocks = new LevelSetUp(levelFile);
             BreakoutBus.GetBus().Subscribe(GameEventType.PlayerEvent, player);
         }
 

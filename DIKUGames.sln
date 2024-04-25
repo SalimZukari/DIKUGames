@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DIKUArcade", "DIKUArcade", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DIKUArcade", "DIKUArcade\DIKUArcade\DIKUArcade.csproj", "{19AD68B8-B1AB-408E-A22A-01C436AF9A9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Galaga", "Galaga\Galaga.csproj", "{CB1FB8A5-8460-492C-A577-B1A5DC3CF00C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Breakout", "Breakout\Breakout.csproj", "{7CDB163E-5C65-4AB2-A737-9F273FC7DFD8}"
 EndProject
 Global

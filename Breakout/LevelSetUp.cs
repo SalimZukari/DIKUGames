@@ -11,8 +11,8 @@ namespace Breakout {
         private InterpretData layout;
         private EntityContainer<Block> blocks;
 
-        public LevelSetUp() {
-            layout = new InterpretData("../Assets/Levels/level1.txt");
+        public LevelSetUp(string file) {
+            layout = new InterpretData(file);
             blocks = new EntityContainer<Block>();
 
             SetUp();
