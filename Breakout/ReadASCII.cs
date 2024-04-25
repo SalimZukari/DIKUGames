@@ -8,7 +8,7 @@ namespace Breakout {
         readonly IDictionary<string, List<string>> organizedData;
         readonly IDictionary<char, string> legendOrganized;
         readonly IDictionary<string, List<(float, float)>> mapOrganized;
-        readonly IDictionary<string, string> metaOrganized;
+        readonly IDictionary<string, string> metaOrganized;        
 
 
         public InterpretData(string file) {
@@ -17,7 +17,8 @@ namespace Breakout {
             } catch {
                 Console.WriteLine("Could not find file");
                 levelContents = Array.Empty<string>();
-            }
+            } 
+
             organizedData = new Dictionary<string, List<string>>();
             legendOrganized = new Dictionary<char, string>();
             mapOrganized = new Dictionary<string, List<(float, float)>>();
@@ -118,6 +119,10 @@ namespace Breakout {
             }
         }
 
+        public IDictionary<string, List<string>> GetOrganizedData() {
+            return organizedData;
+        }
+        
         public IDictionary<char, string> GetLegendOrganized() {
             return legendOrganized;
         }
@@ -128,6 +133,10 @@ namespace Breakout {
 
         public IDictionary<string, string> GetMetaOrganized() {
             return metaOrganized;
+        }
+
+        public string[] GetLevelContents() {
+            return levelContents;
         }
     }
 }
