@@ -12,7 +12,7 @@ namespace Breakout {
         private EntityContainer<Block> blocks;
 
         public LevelSetUp() {
-            layout = new InterpretData("Assets/Levels/level1.txt");
+            layout = new InterpretData("../Assets/Levels/level1.txt");
             blocks = new EntityContainer<Block>();
 
             SetUp();
@@ -28,7 +28,7 @@ namespace Breakout {
                         foreach ((float x, float y) in positionsList) {
                             blocks.AddEntity(new Block(
                                 new DynamicShape(new Vec2F(x, y), new Vec2F(0.1f, 0.05f)),
-                                new Image(Path.Combine("Assets", "Images", colorEntry))
+                                new Image(Path.Combine("..", "Assets", "Images", colorEntry))
                             ));
                         }
                     } else {

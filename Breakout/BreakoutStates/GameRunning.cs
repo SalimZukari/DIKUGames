@@ -30,10 +30,10 @@ namespace Breakout.BreakoutStates {
 
         public GameRunning() {
             backGroundImage = new Entity(new StationaryShape(0.0f, 0.0f, 1.0f, 1.0f), 
-                new Image(Path.Combine("Assets", "Images", "SpaceBackground.png")));
+                new Image(Path.Combine("..", "Assets", "Images", "SpaceBackground.png")));
             player = new Player(
                 new DynamicShape(new Vec2F(0.45f, 0.1f), new Vec2F(0.2f, 0.04f)),
-                new Image(Path.Combine("Assets", "Images", "player.png")));
+                new Image(Path.Combine("..", "Assets", "Images", "player.png")));
             blocks = new LevelSetUp();
             BreakoutBus.GetBus().Subscribe(GameEventType.PlayerEvent, player);
         }
