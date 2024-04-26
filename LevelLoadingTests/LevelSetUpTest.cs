@@ -13,6 +13,7 @@ namespace BreakoutTests {
 
         [SetUp]
         public void Setup() {
+            DIKUArcade.GUI.Window.CreateOpenGLContext();
             levelSetUp = new LevelSetUp(Path.Combine(
                     "..", "..", "..", "..", "Assets", "Levels", "level1.txt"
                 ));

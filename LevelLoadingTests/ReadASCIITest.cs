@@ -13,6 +13,7 @@ namespace BreakoutTests {
     
         [SetUp]
         public void SetUp() {
+            DIKUArcade.GUI.Window.CreateOpenGLContext();
         }
 
         [Test]
