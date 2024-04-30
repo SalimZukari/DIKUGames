@@ -40,7 +40,7 @@ namespace Breakout.BreakoutStates {
             blocks = new LevelSetUp(levelFile);
 
             balls = new EntityContainer<Ball>();
-            ballsImage = new Image(Path.Combine("..", "Assets","Images","ball.png"));
+            ballsImage = new Image(Path.Combine("..", "Assets", "Images", "ball.png"));
             balls.AddEntity(new Ball(new Vec2F(0.45f, 0.3f), ballsImage));
 
             BreakoutBus.GetBus().Subscribe(GameEventType.PlayerEvent, player);
@@ -58,9 +58,9 @@ namespace Breakout.BreakoutStates {
             switch (key) {
                 case KeyboardKey.Escape:
                     BreakoutBus.GetBus().RegisterEvent(new GameEvent { 
-                            EventType = GameEventType.WindowEvent, 
-                            Message = "Quit_Game", 
-                        });
+                        EventType = GameEventType.WindowEvent, 
+                        Message = "Quit_Game", 
+                    });
                     break;
                 case KeyboardKey.Left:
                     BreakoutBus.GetBus().RegisterEvent(new GameEvent {
@@ -96,7 +96,8 @@ namespace Breakout.BreakoutStates {
 
         private void CheckCollisions() {
             balls.Iterate(ball => {
-                ball.Shape.Move();
+                ball.Movement();
+                Console.WriteLine("{0}", ball.Shape.Position.Y);
                 if (ball.Shape.Position.Y < 0.0f) {
                     ball.DeleteEntity();
                 } else {
@@ -130,6 +131,7 @@ namespace Breakout.BreakoutStates {
         public void UpdateState() {
             BreakoutBus.GetBus().ProcessEventsSequentially();
             player.Move();
+            CheckCollisions();
         }
 
         public void NullInstance() {
