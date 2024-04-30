@@ -27,7 +27,7 @@ namespace Breakout {
                     if (positionsList != null) {
                         foreach ((float x, float y) in positionsList) {
                             blocks.AddEntity(new Block(
-                                new DynamicShape(new Vec2F(x, y), new Vec2F(0.1f, 0.05f)),
+                                new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
                                 new Image(Path.Combine("..", "Assets", "Images", colorEntry))
                             ));
                         }

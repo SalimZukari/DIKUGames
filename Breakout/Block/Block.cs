@@ -23,7 +23,7 @@ public class Block : Entity, IBlock {
     public Block(DynamicShape shape, IBaseImage blocksImage) : base(shape, blocksImage) {
         this.blocksImage = blocksImage;
         this.startPos = shape.Position;
-        health = 30;
+        health = 10;
     }
 
     public void Damage() {

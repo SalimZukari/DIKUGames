@@ -21,7 +21,7 @@ public class Ball : Entity {
         this.shape = shape;
     } */
 
-    private static Vec2F extent = new Vec2F(0.045f, 0.045f);
+    private static Vec2F extent = new Vec2F(0.035f, 0.035f);
     private static Vec2F direction = new Vec2F(0.0f, 0.01f);
 
     public Ball(Vec2F position, IBaseImage image)
@@ -31,10 +31,22 @@ public class Ball : Entity {
     public void ChangeDirection() {
         Random rnd = new Random();
         if (direction.Y < 0.0f) {
-            direction.X = (float)rnd.Next(-1, 1);
+            if (Shape.Position.X <= 0.0f - Shape.Extent.X) {
+                direction.X = (float)rnd.Next(0, 100) * 0.000075f;
+            } else if (Shape.Position.X >= 1.0f + Shape.Extent.X) {
+                direction.X = (float)rnd.Next(-100, 0) * 0.000075f;
+            } else {
+                direction.X = (float)rnd.Next(-100, 100) * 0.000075f;
+            }
             direction.Y = 0.01f;
         } else if (direction.Y > 0.0f) {
-            direction.X = (float)rnd.Next(-1, 1);
+            if (Shape.Position.X <= 0.0f - Shape.Extent.X) {
+                direction.X = (float)rnd.Next(0, 100) * 0.000075f;
+            } else if (Shape.Position.X >= 1.0f + Shape.Extent.X) {
+                direction.X = (float)rnd.Next(-100, 0) * 0.000075f;
+            } else {
+                direction.X = (float)rnd.Next(-100, 100) * 0.000075f;
+            }
             direction.Y = -0.01f;
         }
     }
@@ -43,7 +55,11 @@ public class Ball : Entity {
         Shape.Move();
         if (Shape.Position.Y > 1.0f - Shape.Extent.Y) {
             ChangeDirection();
-        }
+        } else if (Shape.Position.X > 1.0f - Shape.Extent.X) {
+            ChangeDirection();
+        } else if (Shape.Position.X < 0.0f + Shape.Extent.X) {
+            ChangeDirection();
+        } 
     }
 
 

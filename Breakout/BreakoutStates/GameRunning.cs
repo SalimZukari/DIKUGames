@@ -97,19 +97,17 @@ namespace Breakout.BreakoutStates {
         private void CheckCollisions() {
             balls.Iterate(ball => {
                 ball.Movement();
-                Console.WriteLine("{0}", ball.Shape.Position.Y);
                 if (ball.Shape.Position.Y < 0.0f) {
                     ball.DeleteEntity();
                 } else {
                     blocks.GetBlocks().Iterate(block => {
-                        var collide = CollisionDetection.Aabb((DynamicShape) ball.Shape, block.Shape);
-                        if (collide.Collision) {
+                        var collideBlock = CollisionDetection.Aabb((DynamicShape) ball.Shape, block.Shape);
+                        var collidePlayer = CollisionDetection.Aabb((DynamicShape) ball.Shape, player.Shape);
+                        if (collideBlock.Collision) {
                             block.Damage();
-                            if (block.Health <= 0) {
-                                ball.DeleteEntity();
-                                block.DeleteEntity();
-                            } 
-                            
+                            ball.ChangeDirection();
+                        } else if (collidePlayer.Collision) {
+                            ball.ChangeDirection();
                         }
                     
                     });
