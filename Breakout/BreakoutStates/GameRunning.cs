@@ -17,6 +17,8 @@ namespace Breakout.BreakoutStates {
         private Entity backGroundImage;
         private Player player;
         private LevelSetUp blocks;
+        private IBaseImage ballsImage;
+        private EntityContainer<Ball> balls;
         private string levelFile = "../Assets/Levels/level1.txt";
 
         public static GameRunning GetInstance() {
@@ -36,6 +38,11 @@ namespace Breakout.BreakoutStates {
                 new DynamicShape(new Vec2F(0.45f, 0.1f), new Vec2F(0.2f, 0.04f)),
                 new Image(Path.Combine("..", "Assets", "Images", "player.png")));
             blocks = new LevelSetUp(levelFile);
+
+            balls = new EntityContainer<Ball>();
+            ballsImage = new Image(Path.Combine("..", "Assets","Images","ball.png"));
+            balls.AddEntity(new Ball(new Vec2F(0.45f, 0.3f), ballsImage));
+
             BreakoutBus.GetBus().Subscribe(GameEventType.PlayerEvent, player);
         }
 
@@ -87,10 +94,33 @@ namespace Breakout.BreakoutStates {
             }
         }
 
+        private void CheckCollisions() {
+            balls.Iterate(ball => {
+                ball.Shape.Move();
+                if (ball.Shape.Position.Y < 0.0f) {
+                    ball.DeleteEntity();
+                } else {
+                    blocks.GetBlocks().Iterate(block => {
+                        var collide = CollisionDetection.Aabb((DynamicShape) ball.Shape, block.Shape);
+                        if (collide.Collision) {
+                            block.Damage();
+                            if (block.Health <= 0) {
+                                ball.DeleteEntity();
+                                block.DeleteEntity();
+                            } 
+                            
+                        }
+                    
+                    });
+                }
+            });
+        }
+
         public void RenderState() {
             backGroundImage.RenderEntity();
             player.Render();
             blocks.GetBlocks().RenderEntities();
+            balls.RenderEntities();
         }
 
         public void ResetState() {
