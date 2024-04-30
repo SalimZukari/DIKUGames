@@ -109,7 +109,6 @@ namespace Breakout.BreakoutStates {
                         } else if (collidePlayer.Collision) {
                             ball.ChangeDirection();
                         }
-                    
                     });
                 }
             });
