@@ -95,7 +95,11 @@ namespace Breakout.BreakoutStates {
         }
 
         private void CheckCollisions() {
+            float playerLeft = player.Shape.Position.X;
+            float playerRight = player.Shape.Position.X + player.Shape.Extent.X;
+            float playerMid = (playerRight + playerLeft) / 2.0f;
             balls.Iterate(ball => {
+                float ballPos = ball.Shape.Position.X + (ball.Shape.Extent.X / 2.0f);
                 ball.Movement();
                 if (ball.Shape.Position.Y < 0.0f) {
                     ball.DeleteEntity();
@@ -107,7 +111,11 @@ namespace Breakout.BreakoutStates {
                             block.Damage();
                             ball.ChangeDirection();
                         } else if (collidePlayer.Collision) {
-                            ball.ChangeDirection();
+                            if (playerLeft <= ballPos && ballPos < playerMid) {
+                                ball.GoLeft();
+                            } else if (playerMid <= ballPos && ballPos < playerRight) {
+                                ball.GoRight();
+                            }
                         }
                     });
                 }
