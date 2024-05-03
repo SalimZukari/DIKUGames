@@ -57,9 +57,10 @@ namespace Breakout.BreakoutStates {
         public void KeyPress(KeyboardKey key) {
             switch (key) {
                 case KeyboardKey.Escape:
-                    BreakoutBus.GetBus().RegisterEvent(new GameEvent { 
-                        EventType = GameEventType.WindowEvent, 
-                        Message = "Quit_Game", 
+                    BreakoutBus.GetBus().RegisterEvent ( new GameEvent {
+                        EventType = GameEventType.GameStateEvent,
+                        Message = "CHANGE_STATE",
+                        StringArg1 = "GAME_PAUSED",
                     });
                     break;
                 case KeyboardKey.Left:
@@ -142,6 +143,5 @@ namespace Breakout.BreakoutStates {
         public void NullInstance() {
             instance = null;
         }
-
     }
 }

@@ -12,6 +12,8 @@ using System.Collections.Generic;
 namespace Breakout.BreakoutStates;
 public enum GameStateType {
     GameRunning,
+    GamePaused,
+    MainMenu
 }
 
 public class StateTransformer {
@@ -19,6 +21,10 @@ public class StateTransformer {
         switch (state) {
             case "GAME_RUNNING":
                 return GameStateType.GameRunning;
+            case "GAME_PAUSED":
+                return GameStateType.GamePaused;
+            case "MAIN_MENU":
+                return GameStateType.MainMenu;
             default:
                 throw new ArgumentException("Invalid state type");
         }
@@ -28,6 +34,10 @@ public class StateTransformer {
         switch (state) {
             case GameStateType.GameRunning:
                 return "GAME_RUNNING";
+            case GameStateType.GamePaused:
+                return "GAME_PAUSED";
+            case GameStateType.MainMenu:
+                return "MAIN_MENU";
             default:
                 throw new ArgumentException("Invalid state type");
         }

@@ -30,7 +30,7 @@ public class Ball : Entity {
         return direction;
     }
 
-   /* public void ChangeDirection() {
+    public void ChangeDirection() {
         if (direction.Y < 0.0f) {
             direction.X = (float)rnd.Next(-100, 100) * 0.000075f;
             direction.Y = 0.01f;
@@ -38,7 +38,7 @@ public class Ball : Entity {
             direction.X = (float)rnd.Next(-100, 100) * 0.000075f;
             direction.Y = -0.01f;
         }
-    } */
+    } 
 
     public void GoLeft() {
         direction.X = (float)rnd.Next(-100, -1) * 0.000075f;
