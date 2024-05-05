@@ -9,6 +9,7 @@ using DIKUArcade.Physics;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
 using Breakout.BreakoutStates;
+using Breakout.IBlock;
 using System.Collections.Generic;
 
 namespace Breakout.BreakoutStates {
@@ -19,7 +20,8 @@ namespace Breakout.BreakoutStates {
         private LevelSetUp blocks;
         private IBaseImage ballsImage;
         private EntityContainer<Ball> balls;
-        private string levelFile = "../Assets/Levels/level1.txt";
+        private string levelFile = "../Assets/Levels/level3.txt";
+        private BlockObserver blockObserver;
 
         public static GameRunning GetInstance() {
             if (GameRunning.instance == null) {
@@ -44,6 +46,8 @@ namespace Breakout.BreakoutStates {
             balls.AddEntity(new Ball(new Vec2F(0.45f, 0.3f), ballsImage));
 
             BreakoutBus.GetBus().Subscribe(GameEventType.PlayerEvent, player);
+
+            blockObserver = new BlockObserver();
         }
 
         public void HandleKeyEvent (KeyboardAction action, KeyboardKey key) {
@@ -138,6 +142,7 @@ namespace Breakout.BreakoutStates {
             BreakoutBus.GetBus().ProcessEventsSequentially();
             player.Move();
             CheckCollisions();
+            blockObserver.CheckBlocks(blocks.GetBlocks());
         }
 
         public void NullInstance() {

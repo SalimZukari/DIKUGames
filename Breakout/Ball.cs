@@ -12,9 +12,6 @@ using DIKUArcade.Physics;
 namespace Breakout;
 
 public class Ball : Entity {
-    private Entity entity;
-    private DynamicShape shape;
-    private float MOVEMENT_SPEED;
     private Random rnd = new Random();
 
 

@@ -77,7 +77,7 @@ namespace Breakout {
                     legendOrganized.TryAdd(data[0], data.Substring(3));
                 });
             } catch {
-                Console.WriteLine("Error Reading Legend");
+                Console.WriteLine("Error Readng Legend");
             }
         }
 

@@ -13,27 +13,34 @@ using DIKUArcade.Physics;
 namespace Breakout.IBlock;
 public class Block : Entity, IBlock {
     private Vec2F startPos; 
-    private int health;
+    protected int health;
     private IBaseImage blocksImage;
+    protected BlockType type;
 
     public int Health {
         get { return health; }
     }
 
-    public Block(DynamicShape shape, IBaseImage blocksImage) : base(shape, blocksImage) {
-        this.blocksImage = blocksImage;
-        this.startPos = shape.Position;
-        health = 10;
+    public Block(DynamicShape shape, IBaseImage blocksImage, BlockType type) 
+        : base(shape, blocksImage) {
+            this.blocksImage = blocksImage;
+            this.startPos = shape.Position;
+            this.type = type;
+            health = 10;
     }
 
-    public void Damage() {
+    public virtual void Damage() {
         health -= 10;
         if (health <= 0) {
             Destroy();
         }
     }
 
-    private void Destroy() {
+    public virtual void Destroy() {
         DeleteEntity();
+    }
+
+    public virtual BlockType GetType() {
+        return type;
     }
 }
