@@ -27,11 +27,11 @@ public class Unbreakable : Block {
     }
 
     public void RemoveImmunity() {
-        bool CanBreak = true;
+        CanBreak = true;
     }
 
     public void ApplyImmunity() {
-        bool CanBreak = false;
+        CanBreak = false;
     }
 
     public bool GetCanBreak() {

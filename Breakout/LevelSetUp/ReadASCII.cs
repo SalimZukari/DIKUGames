@@ -39,13 +39,13 @@ namespace Breakout {
                     organizedData.TryAdd("Map", mapData);
 
                     List<string> metaData = new List<string>();
-                    for (int i = GetMapIndex() + 2; i < GetMetaIndex(); i++) {
+                    for (int i = GetMetaStartIndex() + 1; i < GetMetaEndIndex(); i++) {
                         metaData.Add(levelContents[i]);
                     }
                     organizedData.TryAdd("Meta", metaData);
 
                     List<string> legendData = new List<string>();
-                    for (int i = GetMetaIndex() + 2; i < GetLegendIndex(); i++) {
+                    for (int i = GetLegendStartIndex() + 1; i < GetLegendEndIndex(); i++) {
                         legendData.Add(levelContents[i]);
                     }
                     organizedData.TryAdd("Legend", legendData);
@@ -61,11 +61,19 @@ namespace Breakout {
             return Array.IndexOf(levelContents, "Map/");
         }
 
-        private int GetMetaIndex() {
+        private int GetMetaStartIndex() {
+            return Array.IndexOf(levelContents, "Meta:");
+        }
+
+        private int GetMetaEndIndex() {
             return Array.IndexOf(levelContents, "Meta/");
         }
 
-        private int GetLegendIndex() {
+        private int GetLegendStartIndex() {
+            return Array.IndexOf(levelContents, "Legend:");
+        }
+
+        private int GetLegendEndIndex() {
             return Array.IndexOf(levelContents, "Legend/");
         }
 

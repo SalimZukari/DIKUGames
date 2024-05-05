@@ -26,28 +26,34 @@ namespace Breakout {
             var blockTypes = layout.GetMetaOrganized();
 
             foreach (var colorEntry in colors) {
-                if (positions.TryGetValue(colorEntry, out List<(float, float)>? positionsList)
-                && positionsList != null
-                && coolBlockKey[colorEntry] != "Unbreakable") {
-                    foreach ((float x, float y) in positionsList) {
+                if (positions.TryGetValue(colorEntry, out List<(float, float)>? positionsListN)
+                && positionsListN != null
+                && coolBlockKey[colorEntry] == "Normal") {
+                    foreach ((float x, float y) in positionsListN) {
                         blocks.AddEntity(new Block(
                             new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
                             new Image(Path.Combine("..", "Assets", "Images", colorEntry)),
                             BlockType.Normal
                         ));
                     }
-                } else if (positions.TryGetValue(colorEntry, out List<(float, float)>? positionsList2)
-                && positionsList2 != null
+                } else if (positions.TryGetValue(colorEntry, out List<(float, float)>? positionsListU)
+                && positionsListU != null
                 && coolBlockKey[colorEntry] == "Unbreakable") {
-                    foreach ((float x, float y) in positionsList2) {
+                    foreach ((float x, float y) in positionsListU) {
                         blocks.AddEntity(new Unbreakable(
                             new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
                             new Image(Path.Combine("..", "Assets", "Images", colorEntry)),
-                            BlockType.Normal
+                            BlockType.Unbreakable
                         ));
                     }
+                } else if (positions.TryGetValue(colorEntry, out List<(float, float)>? positionsList)
+                && positionsList == null) {
+                    Console.WriteLine("A positionList is null");
                 } else {
-                    Console.WriteLine("positionList is null");
+                    Console.WriteLine(
+                        "colorEntry '{0}' does not exist as a key in coolBlockKey",
+                        colorEntry
+                    );
                 }
             }
         }

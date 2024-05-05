@@ -19,33 +19,19 @@ public class BlockObserver {
     public void CheckBlocks(EntityContainer<Block> blocks) {
         int length = blocks.CountEntities();
         int numbOfUnbreaks = 0;
+        EntityContainer<Unbreakable> unbreakables = new EntityContainer<Unbreakable>();
 
-        blocks.Iterate(block => {
-            if (block.GetType() == BlockType.Unbreakable) {
-                Unbreakable unbreakable = (Unbreakable)block;
-
-                block.Destroy();
-                blocks.AddEntity(unbreakable);
-
-                numbOfUnbreaks += 1;
+        foreach(Block block in blocks) {
+            if (block is Unbreakable) {
+                unbreakables.AddEntity((Unbreakable)block);
             }
-        });
-        
-        if (numbOfUnbreaks == length) {
-            blocks.Iterate(block => {
-                if (block is Unbreakable) {
-                    Unbreakable unbreakable = (Unbreakable)block;
-                    unbreakable.RemoveImmunity();
-                }
-            });
-        } else {
-            blocks.Iterate(block => {
-                if (block is Unbreakable) {
-                    Unbreakable unbreakable = (Unbreakable)block;
-                    unbreakable.ApplyImmunity();
-                }
-            });
         }
 
+
+        if (unbreakables.CountEntities() == length) {
+            foreach(Unbreakable unbreakable in unbreakables) {
+                unbreakable.RemoveImmunity();
+            }
+        }
     }
 }
