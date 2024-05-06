@@ -7,7 +7,7 @@ using DIKUArcade.Input;
 
 namespace Breakout.BreakoutStates;
 public class GamePaused : IGameState {
-    private static GamePaused instance = null;
+    private static GamePaused? instance = null;
         private Text[] menuButtons;
         private int activeMenuButton;
         private int maxMenuButtons;

@@ -1,5 +1,6 @@
 using System;
 using DIKUArcade.Entities;
+using DIKUArcade.Graphics;
 
 namespace Breakout.IBlock;
 public class BlockObserver {
