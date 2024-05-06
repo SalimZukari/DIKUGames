@@ -13,8 +13,8 @@ namespace Breakout.IBlock;
 public class Hardened : Block {
     public Hardened(DynamicShape shape, Image blocksImage, BlockType type) 
         : base(shape, blocksImage, type) {
+            health = 20;
     }
-    int health = 20;
     public override void Damage() {
         health -= 10;
         if (health <= 0) {

@@ -11,9 +11,9 @@ Map:
 ------------
 ------------
 ------------
+pppppppppppp
 ------------
-------------
-0000C-CCCCCC
+0000-CC-CCCC
 ------------
 ------------
 ------------
@@ -29,11 +29,12 @@ Map/
 Meta:
 Name: LEVEL 3
 Time: 180
-PowerUp: #
+Hardened: 0
 Unbreakable: C
 Meta/
 
 Legend:
 0) orange-block.png
 C) red-block.png
+p) green-block.png
 Legend/

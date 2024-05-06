@@ -45,17 +45,22 @@ namespace Breakout {
                         colorEntry
                     );
                 }
+            }
 
-                foreach (Block block in blocks) {
-                    if (block.GetType() != BlockType.Normal) {
-                        blocks.AddEntity(CreateNewBlock(BlockType.Normal,
-                                                block.GetPosition().X,
-                                                block.GetPosition().Y,
-                                                block.GetImage()
-                        ));
-                        block.Destroy();
-                    }
+            EntityContainer<Block> blocksToDestroy = new EntityContainer<Block>();
+            foreach (Block block in blocks) {
+                if (block.GetType() != BlockType.Normal) {
+                    blocksToDestroy.AddEntity(block);
                 }
+            }
+
+            foreach (Block block in blocksToDestroy) {
+                blocks.AddEntity(CreateNewBlock(block.GetType(),
+                                            block.GetPosition().X,
+                                            block.GetPosition().Y,
+                                            block.GetImage()
+                    ));
+                block.Destroy();
             }
         }
 
@@ -80,6 +85,8 @@ namespace Breakout {
                         return BlockType.Normal;
                     case BlockType.Unbreakable:
                         return BlockType.Unbreakable;
+                    case BlockType.Hardened:
+                        return BlockType.Hardened;
                 }
             }
 
@@ -90,6 +97,12 @@ namespace Breakout {
             switch (type) {
                 case BlockType.Unbreakable:
                     return new Unbreakable(
+                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
+                        image,
+                        type
+                    );
+                case BlockType.Hardened:
+                    return new Hardened(
                         new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
                         image,
                         type

@@ -30,6 +30,7 @@ public class BlockObserver {
                 unbreakables.AddEntity((Unbreakable)block);
             }
         }
+
         foreach (Hardened hardened in hardeneds) {
             if (hardened.Health == 10) {
                 Image blockimage = hardened.blocksImage;
@@ -40,6 +41,7 @@ public class BlockObserver {
 
             }
         }
+        
         if (unbreakables.CountEntities() == length) {
             foreach(Unbreakable unbreakable in unbreakables) {
                 unbreakable.RemoveImmunity();
