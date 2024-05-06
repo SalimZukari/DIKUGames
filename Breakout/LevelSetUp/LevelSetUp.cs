@@ -27,45 +27,36 @@ namespace Breakout {
 
             foreach (var colorEntry in colors) {
                 if (positions.TryGetValue(colorEntry, out List<(float, float)>? positionsListN)
-                && positionsListN != null
-                && coolBlockKey[colorEntry] == "Normal") {
+                && positionsListN != null) {
                     foreach ((float x, float y) in positionsListN) {
                         blocks.AddEntity(new Block(
                             new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
                             new Image(Path.Combine("..", "Assets", "Images", colorEntry)),
-                            BlockType.Normal
+                            StringToBlockType(coolBlockKey[colorEntry])
                         ));
                     }
-                } else if (positions.TryGetValue(colorEntry, out List<(float, float)>? positionsListU)
-                && positionsListU != null
-                && coolBlockKey[colorEntry] == "Unbreakable") {
-                    foreach ((float x, float y) in positionsListU) {
-                        blocks.AddEntity(new Unbreakable(
-                            new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
-                            new Image(Path.Combine("..", "Assets", "Images", colorEntry)),
-                            BlockType.Unbreakable
-                        ));
-                    }
-                } else if (positions.TryGetValue(colorEntry, out List<(float, float)>? positionsList)
-                && positionsList == null) {
-                    Console.WriteLine("A positionList is null");
+                } else if (positions.TryGetValue(colorEntry,
+                    out List<(float, float)>? positionsList)
+                    && positionsList == null) {
+                        Console.WriteLine("A positionList is null");
                 } else {
                     Console.WriteLine(
                         "colorEntry '{0}' does not exist as a key in coolBlockKey",
                         colorEntry
                     );
                 }
-            }
-        }
 
-        public BlockType MetaDataToBlockType(string type) {
-            BlockType blockType;
-            if (Enum.TryParse(type, out blockType)) {
-                switch (blockType) {
-                    case BlockType.Unbreakable:
-                        return BlockType.Unbreakable;
+                foreach (Block block in blocks) {
+                    if (block.GetType() != BlockType.Normal) {
+                        blocks.AddEntity(CreateNewBlock(BlockType.Normal,
+                                                block.GetPosition().X,
+                                                block.GetPosition().Y,
+                                                block.GetImage()
+                        ));
+                        block.Destroy();
+                    }
                 }
-            } return BlockType.Normal;
+            }
         }
 
         public void ColorOfSpecialBlocks() {
@@ -78,6 +69,37 @@ namespace Breakout {
             }
             foreach (KeyValuePair<char, string> entry2 in legend) {
                 coolBlockKey.TryAdd(entry2.Value, "Normal");
+            }
+        }
+
+        public BlockType StringToBlockType(string type) {
+            BlockType blockType = new BlockType();
+            if (BlockType.TryParse(type, out blockType)) {
+                switch (blockType) {
+                    case BlockType.Normal:
+                        return BlockType.Normal;
+                    case BlockType.Unbreakable:
+                        return BlockType.Unbreakable;
+                }
+            }
+
+            return BlockType.Normal;
+        }
+
+        public Block CreateNewBlock(BlockType type, float x, float y, Image image) {
+            switch (type) {
+                case BlockType.Unbreakable:
+                    return new Unbreakable(
+                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
+                        image,
+                        type
+                    );
+                default:
+                    return new Block(
+                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
+                        image,
+                        type
+                    );
             }
         }
 

@@ -43,4 +43,12 @@ public class Block : Entity, IBlock {
     public virtual BlockType GetType() {
         return type;
     }
+
+    public virtual Vec2F GetPosition() {
+        return startPos;
+    }
+
+    public virtual Image GetImage() {
+        return blocksImage;
+    }
 }
