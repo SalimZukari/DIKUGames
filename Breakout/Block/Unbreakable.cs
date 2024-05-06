@@ -13,7 +13,7 @@ using DIKUArcade.Physics;
 namespace Breakout.IBlock;
 public class Unbreakable : Block {
     bool CanBreak = false;
-    public Unbreakable(DynamicShape shape, IBaseImage blocksImage, BlockType type) 
+    public Unbreakable(DynamicShape shape, Image blocksImage, BlockType type) 
         : base(shape, blocksImage, type) {
     }
 

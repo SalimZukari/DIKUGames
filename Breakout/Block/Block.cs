@@ -14,14 +14,14 @@ namespace Breakout.IBlock;
 public class Block : Entity, IBlock {
     private Vec2F startPos; 
     protected int health;
-    private IBaseImage blocksImage;
+    public Image blocksImage;
     protected BlockType type;
 
     public int Health {
         get { return health; }
     }
 
-    public Block(DynamicShape shape, IBaseImage blocksImage, BlockType type) 
+    public Block(DynamicShape shape, Image blocksImage, BlockType type) 
         : base(shape, blocksImage) {
             this.blocksImage = blocksImage;
             this.startPos = shape.Position;

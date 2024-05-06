@@ -1,6 +1,7 @@
 namespace Breakout.IBlock {
     public enum BlockType {
         Unbreakable,
-        Normal
+        Normal,
+        Hardened
     }
 }
