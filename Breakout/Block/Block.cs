@@ -21,7 +21,7 @@ public class Block : Entity, IBlock {
         get { return health; }
     }
 
-    public Block(DynamicShape shape, IBaseImage blocksImage, BlockType type) 
+    public Block(DynamicShape shape, IBaseImage blocksImage) 
         : base(shape, blocksImage) {
             this.blocksImage = blocksImage;
             this.startPos = shape.Position;

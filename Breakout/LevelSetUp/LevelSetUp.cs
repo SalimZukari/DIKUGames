@@ -32,8 +32,7 @@ namespace Breakout {
                     foreach ((float x, float y) in positionsListN) {
                         blocks.AddEntity(new Block(
                             new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
-                            new Image(Path.Combine("..", "Assets", "Images", colorEntry)),
-                            BlockType.Normal
+                            new Image(Path.Combine("..", "Assets", "Images", colorEntry))
                         ));
                     }
                 } else if (positions.TryGetValue(colorEntry, out List<(float, float)>? positionsListU)
@@ -42,8 +41,7 @@ namespace Breakout {
                     foreach ((float x, float y) in positionsListU) {
                         blocks.AddEntity(new Unbreakable(
                             new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
-                            new Image(Path.Combine("..", "Assets", "Images", colorEntry)),
-                            BlockType.Unbreakable
+                            new Image(Path.Combine("..", "Assets", "Images", colorEntry))
                         ));
                     }
                 } else if (positions.TryGetValue(colorEntry, out List<(float, float)>? positionsList)
