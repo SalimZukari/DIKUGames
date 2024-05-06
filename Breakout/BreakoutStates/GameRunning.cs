@@ -1,6 +1,5 @@
-using System.IO;
-using DIKUArcade;
-using DIKUArcade.GUI;
+using System;
+using Breakout.IBlock;
 using DIKUArcade.Math;
 using DIKUArcade.Input;
 using DIKUArcade.State;
@@ -8,9 +7,6 @@ using DIKUArcade.Events;
 using DIKUArcade.Physics;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
-using Breakout.BreakoutStates;
-using Breakout.IBlock;
-using System.Collections.Generic;
 
 namespace Breakout.BreakoutStates {
     public class GameRunning : IGameState {
@@ -126,6 +122,30 @@ namespace Breakout.BreakoutStates {
                 }
             });
         }
+        
+        private void IsGameOver () {
+            if (balls.CountEntities() == 0) {
+                BreakoutBus.GetBus().RegisterEvent(new GameEvent {
+                    EventType = GameEventType.GameStateEvent,
+                    Message = "CHANGE_STATE",
+                    StringArg1 = "GAME_LOST",
+                }); 
+                MainMenu.GetInstance().ResetState();
+                GameRunning.GetInstance().NullInstance();
+            }
+        }
+
+        private void IsGameWon() {
+            if (blocks.GetBlocks().CountEntities() == 0) {
+                BreakoutBus.GetBus().RegisterEvent(new GameEvent {
+                    EventType = GameEventType.GameStateEvent,
+                    Message = "CHANGE_STATE",
+                    StringArg1 = "GAME_WON",
+                });
+                MainMenu.GetInstance().ResetState();
+                GameRunning.GetInstance().NullInstance();
+            }
+        }
 
         public void RenderState() {
             backGroundImage.RenderEntity();
@@ -135,7 +155,6 @@ namespace Breakout.BreakoutStates {
         }
 
         public void ResetState() {
-
         }
 
         public void UpdateState() {
@@ -143,6 +162,8 @@ namespace Breakout.BreakoutStates {
             player.Move();
             CheckCollisions();
             blockObserver.CheckBlocks(blocks.GetBlocks());
+            IsGameOver();
+            IsGameWon();
         }
 
         public void NullInstance() {

@@ -1,14 +1,7 @@
-using System.IO;
-using DIKUArcade;
-using DIKUArcade.GUI;
-using DIKUArcade.Math;
-using DIKUArcade.Input;
+using System;
 using DIKUArcade.State;
 using DIKUArcade.Events;
-using DIKUArcade.Physics;
-using DIKUArcade.Entities;
-using DIKUArcade.Graphics;
-using System.Collections.Generic;
+
 
 namespace Breakout.BreakoutStates;
 public class StateMachine : IGameEventProcessor {
@@ -19,6 +12,8 @@ public class StateMachine : IGameEventProcessor {
         ActiveState = MainMenu.GetInstance();
         GameRunning.GetInstance();
         GamePaused.GetInstance();
+        GameLost.GetInstance();
+        GameWon.GetInstance();
         }
 
     public void SwitchState(GameStateType state) {
@@ -31,6 +26,12 @@ public class StateMachine : IGameEventProcessor {
                 break;
             case GameStateType.MainMenu:
                 ActiveState = MainMenu.GetInstance();
+                break;
+            case GameStateType.GameLost:
+                ActiveState = GameLost.GetInstance();
+                break;
+            case GameStateType.GameWon:
+                ActiveState = GameWon.GetInstance();
                 break;
             default:
                 throw new ArgumentException("Cannot switch to unknown state");
@@ -45,3 +46,4 @@ public class StateMachine : IGameEventProcessor {
         }
     }
 }
+
