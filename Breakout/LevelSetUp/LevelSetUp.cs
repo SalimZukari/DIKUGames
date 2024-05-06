@@ -56,16 +56,6 @@ namespace Breakout {
             }
         }
 
-        public BlockType MetaDataToBlockType(string type) {
-            BlockType blockType;
-            if (Enum.TryParse(type, out blockType)) {
-                switch (blockType) {
-                    case BlockType.Unbreakable:
-                        return BlockType.Unbreakable;
-                }
-            } return BlockType.Normal;
-        }
-
         public void ColorOfSpecialBlocks() {
             var legend = layout.GetLegendOrganized();
             var meta = layout.GetMetaOrganized();

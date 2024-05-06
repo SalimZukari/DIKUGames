@@ -15,7 +15,6 @@ public class Block : Entity, IBlock {
     private Vec2F startPos; 
     protected int health;
     private IBaseImage blocksImage;
-    protected BlockType type;
 
     public int Health {
         get { return health; }
@@ -25,7 +24,6 @@ public class Block : Entity, IBlock {
         : base(shape, blocksImage) {
             this.blocksImage = blocksImage;
             this.startPos = shape.Position;
-            this.type = type;
             health = 10;
     }
 
@@ -38,9 +36,5 @@ public class Block : Entity, IBlock {
 
     public virtual void Destroy() {
         DeleteEntity();
-    }
-
-    public virtual BlockType GetType() {
-        return type;
     }
 }
