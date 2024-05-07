@@ -102,24 +102,21 @@ namespace Breakout.BreakoutStates {
             balls.Iterate(ball => {
                 float ballPos = ball.Shape.Position.X + (ball.Shape.Extent.X / 2.0f);
                 ball.Movement();
-                if (ball.Shape.Position.Y < 0.0f) {
-                    ball.DeleteEntity();
-                } else {
-                    blocks.GetBlocks().Iterate(block => {
-                        var collideBlock = CollisionDetection.Aabb((DynamicShape) ball.Shape, block.Shape);
-                        var collidePlayer = CollisionDetection.Aabb((DynamicShape) ball.Shape, player.Shape);
-                        if (collideBlock.Collision) {
-                            block.Damage();
-                            ball.HitsBlockMove();
-                        } else if (collidePlayer.Collision) {
-                            if (playerLeft <= ballPos && ballPos < playerMid) {
-                                ball.GoLeft();
-                            } else if (playerMid <= ballPos && ballPos < playerRight) {
-                                ball.GoRight();
-                            }
+                ball.CheckDeleteBall();
+                blocks.GetBlocks().Iterate(block => {
+                    var collideBlock = CollisionDetection.Aabb((DynamicShape) ball.Shape, block.Shape);
+                    var collidePlayer = CollisionDetection.Aabb((DynamicShape) ball.Shape, player.Shape);
+                    if (collideBlock.Collision) {
+                        block.Damage();
+                        ball.HitsBlockMove();
+                    } else if (collidePlayer.Collision) {
+                        if (playerLeft <= ballPos && ballPos < playerMid) {
+                            ball.GoLeft();
+                        } else if (playerMid <= ballPos && ballPos < playerRight) {
+                            ball.GoRight();
                         }
-                    });
-                }
+                    }
+                });
             });
         }
         

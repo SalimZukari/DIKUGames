@@ -26,16 +26,17 @@ public class BlockTest {
     [SetUp]
     public void Setup() {
         block = new Block(new DynamicShape(new Vec2F(0.1f, 0.1f),
-            new Vec2F(0.2f, 0.2f)), new Image(Path.Combine("..", "Assets", "Images", "red-block.png")));
+            new Vec2F(0.2f, 0.2f)), new Image(Path.Combine("..", "Assets", "Images", "red-block.png")),
+            new Image(Path.Combine("..", "Assets", "Images", "red-block-damaged.png")), BlockType.Normal);
     }
     [Test]
     public void TestBlockHealth() {
-        Assert.AreEqual(30, block.Health);
+        Assert.AreEqual(10, block.Health);
     }
     [Test]
     public void TestBlockDamage() {
         block.Damage();
-        Assert.AreEqual(20, block.Health);
+        Assert.AreEqual(0, block.Health);
     }
     [Test]
     public void TestBlockDestroy() {

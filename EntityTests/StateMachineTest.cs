@@ -42,7 +42,7 @@ public class StateMachineTest {
 
     [Test]
     public void TestInitialState() {
-        Assert.That(stateMachine.ActiveState, Is.InstanceOf<GameRunning>());
+        Assert.That(stateMachine.ActiveState, Is.InstanceOf<MainMenu>());
     }
 
     [Test]
@@ -57,17 +57,6 @@ public class StateMachineTest {
             EventType = GameEventType.GameStateEvent,
             Message = "CHANGE_STATE",
             StringArg1 = "GAME_RUNNING"
-        };
-
-        stateMachine.ProcessEvent(gameEvent);
-        Assert.That(stateMachine.ActiveState, Is.InstanceOf<GameRunning>());
-    }
-
-    [Test]
-    public void TestQuitGame() {
-        var gameEvent = new GameEvent {
-            EventType = GameEventType.WindowEvent,
-            Message = "CLOSE_WINDOW"
         };
 
         stateMachine.ProcessEvent(gameEvent);

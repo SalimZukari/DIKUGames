@@ -101,21 +101,21 @@ namespace Breakout {
             switch (type) {
                 case BlockType.Unbreakable:
                     return new Unbreakable(
-                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
+                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.06f)),
                         image,
                         damagedImage,
                         type
                     );
                 case BlockType.Hardened:
                     return new Hardened(
-                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
+                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.06f)),
                         image,
                         damagedImage,
                         type
                     );
                 default:
                     return new Block(
-                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
+                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.06f)),
                         image,
                         damagedImage,
                         type

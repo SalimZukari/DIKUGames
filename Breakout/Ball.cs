@@ -60,4 +60,17 @@ public class Ball : Entity {
             direction.X = (float)rnd.Next(0, 100) * 0.000075f;
         } 
     }
+
+    public void CheckDeleteBall() {
+        if (Shape.Position.Y < 0.0f) {
+            DeleteEntity();
+        }
+    }
+
+    /*public void HitSideOfBlock(Block block) {
+        float blockExtentY = block.Extent.Y;
+        if (blockExtentY < Shape.Position.Y || Shape.Position.Y < blockExtentY) {
+            EnsureOppositeXDir();
+        } else if 
+    } */
 }
