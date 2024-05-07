@@ -1,13 +1,8 @@
-using System.IO;
+using System;
+using DIKUArcade.Math;
+using DIKUArcade.Events;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
-using DIKUArcade.Math;
-using DIKUArcade;
-using DIKUArcade.Events;
-using DIKUArcade.Input;
-using System.Collections.Generic;
-using DIKUArcade.GUI;
-using DIKUArcade.Physics;
 
 namespace Breakout;
 public class Player : IGameEventProcessor {

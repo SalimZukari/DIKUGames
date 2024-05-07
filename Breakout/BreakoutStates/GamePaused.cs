@@ -1,18 +1,13 @@
+using System;
 using DIKUArcade.State;
-using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
 using DIKUArcade.Math;
 using DIKUArcade.Events;
 using DIKUArcade.Input;
-using DIKUArcade.GUI;
-using System.Collections.Generic;
-using DIKUArcade;
-using System.IO;
-using System;
 
 namespace Breakout.BreakoutStates;
 public class GamePaused : IGameState {
-    private static GamePaused instance = null;
+    private static GamePaused? instance = null;
         private Text[] menuButtons;
         private int activeMenuButton;
         private int maxMenuButtons;
