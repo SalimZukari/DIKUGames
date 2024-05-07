@@ -4,11 +4,13 @@ using DIKUArcade.Graphics;
 using DIKUArcade.Math;
 using DIKUArcade.Events;
 using DIKUArcade.Input;
+using DIKUArcade.Entities;
 
 namespace Breakout.BreakoutStates;
 public class GamePaused : IGameState {
     private static GamePaused? instance = null;
         private Text[] menuButtons;
+        private Entity backGroundImage;
         private int activeMenuButton;
         private int maxMenuButtons;
         private Text continueGameButton;
@@ -27,6 +29,8 @@ public class GamePaused : IGameState {
             menuButtons = new Text[maxMenuButtons];
             continueGameButton = new Text("Continue Game", new Vec2F(0.3f, 0.17f), new Vec2F(0.45f, 0.45f));
             mainMenuButton = new Text("Main Menu", new Vec2F(0.3f, 0.07f), new Vec2F(0.45f, 0.45f));
+            backGroundImage = new Entity(new StationaryShape(0.0f, 0.0f, 1.0f, 1.0f), 
+                new Image(Path.Combine("..","Assets", "Images", "BreakoutTitleScreen.png")));
             
 
 
@@ -86,6 +90,7 @@ public class GamePaused : IGameState {
         }
 
         public void RenderState() {
+            backGroundImage.RenderEntity();
             foreach (var button in menuButtons) {
                 button.RenderText();
             }
