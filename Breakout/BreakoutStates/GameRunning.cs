@@ -16,7 +16,7 @@ namespace Breakout.BreakoutStates {
         private LevelSetUp blocks;
         private IBaseImage ballsImage;
         private EntityContainer<Ball> balls;
-        private string levelFile = "../Assets/Levels/levelTest.txt";
+        private string levelFile = "../Assets/Levels/level3.txt";
         private BlockObserver blockObserver;
 
         public static GameRunning GetInstance() {
@@ -110,7 +110,7 @@ namespace Breakout.BreakoutStates {
                         var collidePlayer = CollisionDetection.Aabb((DynamicShape) ball.Shape, player.Shape);
                         if (collideBlock.Collision) {
                             block.Damage();
-                            ball.ChangeDirection();
+                            ball.HitsBlockMove();
                         } else if (collidePlayer.Collision) {
                             if (playerLeft <= ballPos && ballPos < playerMid) {
                                 ball.GoLeft();
