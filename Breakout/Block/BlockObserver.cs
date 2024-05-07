@@ -18,9 +18,7 @@ public class BlockObserver {
     }
     public void CheckBlocks(EntityContainer<Block> blocks) {
         int length = blocks.CountEntities();
-        int numbOfUnbreaks = 0;
         EntityContainer<Unbreakable> unbreakables = new EntityContainer<Unbreakable>();
-        int numbOfHardened = 0;
         EntityContainer<Hardened> hardeneds = new EntityContainer<Hardened>();
 
 
@@ -33,8 +31,8 @@ public class BlockObserver {
         }
 
         foreach (Hardened hardened in hardeneds) {
-            if (hardened.Health == 10 && hardened.GetImage() == hardened.blocksImage) {
-                hardened.Image = hardened.damagedImage;
+            if (hardened.Health == 10 && hardened.GetImage() == hardened.BlocksImage) {
+                hardened.SetDamagedImage(hardened.DamagedImage);
             }
         }
         

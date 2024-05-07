@@ -12,7 +12,10 @@ using DIKUArcade.Physics;
 namespace Breakout.IBlock;
 public class Hardened : Block {
 
-    public Image damagedImage;
+    protected new Image damagedImage;
+    public Image DamagedImage {
+        get { return damagedImage; }
+    }
     public Hardened(DynamicShape shape, Image blocksImage, Image damagedImage, BlockType type) 
         : base(shape, blocksImage, damagedImage, type) {
             this.damagedImage = damagedImage;
@@ -23,5 +26,9 @@ public class Hardened : Block {
         if (health <= 0) {
             Destroy();
         }
+    }
+
+    public void SetDamagedImage(Image image) {
+        BlocksImage = image;
     }
 }
