@@ -29,9 +29,12 @@ namespace Breakout {
                 if (positions.TryGetValue(colorEntry, out List<(float, float)>? positionsListN)
                 && positionsListN != null) {
                     foreach ((float x, float y) in positionsListN) {
+                        var imagePath = Path.Combine("..", "Assets", "Images", colorEntry);
+                        var damagedImagePath = Path.Combine("..", "Assets", "Images", colorEntry.Replace(".png", "") + "-damaged.png");
                         blocks.AddEntity(new Block(
                             new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
                             new Image(Path.Combine("..", "Assets", "Images", colorEntry)),
+                            new Image(damagedImagePath),
                             StringToBlockType(coolBlockKey[colorEntry])
                         ));
                     }
@@ -55,10 +58,13 @@ namespace Breakout {
             }
 
             foreach (Block block in blocksToDestroy) {
-                blocks.AddEntity(CreateNewBlock(block.GetType(),
+                blocks.AddEntity(CreateNewBlock(
                                             block.GetPosition().X,
                                             block.GetPosition().Y,
-                                            block.GetImage()
+                                            block.GetImage(),
+                                            block.GetDamagedImage(),
+                                            block.GetType()
+
                     ));
                 block.Destroy();
             }
@@ -93,24 +99,27 @@ namespace Breakout {
             return BlockType.Normal;
         }
 
-        public Block CreateNewBlock(BlockType type, float x, float y, Image image) {
+        public Block CreateNewBlock(float x, float y, Image image, Image damagedImage, BlockType type) {
             switch (type) {
                 case BlockType.Unbreakable:
                     return new Unbreakable(
                         new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
                         image,
+                        damagedImage,
                         type
                     );
                 case BlockType.Hardened:
                     return new Hardened(
                         new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
                         image,
+                        damagedImage,
                         type
                     );
                 default:
                     return new Block(
                         new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
                         image,
+                        damagedImage,
                         type
                     );
             }

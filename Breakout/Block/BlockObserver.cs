@@ -9,6 +9,7 @@ using DIKUArcade.Input;
 using System.Collections.Generic;
 using DIKUArcade.GUI;
 using DIKUArcade.Physics;
+using Breakout.IBlock;
 
 namespace Breakout.IBlock;
 
@@ -32,13 +33,8 @@ public class BlockObserver {
         }
 
         foreach (Hardened hardened in hardeneds) {
-            if (hardened.Health == 10) {
-                Image blockimage = hardened.blocksImage;
-                var pic = blockimage.GetTexture().ToString();
-                pic = pic.Replace(".png", "");
-                hardened.blocksImage = new Image(Path.Combine("Assets", "Images", pic + "-damged.png"));
-
-
+            if (hardened.Health == 10 && hardened.GetImage() == hardened.blocksImage) {
+                hardened.Image = hardened.damagedImage;
             }
         }
         

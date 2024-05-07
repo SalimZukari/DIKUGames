@@ -13,8 +13,8 @@ using DIKUArcade.Physics;
 namespace Breakout.IBlock;
 public class Unbreakable : Block {
     bool CanBreak = false;
-    public Unbreakable(DynamicShape shape, Image blocksImage, BlockType type) 
-        : base(shape, blocksImage, type) {
+    public Unbreakable(DynamicShape shape, Image blocksImage, Image damagedImage, BlockType type) 
+        : base(shape, blocksImage, damagedImage, type) {
     }
 
     public override void Damage() {
@@ -37,4 +37,5 @@ public class Unbreakable : Block {
     public bool GetCanBreak() {
         return CanBreak;
     }
+    
 }

@@ -16,15 +16,17 @@ public class Block : Entity, IBlock {
     protected int health;
     public Image blocksImage;
     protected BlockType type;
+    public Image damagedImage;
 
     public int Health {
         get { return health; }
     }
 
-    public Block(DynamicShape shape, Image blocksImage, BlockType type) 
+    public Block(DynamicShape shape, Image blocksImage, Image damagedImage, BlockType type) 
         : base(shape, blocksImage) {
             this.blocksImage = blocksImage;
             this.startPos = shape.Position;
+            this.damagedImage = damagedImage;
             this.type = type;
             health = 10;
     }
@@ -50,5 +52,8 @@ public class Block : Entity, IBlock {
 
     public virtual Image GetImage() {
         return blocksImage;
+    }
+    public virtual Image GetDamagedImage() {
+        return damagedImage;
     }
 }
