@@ -16,7 +16,7 @@ namespace Breakout.BreakoutStates {
         private LevelSetUp blocks;
         private IBaseImage ballsImage;
         private EntityContainer<Ball> balls;
-        private string levelFile = "../Assets/Levels/level3.txt";
+        private string levelFile = "../Assets/Levels/TestLevel.txt";
         private BlockObserver blockObserver;
 
         public static GameRunning GetInstance() {
@@ -165,6 +165,14 @@ namespace Breakout.BreakoutStates {
 
         public void NullInstance() {
             instance = null;
+        }
+
+        public EntityContainer<Ball> GetBall() {
+            return balls;
+        }
+
+        public EntityContainer<Block> GetBlocks() {
+            return blocks.GetBlocks();
         }
     }
 }

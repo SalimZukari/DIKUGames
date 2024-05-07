@@ -28,7 +28,9 @@ namespace Breakout {
                 && positionsListN != null) {
                     foreach ((float x, float y) in positionsListN) {
                         var imagePath = Path.Combine("..", "Assets", "Images", colorEntry);
-                        var damagedImagePath = Path.Combine("..", "Assets", "Images", colorEntry.Replace(".png", "") + "-damaged.png");
+                        var damagedImagePath = Path.Combine("..", "Assets", "Images", 
+                            colorEntry.Replace(".png", "") + "-damaged.png"
+                        );
                         blocks.AddEntity(new Block(
                             new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
                             new Image(Path.Combine("..", "Assets", "Images", colorEntry)),
@@ -49,11 +51,17 @@ namespace Breakout {
             }
 
             EntityContainer<Block> blocksToDestroy = new EntityContainer<Block>();
+            EntityContainer<Block> normalBlocks = new EntityContainer<Block>();
             foreach (Block block in blocks) {
                 if (block.GetType() != BlockType.Normal) {
                     blocksToDestroy.AddEntity(block);
+                    block.DeleteEntity();
+                } else {
+                    normalBlocks.AddEntity(block);
                 }
             }
+
+            blocks.ClearContainer();
 
             foreach (Block block in blocksToDestroy) {
                 blocks.AddEntity(CreateNewBlock(
@@ -64,6 +72,11 @@ namespace Breakout {
                                             block.GetType()
 
                     ));
+                block.Destroy();
+            }
+
+            foreach (Block block in normalBlocks) {
+                blocks.AddEntity(block);
                 block.Destroy();
             }
         }
@@ -125,6 +138,10 @@ namespace Breakout {
 
         public EntityContainer<Block> GetBlocks() {
             return blocks;
+        }
+
+        public IDictionary<string, string> GetCoolKey() {
+            return coolBlockKey;
         }
     }
 }
