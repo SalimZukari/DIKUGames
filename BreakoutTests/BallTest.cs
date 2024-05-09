@@ -39,24 +39,24 @@ public class BallTest {
 
     [Test]
     public void TestEnsureOppositeXDir() {
-        Ball.direction.X = 0.05f; // positive
+        ball.Direction.X = 0.05f; // positive
         ball.EnsureOppositeXDir();
-        Assert.AreNotEqual(0.05f, Ball.direction.X, "Direction X should invert on hit");
+        Assert.AreNotEqual(0.05f, ball.Direction.X, "Direction X should invert on hit");
 
-        Ball.direction.X = -0.05f; // negative
+        ball.Direction.X = -0.05f; // negative
         ball.EnsureOppositeXDir();
-        Assert.AreNotEqual(-0.05f, Ball.direction.X, "Direction X should invert on hit");
+        Assert.AreNotEqual(-0.05f, ball.Direction.X, "Direction X should invert on hit");
     }
 
     [Test]
     public void TestHitsBlockMove() {
-        Ball.direction.Y = 0.01f; // initially positive
+        ball.Direction.Y = 0.01f; // initially positive
         ball.HitsBlockMove();
-        Assert.AreEqual(-0.01f, Ball.direction.Y, "Direction Y should be negative when initially positive");
+        Assert.AreEqual(-0.01f, ball.Direction.Y, "Direction Y should be negative when initially positive");
 
-        Ball.direction.Y = -0.01f; // now negative
+        ball.Direction.Y = -0.01f; // now negative
         ball.HitsBlockMove();
-        Assert.AreEqual(0.01f, Ball.direction.Y, "Direction Y should be positive when initially negative");
+        Assert.AreEqual(0.01f, ball.Direction.Y, "Direction Y should be positive when initially negative");
     }
 
 
@@ -64,14 +64,14 @@ public class BallTest {
     public void TestMovement() {
         ball.Shape.Position.Y = 2.0f; // First condition 
         ball.Movement();
-        Assert.AreEqual(-0.01f, Ball.direction.Y, "Direction Y should be negative when near upper boundary");
+        Assert.AreEqual(-0.01f, ball.Direction.Y, "Direction Y should be negative when near upper boundary");
 
         ball.Shape.Position.X = 3.0f; // Second condition
         ball.Movement();
-        Assert.Less(Ball.direction.X, 0.0f, "Direction X should be negative when near right boundary");
+        Assert.Less(ball.Direction.X, 0.0f, "Direction X should be negative when near right boundary");
 
         ball.Shape.Position.X = -0.3f; // Third condition
         ball.Movement();
-        Assert.Greater(Ball.direction.X, -1, "Direction X should be positive when near left boundary");
+        Assert.Greater(ball.Direction.X, -1, "Direction X should be positive when near left boundary");
     }
 }
