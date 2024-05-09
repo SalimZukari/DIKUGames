@@ -22,6 +22,7 @@ namespace Breakout {
             var colors = layout.GetLegendOrganized().Values;
             var positions = layout.GetMapOrganized();
             var blockTypes = layout.GetMetaOrganized();
+            EntityContainer<Block> firstContainer = new EntityContainer<Block>();
 
             foreach (var colorEntry in colors) {
                 if (positions.TryGetValue(colorEntry, out List<(float, float)>? positionsListN)
@@ -31,7 +32,7 @@ namespace Breakout {
                         var damagedImagePath = Path.Combine("..", "Assets", "Images", 
                             colorEntry.Replace(".png", "") + "-damaged.png"
                         );
-                        blocks.AddEntity(new Block(
+                        firstContainer.AddEntity(new Block(
                             new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
                             new Image(Path.Combine("..", "Assets", "Images", colorEntry)),
                             new Image(damagedImagePath),
@@ -50,21 +51,17 @@ namespace Breakout {
                 }
             }
 
-            EntityContainer<Block> blocksToDestroy = new EntityContainer<Block>();
-            EntityContainer<Block> normalBlocks = new EntityContainer<Block>();
-            foreach (Block block in blocks) {
+            foreach (Block block in firstContainer) {
                 if (block.GetType() != BlockType.Normal) {
-                    blocksToDestroy.AddEntity(block);
                     block.DeleteEntity();
-                } else {
-                    normalBlocks.AddEntity(block);
+                } else if (block.GetType() == BlockType.Normal) {
+                    blocks.AddEntity(block);
                 }
             }
 
-            blocks.ClearContainer();
-
-            foreach (Block block in blocksToDestroy) {
-                blocks.AddEntity(CreateNewBlock(
+            foreach (Block block in firstContainer) {
+                if (block.IsDeleted()) {
+                    blocks.AddEntity(CreateNewBlock(
                                             block.GetPosition().X,
                                             block.GetPosition().Y,
                                             block.GetImage(),
@@ -72,12 +69,7 @@ namespace Breakout {
                                             block.GetType()
 
                     ));
-                block.Destroy();
-            }
-
-            foreach (Block block in normalBlocks) {
-                blocks.AddEntity(block);
-                block.Destroy();
+                }
             }
         }
 
