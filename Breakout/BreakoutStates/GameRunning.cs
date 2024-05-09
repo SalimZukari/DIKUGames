@@ -120,7 +120,7 @@ namespace Breakout.BreakoutStates {
             });
         }
         
-        private void IsGameOver () {
+        public void IsGameOver () {
             if (balls.CountEntities() == 0) {
                 BreakoutBus.GetBus().RegisterEvent(new GameEvent {
                     EventType = GameEventType.GameStateEvent,
@@ -132,7 +132,7 @@ namespace Breakout.BreakoutStates {
             }
         }
 
-        private void IsGameWon() {
+        public void IsGameWon() {
             if (blocks.GetBlocks().CountEntities() == 0) {
                 BreakoutBus.GetBus().RegisterEvent(new GameEvent {
                     EventType = GameEventType.GameStateEvent,

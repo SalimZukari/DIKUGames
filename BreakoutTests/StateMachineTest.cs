@@ -37,7 +37,7 @@ public class StateMachineTest {
 
         BreakoutBus.GetBus().Subscribe(GameEventType.InputEvent, stateMachine);
         BreakoutBus.GetBus().Subscribe(GameEventType.WindowEvent, stateMachine);
-        BreakoutBus.GetBus().Subscribe(GameEventType.GameStateEvent, stateMachine);
+        BreakoutBus.GetBus().Subscribe(GameEventType.GameStateEvent, stateMachine);    
     }
 
     [Test]
@@ -49,6 +49,18 @@ public class StateMachineTest {
     public void TestSwitchState() {
         stateMachine.SwitchState(GameStateType.GameRunning);
         Assert.That(stateMachine.ActiveState, Is.InstanceOf<GameRunning>());
+
+        stateMachine.SwitchState(GameStateType.MainMenu);
+        Assert.That(stateMachine.ActiveState, Is.InstanceOf<MainMenu>());
+
+        stateMachine.SwitchState(GameStateType.GamePaused);
+        Assert.That(stateMachine.ActiveState, Is.InstanceOf<GamePaused>());
+
+        stateMachine.SwitchState(GameStateType.GameLost);
+        Assert.That(stateMachine.ActiveState, Is.InstanceOf<GameLost>());
+
+        stateMachine.SwitchState(GameStateType.GameWon);
+        Assert.That(stateMachine.ActiveState, Is.InstanceOf<GameWon>());
     }
 
     [Test]
@@ -61,5 +73,37 @@ public class StateMachineTest {
 
         stateMachine.ProcessEvent(gameEvent);
         Assert.That(stateMachine.ActiveState, Is.InstanceOf<GameRunning>());
+
+        var gameEvent2 = new GameEvent {
+            EventType = GameEventType.GameStateEvent,
+            Message = "CHANGE_STATE",
+            StringArg1 = "MAIN_MENU"
+        };
+        stateMachine.ProcessEvent(gameEvent2);
+        Assert.That(stateMachine.ActiveState, Is.InstanceOf<MainMenu>());
+
+        var gameEvent3 = new GameEvent {
+            EventType = GameEventType.GameStateEvent,
+            Message = "CHANGE_STATE",
+            StringArg1 = "GAME_PAUSED"
+        };
+        stateMachine.ProcessEvent(gameEvent3);
+        Assert.That(stateMachine.ActiveState, Is.InstanceOf<GamePaused>());
+
+        var gameEvent4 = new GameEvent {
+            EventType = GameEventType.GameStateEvent,
+            Message = "CHANGE_STATE",
+            StringArg1 = "GAME_LOST"
+        };
+        stateMachine.ProcessEvent(gameEvent4);
+        Assert.That(stateMachine.ActiveState, Is.InstanceOf<GameLost>());
+
+        var gameEvent5 = new GameEvent {
+            EventType = GameEventType.GameStateEvent,
+            Message = "CHANGE_STATE",
+            StringArg1 = "GAME_WON"
+        };
+        stateMachine.ProcessEvent(gameEvent5);
+        Assert.That(stateMachine.ActiveState, Is.InstanceOf<GameWon>());
     }
 }
