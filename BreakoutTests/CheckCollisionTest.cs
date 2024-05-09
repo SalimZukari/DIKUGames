@@ -3,11 +3,11 @@ using DIKUArcade;
 using DIKUArcade.GUI;
 using NUnit.Framework;
 using DIKUArcade.Math;
-using DIKUArcade.Input;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
 using Breakout.BreakoutStates;
 using Breakout.IBlock;
+using Breakout;
 using System.Collections.Generic;
 using System;
 
@@ -26,26 +26,58 @@ public class CheckCollisionTest {
 
     [Test]
     public void TestBlockDestroyed() {
-        /* GameRunning gameRunning = new GameRunning();
-        Block block = gameRunning.GetBlocks()[0];
-        Ball ball = gameRunning.GetBall()[0];
+        GameRunning gameRunning = new GameRunning(Path.Combine(
+                    "..", "..", "..", "..", "Assets", "Levels", "level1.txt"
+                ));
+        EntityContainer<Block> block = gameRunning.LevelSetUp.GetBlocks();
+        EntityContainer<Ball> ball = gameRunning.Ball;
+        int beforeCheckBlocks = block.CountEntities();
 
-        float blockPosition = block.GetPosition();
-        float ballPosition = ball.GetPosition();
-        Vec2F ballDir = (blockPosition.X - ballPosition.X,
-                        blockPosition.Y - ballPosition.Y);
-        int lengthOfDirVec = Math.sqrt(
-                ((double)ballDir.X ** 2.0) +
-                ((double)ballDir.Y ** 2.0)
-            );
-
-        ball.SetDirection(ballDir);
-
-        for (int i = 0; i <= lengthOfDirVec; i++) {
-            ball.Movement();
-            gameRunning.CheckCollisions();
+        for (int i = 0; i < 100; i++) {
+            gameRunning.UpdateState();
         }
 
-        Assert.AreEqual(ball, null); */
+        int afterCheckBlocks = block.CountEntities();
+        Assert.Less(afterCheckBlocks, beforeCheckBlocks);
     }
+
+    [Test]
+    public void TestPlayerHitLeft() {
+        GameRunning gameRunning = new GameRunning(Path.Combine(
+                    "..", "..", "..", "..", "Assets", "Levels", "level1.txt"
+                ));
+        EntityContainer<Block> block = gameRunning.LevelSetUp.GetBlocks();
+        EntityContainer<Ball> ball = gameRunning.Ball;
+        ball.ClearContainer();
+        Ball newBall = new Ball(new Vec2F(0.47f, 0.2f),
+                                new Image("../Assets/Images/ball.png"));
+        newBall.SetDirectionY(-0.01f);
+        ball.AddEntity(newBall);
+
+        for (int i = 0; i < 20; i++) {
+            gameRunning.UpdateState();
+        }
+        Assert.Less(newBall.Direction.X, 0);
+    }
+
+    [Test]
+    public void TestPlayerHitRight() {
+        GameRunning gameRunning = new GameRunning(Path.Combine(
+                    "..", "..", "..", "..", "Assets", "Levels", "level1.txt"
+                ));
+        EntityContainer<Block> block = gameRunning.LevelSetUp.GetBlocks();
+        EntityContainer<Ball> ball = gameRunning.Ball;
+        ball.ClearContainer();
+        Ball newBall = new Ball(new Vec2F(0.57f, 0.2f),
+                                new Image("../Assets/Images/ball.png"));
+        newBall.SetDirectionY(-0.01f);
+        ball.AddEntity(newBall);
+
+        for (int i = 0; i < 20; i++) {
+            gameRunning.UpdateState();
+        }
+        Assert.Less(0, newBall.Direction.X);
+    }
+
+
 }

@@ -16,20 +16,29 @@ namespace Breakout.BreakoutStates {
         private LevelSetUp blocks;
         private IBaseImage ballsImage;
         private EntityContainer<Ball> balls;
-        private string levelFile = "../Assets/Levels/TestLevel.txt";
         private BlockObserver blockObserver;
+        public EntityContainer<Ball> Ball {
+            get { return balls; }
+        }
+
+        public LevelSetUp LevelSetUp {
+            get { return blocks; }
+        }
+
+        public Player Player {
+            get { return player; }
+        }
 
         public static GameRunning GetInstance() {
             if (GameRunning.instance == null) {
-                GameRunning.instance = new GameRunning();
+                GameRunning.instance = new GameRunning("../Assets/Levels/level1.txt");
                 GameRunning.instance.ResetState();
 
                 }
             return GameRunning.instance;
             }
 
-
-        public GameRunning() {
+        public GameRunning(string levelFile) {
             backGroundImage = new Entity(new StationaryShape(0.0f, 0.0f, 1.0f, 1.0f), 
                 new Image(Path.Combine("..", "Assets", "Images", "SpaceBackground.png")));
             player = new Player(
@@ -104,8 +113,10 @@ namespace Breakout.BreakoutStates {
                 ball.Movement();
                 ball.CheckDeleteBall();
                 blocks.GetBlocks().Iterate(block => {
-                    var collideBlock = CollisionDetection.Aabb((DynamicShape) ball.Shape, block.Shape);
-                    var collidePlayer = CollisionDetection.Aabb((DynamicShape) ball.Shape, player.Shape);
+                    var collideBlock = CollisionDetection.Aabb((
+                                                DynamicShape) ball.Shape, block.Shape);
+                    var collidePlayer = CollisionDetection.Aabb((
+                                                DynamicShape) ball.Shape, player.Shape);
                     if (collideBlock.Collision) {
                         block.Damage();
                         ball.HitsBlockMove();
@@ -165,14 +176,6 @@ namespace Breakout.BreakoutStates {
 
         public void NullInstance() {
             instance = null;
-        }
-
-        public EntityContainer<Ball> GetBall() {
-            return balls;
-        }
-
-        public EntityContainer<Block> GetBlocks() {
-            return blocks.GetBlocks();
         }
     }
 }
