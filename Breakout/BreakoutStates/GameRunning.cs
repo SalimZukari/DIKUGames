@@ -131,7 +131,7 @@ namespace Breakout.BreakoutStates {
             });
         }
         
-        public void IsGameOver () {
+        public bool IsGameOver () {
             if (balls.CountEntities() == 0) {
                 BreakoutBus.GetBus().RegisterEvent(new GameEvent {
                     EventType = GameEventType.GameStateEvent,
@@ -140,19 +140,39 @@ namespace Breakout.BreakoutStates {
                 }); 
                 MainMenu.GetInstance().ResetState();
                 GameRunning.GetInstance().NullInstance();
+                return true;
             }
+            return false;
         }
 
-        public void IsGameWon() {
-            if (blocks.GetBlocks().CountEntities() == 0) {
-                BreakoutBus.GetBus().RegisterEvent(new GameEvent {
-                    EventType = GameEventType.GameStateEvent,
-                    Message = "CHANGE_STATE",
-                    StringArg1 = "GAME_WON",
-                });
-                MainMenu.GetInstance().ResetState();
-                GameRunning.GetInstance().NullInstance();
+        public bool SwitchLevelIfWon() {
+            string nextLevelFile = blocks.GetNextLevelFile();
+
+            if (File.Exists(nextLevelFile)) {
+                blocks.LoadLevel(nextLevelFile);
+                
+                player.ResetPosition();
+                balls.ClearContainer();
+                balls.AddEntity(new Ball(new Vec2F(0.45f, 0.3f), ballsImage));
+                return true;
             }
+            return false;
+        }
+
+        public bool IsGameWon() {
+            if (blocks.GetBlocks().CountEntities() == 0) {
+                if (!SwitchLevelIfWon()) {
+                    BreakoutBus.GetBus().RegisterEvent(new GameEvent {
+                        EventType = GameEventType.GameStateEvent,
+                        Message = "CHANGE_STATE",
+                        StringArg1 = "GAME_WON",
+                    });
+                    MainMenu.GetInstance().ResetState();
+                    GameRunning.GetInstance().NullInstance();
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void RenderState() {

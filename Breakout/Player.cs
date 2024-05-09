@@ -68,6 +68,10 @@ public class Player : IGameEventProcessor {
         return shape.Position;
     }
 
+    public void ResetPosition() {
+        shape.Position = new Vec2F(0.45f, 0.1f);
+    }
+
     public void ProcessEvent(GameEvent gameEvent) {
         if (gameEvent.EventType == GameEventType.PlayerEvent) {
             switch (gameEvent.Message) {

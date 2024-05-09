@@ -9,8 +9,10 @@ namespace Breakout {
         private InterpretData layout;
         private EntityContainer<Block> blocks;
         private IDictionary<string, string> coolBlockKey = new Dictionary<string, string>();
+        public string CurrentLevelFile { get; private set; }  
 
         public LevelSetUp(string file) {
+            CurrentLevelFile = file;
             layout = new InterpretData(file);
             blocks = new EntityContainer<Block>();
 
@@ -73,6 +75,13 @@ namespace Breakout {
             }
         }
 
+        public void LoadLevel(string file) {
+            CurrentLevelFile = file;
+            layout = new InterpretData(file);
+            blocks.ClearContainer();
+            SetUp();
+        }
+
         public void ColorOfSpecialBlocks() {
             var legend = layout.GetLegendOrganized();
             var meta = layout.GetMetaOrganized();
@@ -126,6 +135,26 @@ namespace Breakout {
                         type
                     );
             }
+        }
+
+
+        public int GetLevelNumber() {
+            string currentLevelFile = CurrentLevelFile;
+            string standardLevelName = "level";
+            string fileExtension = ".txt";
+            
+            int currentLevelNumber = int.Parse(currentLevelFile.Substring(
+                currentLevelFile.IndexOf(standardLevelName) + standardLevelName.Length,
+                currentLevelFile.IndexOf(fileExtension) - currentLevelFile.IndexOf(standardLevelName) - standardLevelName.Length
+            ));
+
+            return currentLevelNumber;
+        }
+
+        public string GetNextLevelFile() {
+            int nextLevelNumber = GetLevelNumber() + 1;
+            string nextLevelFile = Path.Combine("..", "Assets", "Levels", $"level{nextLevelNumber}.txt");
+            return nextLevelFile;
         }
 
         public EntityContainer<Block> GetBlocks() {

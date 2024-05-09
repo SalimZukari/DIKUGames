@@ -79,5 +79,24 @@ public class CheckCollisionTest {
         Assert.Less(0, newBall.Direction.X);
     }
 
+    [Test]
+    public void TestIsGameOver() {
+        var gameRunning = new GameRunning(Path.Combine("..", "..", "..", "..", "Assets", "Levels", "level1.txt"));
+    
+        Assert.IsTrue(gameRunning.Ball.CountEntities() > 0);
 
+        gameRunning.Ball.ClearContainer();
+
+        Assert.IsTrue(gameRunning.IsGameOver());
+    }
+
+    [Test]
+    public void TestIsGameWon() {
+        var gameRunning = new GameRunning(Path.Combine("..", "..", "..", "..", "Assets", "Levels", "level1.txt"));
+        Assert.IsTrue(gameRunning.LevelSetUp.GetBlocks().CountEntities() > 0);
+
+        gameRunning.LevelSetUp.GetBlocks().ClearContainer();
+        
+        Assert.IsTrue(gameRunning.IsGameWon());
+    }
 }
