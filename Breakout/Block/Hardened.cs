@@ -19,6 +19,7 @@ public class Hardened : Block {
     public Hardened(DynamicShape shape, Image blocksImage, Image damagedImage, BlockType type) 
         : base(shape, blocksImage, damagedImage, type) {
             this.damagedImage = damagedImage;
+            this.Image = blocksImage;
             health = 20;
     }
     public override void Damage() {
