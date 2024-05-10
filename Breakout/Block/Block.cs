@@ -10,7 +10,7 @@ public class Block : Entity, IBlock {
     protected int health;
     protected Image blocksImage;
     protected BlockType type;
-    public Image damagedImage;
+    protected Image damagedImage;
 
     public int Health {
         get { return health; }

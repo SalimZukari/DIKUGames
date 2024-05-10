@@ -31,6 +31,11 @@ public class CheckCollisionTest {
                 ));
         EntityContainer<Block> block = gameRunning.LevelSetUp.GetBlocks();
         EntityContainer<Ball> ball = gameRunning.Ball;
+        ball.ClearContainer();
+        Ball newBall = new Ball(new Vec2F(0.47f, 0.2f),
+                                new Image("../Assets/Images/ball.png"));
+        newBall.SetDirectionY(0.01f);
+        ball.AddEntity(newBall);
         int beforeCheckBlocks = block.CountEntities();
 
         for (int i = 0; i < 100; i++) {
