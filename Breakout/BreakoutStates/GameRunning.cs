@@ -66,7 +66,7 @@ namespace Breakout.BreakoutStates {
             BreakoutBus.GetBus().Subscribe(GameEventType.PlayerEvent, player);
 
             blockObserver = new BlockObserver();
-            lives = 3;
+            lives = 3;            
         }
 
         public void LivesImageDisplay() {
@@ -75,6 +75,19 @@ namespace Breakout.BreakoutStates {
                     new Image(Path.Combine("..", "Assets", "Images", "heart_filled.png")));
                 livesImage.RenderEntity();
             } 
+        }
+        public Text TimeRender() {
+            var timeData = level.Layout.GetMetaOrganized();
+            int timeInSec = -1;
+            if (timeData.ContainsKey("Time")) {
+                Int32.TryParse(timeData["Time"], out int t);
+                timeInSec = t;
+            }
+            var timeLeft = (int)(timeInSec - StaticTimer.GetElapsedSeconds());
+            var timeLeftString = timeLeft.ToString();
+            var timeLeftText = new Text(timeLeftString, new Vec2F(0.8f, 0.65f), new Vec2F(0.35f, 0.35f));
+            timeLeftText.SetColor(System.Drawing.Color.White);
+            return timeLeftText;
         }
 
 
@@ -229,6 +242,8 @@ namespace Breakout.BreakoutStates {
             level.GetBlocks().RenderEntities();
             balls.RenderEntities();
             LivesImageDisplay();
+            TimeRender().RenderText();
+            
         }
 
         public void ResetState() {
