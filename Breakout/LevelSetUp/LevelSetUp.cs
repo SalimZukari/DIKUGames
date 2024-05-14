@@ -9,7 +9,11 @@ namespace Breakout {
         private InterpretData layout;
         private EntityContainer<Block> blocks;
         private IDictionary<string, string> coolBlockKey = new Dictionary<string, string>();
-        public string CurrentLevelFile { get; private set; }  
+        public string CurrentLevelFile { get; private set; } 
+
+        public InterpretData Layout {
+            get {return layout;}
+        } 
 
         public LevelSetUp(string file) {
             CurrentLevelFile = file;

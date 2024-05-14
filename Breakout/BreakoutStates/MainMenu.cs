@@ -5,6 +5,7 @@ using DIKUArcade.Graphics;
 using DIKUArcade.Math;
 using DIKUArcade.Events;
 using DIKUArcade.Input;
+using DIKUArcade.Timers;
 
 
 namespace Breakout.BreakoutStates;
@@ -75,6 +76,8 @@ public class MainMenu : IGameState {
                         Message = "CHANGE_STATE",
                         StringArg1 = "GAME_RUNNING"
                     });
+                    StaticTimer.RestartTimer();
+
                 } else {
                     BreakoutBus.GetBus().RegisterEvent(new GameEvent { 
                         EventType = GameEventType.WindowEvent, 

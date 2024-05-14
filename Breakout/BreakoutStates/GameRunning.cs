@@ -7,23 +7,30 @@ using DIKUArcade.Events;
 using DIKUArcade.Physics;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
+using DIKUArcade.Timers;
 
 namespace Breakout.BreakoutStates {
     public class GameRunning : IGameState {
         private static GameRunning? instance = null;
         private Entity backGroundImage;
         private Player player;
-        private LevelSetUp blocks;
+        private LevelSetUp level;
         private IBaseImage ballsImage;
         private EntityContainer<Ball> balls;
         private BlockObserver blockObserver;
         private int lives;
+        private bool timeOut = false;
+
+        public bool TimeOut {
+            get {return timeOut;}
+            private set {timeOut = value;}
+        }
         public EntityContainer<Ball> Ball {
             get { return balls; }
         }
 
         public LevelSetUp LevelSetUp {
-            get { return blocks; }
+            get { return level; }
         }
         public int Lives {
             get { return lives; }
@@ -49,7 +56,7 @@ namespace Breakout.BreakoutStates {
             player = new Player(
                 new DynamicShape(new Vec2F(0.45f, 0.1f), new Vec2F(0.2f, 0.04f)),
                 new Image(Path.Combine("..", "Assets", "Images", "player.png")));
-            blocks = new LevelSetUp(levelFile);
+            level = new LevelSetUp(levelFile);
 
             balls = new EntityContainer<Ball>();
             ballsImage = new Image(Path.Combine("..", "Assets", "Images", "ball.png"));
@@ -77,6 +84,7 @@ namespace Breakout.BreakoutStates {
                         Message = "CHANGE_STATE",
                         StringArg1 = "GAME_PAUSED",
                     });
+                    StaticTimer.PauseTimer();
                     break;
                 case KeyboardKey.Left:
                     BreakoutBus.GetBus().RegisterEvent(new GameEvent {
@@ -118,7 +126,7 @@ namespace Breakout.BreakoutStates {
                 float ballPos = ball.Shape.Position.X + (ball.Shape.Extent.X / 2.0f);
                 ball.Movement();
                 ball.CheckDeleteBall();
-                blocks.GetBlocks().Iterate(block => {
+                level.GetBlocks().Iterate(block => {
                     var collideBlock = CollisionDetection.Aabb((
                                                 DynamicShape) ball.Shape, block.Shape);
                     var collidePlayer = CollisionDetection.Aabb((
@@ -137,7 +145,7 @@ namespace Breakout.BreakoutStates {
             });
         }
 
-        private void DetractLife() {
+        public void DetractLife() {
             if (balls.CountEntities() == 0 && Lives > 1) {
                 Lives--;
                 balls.AddEntity(new Ball(new Vec2F(0.45f, 0.3f), ballsImage));
@@ -145,9 +153,24 @@ namespace Breakout.BreakoutStates {
                 Lives--;
             }
         }
+
+        public void SetStopWatch() {
+            var timeData = level.Layout.GetMetaOrganized();
+            int timeInSec = -1;
+            if (timeData.ContainsKey("Time")) {
+                Int32.TryParse(timeData["Time"], out int t);
+                timeInSec = t;
+            }
+
+            Console.WriteLine(StaticTimer.GetElapsedSeconds());
+
+            if (StaticTimer.GetElapsedSeconds() >= timeInSec) {
+                TimeOut = true;
+            }
+        }
         
         public bool IsGameOver () {
-            if (Lives == 0) {
+            if (Lives == 0 || TimeOut) {
                 BreakoutBus.GetBus().RegisterEvent(new GameEvent {
                     EventType = GameEventType.GameStateEvent,
                     Message = "CHANGE_STATE",
@@ -161,10 +184,10 @@ namespace Breakout.BreakoutStates {
         }
 
         public bool SwitchLevelIfWon() {
-            string nextLevelFile = blocks.GetNextLevelFile();
+            string nextLevelFile = level.GetNextLevelFile();
 
             if (File.Exists(nextLevelFile)) {
-                blocks.LoadLevel(nextLevelFile);
+                level.LoadLevel(nextLevelFile);
                 
                 player.ResetPosition();
                 balls.ClearContainer();
@@ -175,7 +198,7 @@ namespace Breakout.BreakoutStates {
         }
 
         public bool IsGameWon() {
-            if (blocks.GetBlocks().CountEntities() == 0) {
+            if (level.GetBlocks().CountEntities() == 0) {
                 if (!SwitchLevelIfWon()) {
                     BreakoutBus.GetBus().RegisterEvent(new GameEvent {
                         EventType = GameEventType.GameStateEvent,
@@ -193,21 +216,23 @@ namespace Breakout.BreakoutStates {
         public void RenderState() {
             backGroundImage.RenderEntity();
             player.Render();
-            blocks.GetBlocks().RenderEntities();
+            level.GetBlocks().RenderEntities();
             balls.RenderEntities();
         }
 
         public void ResetState() {
+            StaticTimer.RestartTimer();
         }
 
         public void UpdateState() {
             BreakoutBus.GetBus().ProcessEventsSequentially();
             player.Move();
             CheckCollisions();
-            blockObserver.CheckBlocks(blocks.GetBlocks());
+            blockObserver.CheckBlocks(level.GetBlocks());
             IsGameOver();
             IsGameWon();
             DetractLife();
+            SetStopWatch();
         }
 
         public void NullInstance() {

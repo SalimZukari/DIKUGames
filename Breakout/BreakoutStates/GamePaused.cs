@@ -5,6 +5,7 @@ using DIKUArcade.Math;
 using DIKUArcade.Events;
 using DIKUArcade.Input;
 using DIKUArcade.Entities;
+using DIKUArcade.Timers;
 
 namespace Breakout.BreakoutStates;
 public class GamePaused : IGameState {
@@ -75,6 +76,7 @@ public class GamePaused : IGameState {
                                 Message = "CHANGE_STATE",
                                 StringArg1 = "GAME_RUNNING",
                             });
+                            StaticTimer.ResumeTimer();
                             break;
                         case 1:
                             BreakoutBus.GetBus().RegisterEvent(new GameEvent {
