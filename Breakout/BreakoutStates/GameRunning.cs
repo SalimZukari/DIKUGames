@@ -17,12 +17,17 @@ namespace Breakout.BreakoutStates {
         private IBaseImage ballsImage;
         private EntityContainer<Ball> balls;
         private BlockObserver blockObserver;
+        private int lives;
         public EntityContainer<Ball> Ball {
             get { return balls; }
         }
 
         public LevelSetUp LevelSetUp {
             get { return blocks; }
+        }
+        public int Lives {
+            get { return lives; }
+            private set {lives = value;}
         }
 
         public Player Player {
@@ -31,7 +36,7 @@ namespace Breakout.BreakoutStates {
 
         public static GameRunning GetInstance() {
             if (GameRunning.instance == null) {
-                GameRunning.instance = new GameRunning("../Assets/Levels/level1.txt");
+                GameRunning.instance = new GameRunning("../Assets/Levels/level3.txt");
                 GameRunning.instance.ResetState();
 
                 }
@@ -53,6 +58,7 @@ namespace Breakout.BreakoutStates {
             BreakoutBus.GetBus().Subscribe(GameEventType.PlayerEvent, player);
 
             blockObserver = new BlockObserver();
+            lives = 3;
         }
 
         public void HandleKeyEvent (KeyboardAction action, KeyboardKey key) {
@@ -130,9 +136,18 @@ namespace Breakout.BreakoutStates {
                 });
             });
         }
+
+        private void DetractLife() {
+            if (balls.CountEntities() == 0 && Lives > 1) {
+                Lives--;
+                balls.AddEntity(new Ball(new Vec2F(0.45f, 0.3f), ballsImage));
+            } else if (balls.CountEntities() == 0 && Lives == 1) {
+                Lives--;
+            }
+        }
         
         public bool IsGameOver () {
-            if (balls.CountEntities() == 0) {
+            if (Lives == 0) {
                 BreakoutBus.GetBus().RegisterEvent(new GameEvent {
                     EventType = GameEventType.GameStateEvent,
                     Message = "CHANGE_STATE",
@@ -192,6 +207,7 @@ namespace Breakout.BreakoutStates {
             blockObserver.CheckBlocks(blocks.GetBlocks());
             IsGameOver();
             IsGameWon();
+            DetractLife();
         }
 
         public void NullInstance() {
