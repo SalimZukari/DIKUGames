@@ -8,12 +8,13 @@ using DIKUArcade.Physics;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
 using DIKUArcade.Timers;
+using Breakout;
 
 namespace Breakout.BreakoutStates {
     public class GameRunning : IGameState {
         private static GameRunning? instance = null;
         private Entity backGroundImage;
-        private Entity livesImage;
+        private EntityContainer<Lives> livesImage;
         private Player player;
         private LevelSetUp level;
         private IBaseImage ballsImage;
@@ -66,16 +67,16 @@ namespace Breakout.BreakoutStates {
             BreakoutBus.GetBus().Subscribe(GameEventType.PlayerEvent, player);
 
             blockObserver = new BlockObserver();
-            lives = 3;            
+            lives = 3;
+            livesImage = new EntityContainer<Lives>();
+            for (int i = 0; i < lives; i++) {
+                var Life = new Lives(new Vec2F(0.01f + i * 0.05f, 0.95f), 
+                    new Image(Path.Combine("..", "Assets", "Images", "heart_filled.png")), 
+                    new Image(Path.Combine("..", "Assets", "Images", "heart_empty.png")), i + 1);
+                livesImage.AddEntity(Life);
+            }
         }
 
-        public void LivesImageDisplay() {
-            for (int i = 0; i < Lives; i++) {
-                livesImage = new Entity(new StationaryShape(0.01f + i * 0.05f, 0.95f, 0.04f, 0.04f),
-                    new Image(Path.Combine("..", "Assets", "Images", "heart_filled.png")));
-                livesImage.RenderEntity();
-            } 
-        }
         public Text TimeRender() {
             var timeData = level.Layout.GetMetaOrganized();
             int timeInSec = -1;
@@ -169,11 +170,17 @@ namespace Breakout.BreakoutStates {
         }
 
         public void DetractLife() {
-            if (balls.CountEntities() == 0 && Lives > 1) {
-                Lives--;
-                balls.AddEntity(new Ball(new Vec2F(0.45f, 0.3f), ballsImage));
-            } else if (balls.CountEntities() == 0 && Lives == 1) {
-                Lives--;
+            if (balls.CountEntities() == 0 && lives > 0) {
+                livesImage.Iterate(life => {
+                    if (life.LifeNumber == lives && life.IsFull) {
+                        life.ChangeImage();
+                        life.IsFull = false;
+                    }
+                });
+                lives--;
+                if (lives > 0) {
+                    balls.AddEntity(new Ball(new Vec2F(0.45f, 0.3f), ballsImage));
+                }
             }
         }
 
@@ -185,7 +192,6 @@ namespace Breakout.BreakoutStates {
                 timeInSec = t;
             }
 
-            Console.WriteLine(StaticTimer.GetElapsedSeconds());
 
             if (StaticTimer.GetElapsedSeconds() >= timeInSec) {
                 TimeOut = true;
@@ -241,8 +247,8 @@ namespace Breakout.BreakoutStates {
             player.Render();
             level.GetBlocks().RenderEntities();
             balls.RenderEntities();
-            LivesImageDisplay();
             TimeRender().RenderText();
+            livesImage.RenderEntities();
             
         }
 
