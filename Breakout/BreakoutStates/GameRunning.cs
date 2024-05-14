@@ -67,7 +67,7 @@ namespace Breakout.BreakoutStates {
             BreakoutBus.GetBus().Subscribe(GameEventType.PlayerEvent, player);
 
             blockObserver = new BlockObserver();
-            lives = 3;
+            lives = 3;            
         }
 
         public void LivesImageDisplay() {
