@@ -20,6 +20,7 @@ namespace Breakout.BreakoutStates {
         private EntityContainer<Ball> balls;
         private BlockObserver blockObserver;
         private int lives;
+        private int livesLost;
         private bool timeOut = false;
 
         public bool TimeOut {
@@ -73,6 +74,15 @@ namespace Breakout.BreakoutStates {
             for (int i = 0; i < Lives; i++) {
                 livesImage = new Entity(new StationaryShape(0.01f + i * 0.05f, 0.95f, 0.04f, 0.04f),
                     new Image(Path.Combine("..", "Assets", "Images", "heart_filled.png")));
+                livesImage.RenderEntity();
+            } 
+        }
+
+        public void LivesLostDisplay() {
+            livesLost = 3 - Lives;
+            for (int i = 0; i < livesLost; i++) {
+                livesImage = new Entity(new StationaryShape(0.01f + i * 0.05f, 0.95f, 0.04f, 0.04f),
+                    new Image(Path.Combine("..", "Assets", "Images", "heart_empty.png")));
                 livesImage.RenderEntity();
             } 
         }
@@ -159,6 +169,7 @@ namespace Breakout.BreakoutStates {
             if (balls.CountEntities() == 0 && Lives > 1) {
                 Lives--;
                 balls.AddEntity(new Ball(new Vec2F(0.45f, 0.3f), ballsImage));
+
             } else if (balls.CountEntities() == 0 && Lives == 1) {
                 Lives--;
             }
@@ -170,11 +181,7 @@ namespace Breakout.BreakoutStates {
             if (timeData.ContainsKey("Time")) {
                 Int32.TryParse(timeData["Time"], out int t);
                 timeInSec = t;
-            }
-
-            Console.WriteLine(StaticTimer.GetElapsedSeconds());
-
-            if (StaticTimer.GetElapsedSeconds() >= timeInSec) {
+            } if (StaticTimer.GetElapsedSeconds() >= timeInSec) {
                 TimeOut = true;
             }
         }
@@ -229,6 +236,7 @@ namespace Breakout.BreakoutStates {
             level.GetBlocks().RenderEntities();
             balls.RenderEntities();
             LivesImageDisplay();
+            LivesLostDisplay();
         }
 
         public void ResetState() {
