@@ -1,17 +1,12 @@
-using System.IO;
-using DIKUArcade;
-using DIKUArcade.GUI;
-using DIKUArcade.Math;
-using DIKUArcade.Input;
-using DIKUArcade.Events;
-using DIKUArcade.Physics;
-using DIKUArcade.Entities;
-using DIKUArcade.Graphics;
-using System.Collections.Generic;
+using System;
 
 namespace Breakout.BreakoutStates;
 public enum GameStateType {
     GameRunning,
+    GamePaused,
+    MainMenu,
+    GameLost,
+    GameWon
 }
 
 public class StateTransformer {
@@ -19,6 +14,14 @@ public class StateTransformer {
         switch (state) {
             case "GAME_RUNNING":
                 return GameStateType.GameRunning;
+            case "GAME_PAUSED":
+                return GameStateType.GamePaused;
+            case "MAIN_MENU":
+                return GameStateType.MainMenu;
+            case "GAME_LOST":
+                return GameStateType.GameLost;
+            case "GAME_WON":
+                return GameStateType.GameWon;
             default:
                 throw new ArgumentException("Invalid state type");
         }
@@ -28,8 +31,17 @@ public class StateTransformer {
         switch (state) {
             case GameStateType.GameRunning:
                 return "GAME_RUNNING";
+            case GameStateType.GamePaused:
+                return "GAME_PAUSED";
+            case GameStateType.MainMenu:
+                return "MAIN_MENU";
+            case GameStateType.GameLost:
+                return "GAME_LOST";
+            case GameStateType.GameWon:
+                return "GAME_WON";
             default:
                 throw new ArgumentException("Invalid state type");
         }
     }
 }
+

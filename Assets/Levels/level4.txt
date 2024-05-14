@@ -1,0 +1,40 @@
+Map:
+------------
+------------
+------------
+000000000000
+000000000000
+CCCCCCCCCCCC
+------------
+YY--------YY
+YY--------YY
+YY--------YY
+------------
+000000000000
+CCCCC00CCCCC
+CCCCC--CCCCC
+YYYY----YYYY
+------------
+------------
+------------
+------------
+------------
+------------
+------------
+------------
+------------
+------------
+Map/
+
+Meta:
+Name: LEVEL €
+Time: 180
+Unbreakable: Y
+Hardened: C
+Meta/
+
+Legend:
+0) orange-block.png
+Y) brown-block.png
+C) red-block.png
+Legend/

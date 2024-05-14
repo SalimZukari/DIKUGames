@@ -1,13 +1,8 @@
-using System.IO;
+using System;
+using DIKUArcade.Math;
+using DIKUArcade.Events;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
-using DIKUArcade.Math;
-using DIKUArcade;
-using DIKUArcade.Events;
-using DIKUArcade.Input;
-using System.Collections.Generic;
-using DIKUArcade.GUI;
-using DIKUArcade.Physics;
 
 namespace Breakout;
 public class Player : IGameEventProcessor {
@@ -71,6 +66,10 @@ public class Player : IGameEventProcessor {
 
     public Vec2F GetPosition() {
         return shape.Position;
+    }
+
+    public void ResetPosition() {
+        shape.Position = new Vec2F(0.45f, 0.1f);
     }
 
     public void ProcessEvent(GameEvent gameEvent) {

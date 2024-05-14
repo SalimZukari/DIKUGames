@@ -1,6 +1,5 @@
-using System.IO;
-using DIKUArcade;
-using DIKUArcade.GUI;
+using System;
+using Breakout.IBlock;
 using DIKUArcade.Math;
 using DIKUArcade.Input;
 using DIKUArcade.State;
@@ -8,40 +7,65 @@ using DIKUArcade.Events;
 using DIKUArcade.Physics;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
-using Breakout.BreakoutStates;
-using System.Collections.Generic;
+using DIKUArcade.Timers;
 
 namespace Breakout.BreakoutStates {
     public class GameRunning : IGameState {
         private static GameRunning? instance = null;
         private Entity backGroundImage;
         private Player player;
-        private LevelSetUp blocks;
+        private LevelSetUp level;
+        private IBaseImage ballsImage;
+        private EntityContainer<Ball> balls;
+        private BlockObserver blockObserver;
+        private int lives;
+        private bool timeOut = false;
+
+        public bool TimeOut {
+            get {return timeOut;}
+            private set {timeOut = value;}
+        }
+        public EntityContainer<Ball> Ball {
+            get { return balls; }
+        }
+
+        public LevelSetUp LevelSetUp {
+            get { return level; }
+        }
+        public int Lives {
+            get { return lives; }
+            private set {lives = value;}
+        }
+
+        public Player Player {
+            get { return player; }
+        }
 
         public static GameRunning GetInstance() {
             if (GameRunning.instance == null) {
-                GameRunning.instance = new GameRunning();
+                GameRunning.instance = new GameRunning("../Assets/Levels/level3.txt");
                 GameRunning.instance.ResetState();
 
                 }
-                return GameRunning.instance;
+            return GameRunning.instance;
             }
 
-
-        public GameRunning() {
+        public GameRunning(string levelFile) {
             backGroundImage = new Entity(new StationaryShape(0.0f, 0.0f, 1.0f, 1.0f), 
-                new Image(Path.Combine("Assets", "Images", "SpaceBackground.png")));
+                new Image(Path.Combine("..", "Assets", "Images", "SpaceBackground.png")));
             player = new Player(
                 new DynamicShape(new Vec2F(0.45f, 0.1f), new Vec2F(0.2f, 0.04f)),
-                new Image(Path.Combine("Assets", "Images", "player.png")));
-            blocks = new LevelSetUp();
-            /* blocks = new EntityContainer<Block>(8);
-            for (int i = 0; i < 8; i++) {
-                blocks.AddEntity(new Block(
-                    new DynamicShape(new Vec2F(0.1f + i * 0.1f, 0.9f), new Vec2F(0.1f, 0.1f)), 
-                    new Image (Path.Combine("Assets", "Images", "red-block.png"))));
-            } */
+                new Image(Path.Combine("..", "Assets", "Images", "player.png")));
+            level = new LevelSetUp(levelFile);
+
+            balls = new EntityContainer<Ball>();
+            ballsImage = new Image(Path.Combine("..", "Assets", "Images", "ball.png"));
+            balls.AddEntity(new Ball(new Vec2F(0.45f, 0.3f), ballsImage));
+
             BreakoutBus.GetBus().Subscribe(GameEventType.PlayerEvent, player);
+
+            blockObserver = new BlockObserver();
+            lives = 3;
         }
 
         public void HandleKeyEvent (KeyboardAction action, KeyboardKey key) {
@@ -55,10 +79,12 @@ namespace Breakout.BreakoutStates {
         public void KeyPress(KeyboardKey key) {
             switch (key) {
                 case KeyboardKey.Escape:
-                    BreakoutBus.GetBus().RegisterEvent(new GameEvent { 
-                            EventType = GameEventType.WindowEvent, 
-                            Message = "Quit_Game", 
-                        });
+                    BreakoutBus.GetBus().RegisterEvent ( new GameEvent {
+                        EventType = GameEventType.GameStateEvent,
+                        Message = "CHANGE_STATE",
+                        StringArg1 = "GAME_PAUSED",
+                    });
+                    StaticTimer.PauseTimer();
                     break;
                 case KeyboardKey.Left:
                     BreakoutBus.GetBus().RegisterEvent(new GameEvent {
@@ -92,24 +118,125 @@ namespace Breakout.BreakoutStates {
             }
         }
 
+        private void CheckCollisions() {
+            float playerLeft = player.Shape.Position.X;
+            float playerRight = player.Shape.Position.X + player.Shape.Extent.X;
+            float playerMid = (playerRight + playerLeft) / 2.0f;
+            balls.Iterate(ball => {
+                float ballPos = ball.Shape.Position.X + (ball.Shape.Extent.X / 2.0f);
+                ball.Movement();
+                ball.CheckDeleteBall();
+                level.GetBlocks().Iterate(block => {
+                    var collideBlock = CollisionDetection.Aabb((
+                                                DynamicShape) ball.Shape, block.Shape);
+                    var collidePlayer = CollisionDetection.Aabb((
+                                                DynamicShape) ball.Shape, player.Shape);
+                    if (collideBlock.Collision) {
+                        block.Damage();
+                        ball.HitsBlockMove();
+                    } else if (collidePlayer.Collision) {
+                        if (playerLeft <= ballPos && ballPos < playerMid) {
+                            ball.GoLeft();
+                        } else if (playerMid <= ballPos && ballPos < playerRight) {
+                            ball.GoRight();
+                        }
+                    }
+                });
+            });
+        }
+
+        public void DetractLife() {
+            if (balls.CountEntities() == 0 && Lives > 1) {
+                Lives--;
+                balls.AddEntity(new Ball(new Vec2F(0.45f, 0.3f), ballsImage));
+            } else if (balls.CountEntities() == 0 && Lives == 1) {
+                Lives--;
+            }
+        }
+
+        public void SetStopWatch() {
+            var timeData = level.Layout.GetMetaOrganized();
+            int timeInSec = -1;
+            if (timeData.ContainsKey("Time")) {
+                Int32.TryParse(timeData["Time"], out int t);
+                timeInSec = t;
+            }
+
+            Console.WriteLine(StaticTimer.GetElapsedSeconds());
+
+            if (StaticTimer.GetElapsedSeconds() >= timeInSec) {
+                TimeOut = true;
+            }
+        }
+        
+        public bool IsGameOver () {
+            if (Lives == 0 || TimeOut) {
+                BreakoutBus.GetBus().RegisterEvent(new GameEvent {
+                    EventType = GameEventType.GameStateEvent,
+                    Message = "CHANGE_STATE",
+                    StringArg1 = "GAME_LOST",
+                }); 
+                MainMenu.GetInstance().ResetState();
+                GameRunning.GetInstance().NullInstance();
+                return true;
+            }
+            return false;
+        }
+
+        public bool SwitchLevelIfWon() {
+            string nextLevelFile = level.GetNextLevelFile();
+
+            if (File.Exists(nextLevelFile)) {
+                level.LoadLevel(nextLevelFile);
+                
+                player.ResetPosition();
+                balls.ClearContainer();
+                balls.AddEntity(new Ball(new Vec2F(0.45f, 0.3f), ballsImage));
+                return true;
+            }
+            return false;
+        }
+
+        public bool IsGameWon() {
+            if (level.GetBlocks().CountEntities() == 0) {
+                if (!SwitchLevelIfWon()) {
+                    BreakoutBus.GetBus().RegisterEvent(new GameEvent {
+                        EventType = GameEventType.GameStateEvent,
+                        Message = "CHANGE_STATE",
+                        StringArg1 = "GAME_WON",
+                    });
+                    MainMenu.GetInstance().ResetState();
+                    GameRunning.GetInstance().NullInstance();
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public void RenderState() {
             backGroundImage.RenderEntity();
             player.Render();
-            blocks.GetBlocks().RenderEntities();
+            level.GetBlocks().RenderEntities();
+            balls.RenderEntities();
         }
 
         public void ResetState() {
-
+            StaticTimer.RestartTimer();
         }
 
         public void UpdateState() {
             BreakoutBus.GetBus().ProcessEventsSequentially();
             player.Move();
+            CheckCollisions();
+            blockObserver.CheckBlocks(level.GetBlocks());
+            IsGameOver();
+            IsGameWon();
+            DetractLife();
+            SetStopWatch();
         }
 
         public void NullInstance() {
             instance = null;
         }
-
     }
 }
