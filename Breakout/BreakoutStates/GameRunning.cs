@@ -13,6 +13,7 @@ namespace Breakout.BreakoutStates {
     public class GameRunning : IGameState {
         private static GameRunning? instance = null;
         private Entity backGroundImage;
+        private Entity livesImage;
         private Player player;
         private LevelSetUp level;
         private IBaseImage ballsImage;
@@ -67,6 +68,15 @@ namespace Breakout.BreakoutStates {
             blockObserver = new BlockObserver();
             lives = 3;
         }
+
+        public void LivesImageDisplay() {
+            for (int i = 0; i < Lives; i++) {
+                livesImage = new Entity(new StationaryShape(0.01f + i * 0.05f, 0.95f, 0.04f, 0.04f),
+                    new Image(Path.Combine("..", "Assets", "Images", "heart_filled.png")));
+                livesImage.RenderEntity();
+            } 
+        }
+
 
         public void HandleKeyEvent (KeyboardAction action, KeyboardKey key) {
             if (action == KeyboardAction.KeyPress) {
@@ -218,6 +228,7 @@ namespace Breakout.BreakoutStates {
             player.Render();
             level.GetBlocks().RenderEntities();
             balls.RenderEntities();
+            LivesImageDisplay();
         }
 
         public void ResetState() {
