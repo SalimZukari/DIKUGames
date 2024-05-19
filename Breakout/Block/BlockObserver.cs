@@ -20,6 +20,7 @@ public class BlockObserver {
         int length = blocks.CountEntities();
         EntityContainer<Unbreakable> unbreakables = new EntityContainer<Unbreakable>();
         EntityContainer<Hardened> hardeneds = new EntityContainer<Hardened>();
+        EntityContainer<PowerUpBlock> powerUps = new EntityContainer<PowerUpBlock>();
 
 
         foreach(Block block in blocks) {
@@ -27,6 +28,8 @@ public class BlockObserver {
                 hardeneds.AddEntity((Hardened)block);
             } else if (block is Unbreakable) {
                 unbreakables.AddEntity((Unbreakable)block);
+            } else if (block is PowerUpBlock) {
+                powerUps.AddEntity((PowerUpBlock)block);
             }
         }
 
