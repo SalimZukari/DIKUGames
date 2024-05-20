@@ -11,11 +11,18 @@ public class Player : IGameEventProcessor {
     private float moveRight = 0.0f;
     private float moveLeft = 0.0f;
     private float MOVEMENT_SPEED = 0.01f;
+    private int lives;
 
-    public Player(DynamicShape shape, IBaseImage image) {
+    public Player(DynamicShape shape, IBaseImage image, int Lives) {
         entity = new Entity(shape, image);
         this.shape = shape;
+        this.lives = Lives;
         BreakoutBus.GetBus().Subscribe(GameEventType.PlayerEvent, this);
+    }
+
+    public float MovementSpeed {
+        get { return MOVEMENT_SPEED; }
+        set { MOVEMENT_SPEED = value; }
     }
 
     public DynamicShape Shape {
@@ -29,6 +36,11 @@ public class Player : IGameEventProcessor {
 
     public float MoveLeft {
         get { return moveLeft; }
+    }
+
+    public int Lives {
+        get { return lives; }
+        set { lives = value; }
     }
 
     private void UpdateDirection() {

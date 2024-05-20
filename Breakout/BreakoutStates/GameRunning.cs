@@ -8,6 +8,8 @@ using DIKUArcade.Physics;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
 using DIKUArcade.Timers;
+using DIKUArcade.Utilities;
+using Breakout.PowerUps;
 using Breakout;
 
 namespace Breakout.BreakoutStates {
@@ -23,6 +25,7 @@ namespace Breakout.BreakoutStates {
         private int lives;
         private int livesLost;
         private bool timeOut = false;
+        private EntityContainer<PowerUp> powerUps;
 
         public bool TimeOut {
             get {return timeOut;}
@@ -34,10 +37,6 @@ namespace Breakout.BreakoutStates {
 
         public LevelSetUp LevelSetUp {
             get { return level; }
-        }
-        public int Lives {
-            get { return lives; }
-            private set {lives = value;}
         }
 
         public Player Player {
@@ -58,7 +57,7 @@ namespace Breakout.BreakoutStates {
                 new Image(Path.Combine("..", "Assets", "Images", "SpaceBackground.png")));
             player = new Player(
                 new DynamicShape(new Vec2F(0.45f, 0.1f), new Vec2F(0.2f, 0.04f)),
-                new Image(Path.Combine("..", "Assets", "Images", "player.png")));
+                new Image(Path.Combine("..", "Assets", "Images", "player.png")), 3);
             level = new LevelSetUp(levelFile);
 
             balls = new EntityContainer<Ball>();
@@ -68,7 +67,7 @@ namespace Breakout.BreakoutStates {
             BreakoutBus.GetBus().Subscribe(GameEventType.PlayerEvent, player);
 
             blockObserver = new BlockObserver();
-            lives = 3;
+            lives = player.Lives;
             livesImage = new EntityContainer<Lives>();
             for (int i = 0; i < lives; i++) {
                 var Life = new Lives(new Vec2F(0.01f + i * 0.05f, 0.95f), 
@@ -76,7 +75,26 @@ namespace Breakout.BreakoutStates {
                     new Image(Path.Combine("..", "Assets", "Images", "heart_empty.png")), i + 1);
                 livesImage.AddEntity(Life);
             }
+
+            powerUps = new EntityContainer<PowerUp>(); 
         }
+
+        public void SpawnPowerUp(PowerUp powerUp) {
+            powerUps.AddEntity(powerUp);
+        }
+
+        private void CheckPowerUpCollisions() {
+            powerUps.Iterate(powerUp => {
+                powerUp.Update();
+                if (CollisionDetection.Aabb(player.Shape, powerUp.Shape).Collision) {
+                    powerUp.Activate(player);
+                    powerUp.DeleteEntity();
+                } else if (powerUp.Shape.Position.Y < 0.0f) {
+                    powerUp.DeleteEntity();
+                }
+            });
+        }
+
 
         public Text TimeRender() {
             var timeData = level.Layout.GetMetaOrganized();
@@ -152,12 +170,14 @@ namespace Breakout.BreakoutStates {
                 ball.Movement();
                 ball.CheckDeleteBall();
                 level.GetBlocks().Iterate(block => {
-                    var collideBlock = CollisionDetection.Aabb((
-                                                DynamicShape) ball.Shape, block.Shape);
-                    var collidePlayer = CollisionDetection.Aabb((
-                                                DynamicShape) ball.Shape, player.Shape);
+                    var collideBlock = CollisionDetection.Aabb((DynamicShape)ball.Shape, block.Shape);
+                    var collidePlayer = CollisionDetection.Aabb((DynamicShape)ball.Shape, player.Shape);
                     if (collideBlock.Collision) {
-                        block.Damage();
+                        if (block is PowerUpBlock powerUpBlock) {
+                            powerUpBlock.Damage();
+                        } else {
+                            block.Damage();
+                        }
                         ball.HitsBlockMove();
                     } else if (collidePlayer.Collision) {
                         if (playerLeft <= ballPos && ballPos < playerMid) {
@@ -200,7 +220,7 @@ namespace Breakout.BreakoutStates {
         }
         
         public bool IsGameOver () {
-            if (Lives == 0 || TimeOut) {
+            if (lives == 0 || TimeOut) {
                 BreakoutBus.GetBus().RegisterEvent(new GameEvent {
                     EventType = GameEventType.GameStateEvent,
                     Message = "CHANGE_STATE",
@@ -250,7 +270,7 @@ namespace Breakout.BreakoutStates {
             balls.RenderEntities();
             TimeRender().RenderText();
             livesImage.RenderEntities();
-            
+            powerUps.RenderEntities();
         }
 
         public void ResetState() {
@@ -266,6 +286,8 @@ namespace Breakout.BreakoutStates {
             IsGameWon();
             DetractLife();
             SetStopWatch();
+            CheckPowerUpCollisions();
+            powerUps.Iterate(powerUp => powerUp.Update());
         }
 
         public void NullInstance() {

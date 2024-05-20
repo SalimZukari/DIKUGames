@@ -1,7 +1,7 @@
-namespace Breakout.IBlock {
-    public enum BlockType {
-        Unbreakable,
-        Normal,
-        Hardened
-    }
+namespace Breakout.IBlock;
+public enum BlockType {
+    Unbreakable,
+    Normal,
+    Hardened,
+    PowerUpBlock
 }

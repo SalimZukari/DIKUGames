@@ -15,8 +15,8 @@ public class Ball : Entity {
     }
 
     public Vec2F Direction {
-        get {return direction; }
-        private set {direction = value;}
+        get { return direction; }
+        set { direction = value; }
     }
 
     public Vec2F Position {
