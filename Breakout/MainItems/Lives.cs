@@ -29,9 +29,14 @@ namespace Breakout {
                 this.LifeNumber = lifeNumber;
         }
 
-        public void ChangeImage() {
+        public void MakeEmtpy() {
             this.Image = empty;
             isFull = false;
+        }
+
+        public void MakeFull() {
+            this.Image = Image;
+            isFull = true;
         }
     }
 }

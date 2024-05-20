@@ -1,0 +1,24 @@
+using DIKUArcade.Entities;
+using DIKUArcade.Graphics;
+using DIKUArcade.Math;
+using Breakout.BreakoutStates;
+using Breakout;
+
+namespace Breakout.PowerUps {
+    public class LoseLife : Effect {
+        public LoseLife(DynamicShape shape, IBaseImage image) 
+            : base(EffectType.PlayerSpeed, shape, image) {
+        }
+
+        public override void Activate(Player player) {
+            GameRunning.LivesImage.Iterate(life => {
+                    if (life.LifeNumber == player.Lives && life.IsFull) {
+                        life.MakeEmtpy();
+                        life.IsFull = false;
+                    }
+            });
+            player.Lives--;
+            Deactivate();
+        }
+    }
+}

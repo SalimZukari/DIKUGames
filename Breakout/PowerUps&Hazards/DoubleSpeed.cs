@@ -1,17 +1,21 @@
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
+using DIKUArcade.Timers;
 using DIKUArcade.Math;
 using Breakout.BreakoutStates;
 using Breakout;
 
 namespace Breakout.PowerUps {
-    public class DoubleSpeed : PowerUp {
+    public class DoubleSpeed : Effect {
         public DoubleSpeed(DynamicShape shape, IBaseImage image) 
-            : base(PowerUpType.DoubleSpeed, shape, image) {
+            : base(EffectType.DoubleSpeed, shape, image) {
         }
 
         public override void Activate(Ball ball) {
-            ball.Direction *= 2;
+            var currentTime = StaticTimer.GetElapsedSeconds();
+            while (StaticTimer.GetElapsedSeconds() <= currentTime + duration) {
+                ball.Direction *= 2;
+            }
             Deactivate(); 
         }
     }

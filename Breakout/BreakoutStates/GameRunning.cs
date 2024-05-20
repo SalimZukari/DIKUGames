@@ -16,19 +16,18 @@ namespace Breakout.BreakoutStates {
     public class GameRunning : IGameState {
         private static GameRunning? instance = null;
         private Entity backGroundImage;
-        private EntityContainer<Lives> livesImage;
+        private static EntityContainer<Lives> livesImage;
         private Player player;
         private LevelSetUp level;
         private IBaseImage ballsImage;
         private EntityContainer<Ball> balls;
         private BlockObserver blockObserver;
         private int lives;
-        private int livesLost;
         private bool timeOut = false;
         private IDictionary<string, string> timeData;
         private int timeInSec;
         private Text timeLeftText;
-        private static EntityContainer<PowerUp> powerUps;
+        private static EntityContainer<Effect> effects;
 
         public bool TimeOut {
             get {return timeOut;}
@@ -47,8 +46,11 @@ namespace Breakout.BreakoutStates {
         public Player Player {
             get { return player; }
         }
-        public static EntityContainer<PowerUp> PowerUps {
-            get { return powerUps; }
+        public static EntityContainer<Effect> Effects {
+            get { return effects; }
+        }
+        public static EntityContainer<Lives> LivesImage {
+            get {return livesImage;}
         }
 
         public static GameRunning GetInstance() {
@@ -94,22 +96,22 @@ namespace Breakout.BreakoutStates {
             TimeLeftText = new Text("", new Vec2F(0.8f, 0.65f), new Vec2F(0.35f, 0.35f));
             TimeLeftText.SetColor(System.Drawing.Color.White);
 
-            powerUps = new EntityContainer<PowerUp>(); 
-            powerUps.ClearContainer();
+            effects = new EntityContainer<Effect>(); 
+            effects.ClearContainer();
         }
 
-        public void SpawnPowerUp(PowerUp powerUp) {
-            powerUps.AddEntity(powerUp);
+        public void SpawnPowerUp(Effect powerUp) {
+            effects.AddEntity(powerUp);
         }
 
-        private void CheckPowerUpCollisions() {
-            powerUps.Iterate(powerUp => {
-                powerUp.Update();
-                if (CollisionDetection.Aabb((DynamicShape)powerUp.Shape, player.Shape).Collision) {
-                    powerUp.Activate(player);
-                    powerUp.DeleteEntity();
-                } else if (powerUp.Shape.Position.Y < 0.0f) {
-                    powerUp.DeleteEntity();
+        private void CheckEffectCollisions() {
+            effects.Iterate(effect => {
+                effect.Update();
+                if (CollisionDetection.Aabb((DynamicShape)effect.Shape, player.Shape).Collision) {
+                    effect.Activate(player);
+                    effect.DeleteEntity();
+                } else if (effect.Shape.Position.Y < 0.0f) {
+                    effect.DeleteEntity();
                 }
             });
         }
@@ -204,7 +206,7 @@ namespace Breakout.BreakoutStates {
             if (balls.CountEntities() == 0 && lives > 0) {
                 livesImage.Iterate(life => {
                     if (life.LifeNumber == lives && life.IsFull) {
-                        life.ChangeImage();
+                        life.MakeEmtpy();
                         life.IsFull = false;
                     }
                 });
@@ -279,7 +281,7 @@ namespace Breakout.BreakoutStates {
             balls.RenderEntities();
             TimeLeftText.RenderText();
             livesImage.RenderEntities();
-            powerUps.RenderEntities();
+            effects.RenderEntities();
         }
 
         public void ResetState() {
@@ -296,7 +298,7 @@ namespace Breakout.BreakoutStates {
             DetractLife();
             SetStopWatch();
             TimeRender();
-            CheckPowerUpCollisions();
+            CheckEffectCollisions();
         }
 
         public void NullInstance() {

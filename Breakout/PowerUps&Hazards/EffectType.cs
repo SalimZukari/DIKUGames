@@ -1,8 +1,10 @@
 namespace Breakout.PowerUps;
-public enum PowerUpType {
+public enum EffectType {
     ExtraLife,
     PlayerSpeed,
     DoubleSpeed,
     Wide,
-    DoubleSize
+    DoubleSize,
+    LoseLife,
+    Slowness
 }

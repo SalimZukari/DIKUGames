@@ -2,19 +2,23 @@ using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
 using DIKUArcade.Math;
 using Breakout.BreakoutStates;
+using DIKUArcade.Timers;
 using Breakout;
 
 namespace Breakout.PowerUps {
-    public class PlayerSpeed : PowerUp {
+    public class PlayerSpeed : Effect {
         private float originalSpeed;
 
         public PlayerSpeed(DynamicShape shape, IBaseImage image) 
-            : base(PowerUpType.PlayerSpeed, shape, image) {
+            : base(EffectType.PlayerSpeed, shape, image) {
         }
 
         public override void Activate(Player player) {
             originalSpeed = player.MovementSpeed;
-            player.MovementSpeed *= 2;
+            var currentTime = StaticTimer.GetElapsedSeconds();
+            while (StaticTimer.GetElapsedSeconds() <= currentTime + duration) {
+                player.MovementSpeed *= 2;
+            }
             Deactivate();
         }
     }

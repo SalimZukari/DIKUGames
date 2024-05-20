@@ -55,7 +55,7 @@ namespace Breakout.BreakoutStates {
                     SwitchState(StateTransformer.TransformStringToState(gameEvent.StringArg1));
                 } else if (gameEvent.Message == "SPAWN_POWERUP") {
                     if (ActiveState is GameRunning gameRunning) {
-                        var powerUp = gameEvent.ObjectArg1 as PowerUp;
+                        var powerUp = gameEvent.ObjectArg1 as Effect;
                         if (powerUp != null) {
                             gameRunning.SpawnPowerUp(powerUp);
                         }

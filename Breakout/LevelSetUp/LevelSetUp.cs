@@ -39,7 +39,7 @@ namespace Breakout {
                             colorEntry.Replace(".png", "") + "-damaged.png"
                         );
                         firstContainer.AddEntity(new Block(
-                            new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.05f)),
+                            new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)),
                             new Image(Path.Combine("..", "Assets", "Images", colorEntry)),
                             new Image(damagedImagePath),
                             StringToBlockType(coolBlockKey[colorEntry])
@@ -57,11 +57,19 @@ namespace Breakout {
                 }
             }
 
+            int i = 0;
             foreach (Block block in firstContainer) {
+                i++;
                 if (block.GetType() != BlockType.Normal) {
                     block.DeleteEntity();
-                } else if (block.GetType() == BlockType.Normal) {
-                    blocks.AddEntity(block);
+                } else if (block.GetType() == BlockType.Normal 
+                    && i == 10) {
+                        block.SwitchType(BlockType.Hazard);
+                        block.DeleteEntity();
+                        i = 0;
+                } else if (block.GetType() == BlockType.Normal
+                    && i != 10) {
+                        blocks.AddEntity(block);
                 }
             }
 
@@ -121,28 +129,35 @@ namespace Breakout {
             switch (type) {
                 case BlockType.Unbreakable:
                     return new Unbreakable(
-                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.06f)),
+                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)),
                         image,
                         damagedImage,
                         type
                     );
                 case BlockType.Hardened:
                     return new Hardened(
-                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.06f)),
+                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)),
                         image,
                         damagedImage,
                         type
                     );
                 case BlockType.PowerUp:
                     return new PowerUpBlock(
-                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.06f)),
+                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)),
+                        image,
+                        damagedImage,
+                        type
+                    );
+                case BlockType.Hazard:
+                    return new HazardBlock(
+                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)),
                         image,
                         damagedImage,
                         type
                     );
                 default:
                     return new Block(
-                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.06f)),
+                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)),
                         image,
                         damagedImage,
                         type

@@ -45,6 +45,10 @@ public class Block : Entity, IBlock {
         return type;
     }
 
+    public virtual void SwitchType(BlockType newType) {
+        type = newType;
+    }
+
     public virtual Vec2F GetPosition() {
         return startPos;
     }
