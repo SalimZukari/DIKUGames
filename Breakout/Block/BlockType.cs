@@ -3,5 +3,6 @@ public enum BlockType {
     Unbreakable,
     Normal,
     Hardened,
-    PowerUp
+    PowerUp,
+    Hazard
 }
