@@ -25,6 +25,9 @@ namespace Breakout.BreakoutStates {
         private int lives;
         private int livesLost;
         private bool timeOut = false;
+        private IDictionary<string, string> timeData;
+        private int timeInSec;
+        private Text timeLeftText;
         private EntityContainer<PowerUp> powerUps;
 
         public bool TimeOut {
@@ -34,11 +37,13 @@ namespace Breakout.BreakoutStates {
         public EntityContainer<Ball> Ball {
             get { return balls; }
         }
-
+        public Text TimeLeftText {
+            get {return timeLeftText;}
+            private set {timeLeftText = value;}
+        }
         public LevelSetUp LevelSetUp {
             get { return level; }
         }
-
         public Player Player {
             get { return player; }
         }
@@ -76,6 +81,16 @@ namespace Breakout.BreakoutStates {
                 livesImage.AddEntity(Life);
             }
 
+            timeData = level.Layout.GetMetaOrganized();
+            timeInSec = -1;
+            if (timeData.ContainsKey("Time")) {
+                Int32.TryParse(timeData["Time"], out int t);
+                timeInSec = t;
+            }          
+
+            TimeLeftText = new Text("", new Vec2F(0.8f, 0.65f), new Vec2F(0.35f, 0.35f));
+            TimeLeftText.SetColor(System.Drawing.Color.White);
+
             powerUps = new EntityContainer<PowerUp>(); 
         }
 
@@ -95,19 +110,10 @@ namespace Breakout.BreakoutStates {
             });
         }
 
-
-        public Text TimeRender() {
-            var timeData = level.Layout.GetMetaOrganized();
-            int timeInSec = -1;
-            if (timeData.ContainsKey("Time")) {
-                Int32.TryParse(timeData["Time"], out int t);
-                timeInSec = t;
-            }
-            var timeLeft = (int)(timeInSec - StaticTimer.GetElapsedSeconds());
-            var timeLeftString = timeLeft.ToString();
-            var timeLeftText = new Text(timeLeftString, new Vec2F(0.8f, 0.65f), new Vec2F(0.35f, 0.35f));
-            timeLeftText.SetColor(System.Drawing.Color.White);
-            return timeLeftText;
+        public void TimeRender() {
+            int timeLeft = (int)(timeInSec - StaticTimer.GetElapsedSeconds());
+            string timeLeftString = timeLeft.ToString();
+            TimeLeftText.SetText(timeLeftString);
         }
 
 
@@ -206,7 +212,6 @@ namespace Breakout.BreakoutStates {
         }
 
         public void SetStopWatch() {
-            var timeData = level.Layout.GetMetaOrganized();
             int timeInSec = -1;
             if (timeData.ContainsKey("Time")) {
                 Int32.TryParse(timeData["Time"], out int t);
@@ -268,7 +273,7 @@ namespace Breakout.BreakoutStates {
             player.Render();
             level.GetBlocks().RenderEntities();
             balls.RenderEntities();
-            TimeRender().RenderText();
+            TimeLeftText.RenderText();
             livesImage.RenderEntities();
             powerUps.RenderEntities();
         }
@@ -286,6 +291,7 @@ namespace Breakout.BreakoutStates {
             IsGameWon();
             DetractLife();
             SetStopWatch();
+            TimeRender();
             CheckPowerUpCollisions();
             powerUps.Iterate(powerUp => powerUp.Update());
         }
