@@ -6,8 +6,8 @@ using Breakout;
 
 namespace Breakout.PowerUps {
     public class DoubleSize : PowerUp {
-        public DoubleSize(DynamicShape shape, IBaseImage image, float duration) 
-            : base(PowerUpType.DoubleSize, shape, image, duration) {
+        public DoubleSize(DynamicShape shape, IBaseImage image) 
+            : base(PowerUpType.DoubleSize, shape, image) {
         }
 
         public override void Activate(Ball ball) {

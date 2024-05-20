@@ -8,8 +8,8 @@ namespace Breakout.PowerUps {
     public class PlayerSpeed : PowerUp {
         private float originalSpeed;
 
-        public PlayerSpeed(DynamicShape shape, IBaseImage image, float duration) 
-            : base(PowerUpType.PlayerSpeed, shape, image, duration) {
+        public PlayerSpeed(DynamicShape shape, IBaseImage image) 
+            : base(PowerUpType.PlayerSpeed, shape, image) {
         }
 
         public override void Activate(Player player) {

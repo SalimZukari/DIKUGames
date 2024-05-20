@@ -6,8 +6,8 @@ using Breakout;
 
 namespace Breakout.PowerUps {
     public class Wide : PowerUp {
-        public Wide(DynamicShape shape, IBaseImage image, float duration) 
-            : base(PowerUpType.Wide, shape, image, duration) {
+        public Wide(DynamicShape shape, IBaseImage image) 
+            : base(PowerUpType.Wide, shape, image) {
         }
 
         public override void Activate(Player player) {

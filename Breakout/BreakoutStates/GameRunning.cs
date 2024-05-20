@@ -28,7 +28,7 @@ namespace Breakout.BreakoutStates {
         private IDictionary<string, string> timeData;
         private int timeInSec;
         private Text timeLeftText;
-        private EntityContainer<PowerUp> powerUps;
+        private static EntityContainer<PowerUp> powerUps;
 
         public bool TimeOut {
             get {return timeOut;}
@@ -46,6 +46,9 @@ namespace Breakout.BreakoutStates {
         }
         public Player Player {
             get { return player; }
+        }
+        public static EntityContainer<PowerUp> PowerUps {
+            get { return powerUps; }
         }
 
         public static GameRunning GetInstance() {
@@ -92,6 +95,7 @@ namespace Breakout.BreakoutStates {
             TimeLeftText.SetColor(System.Drawing.Color.White);
 
             powerUps = new EntityContainer<PowerUp>(); 
+            powerUps.ClearContainer();
         }
 
         public void SpawnPowerUp(PowerUp powerUp) {
@@ -101,7 +105,7 @@ namespace Breakout.BreakoutStates {
         private void CheckPowerUpCollisions() {
             powerUps.Iterate(powerUp => {
                 powerUp.Update();
-                if (CollisionDetection.Aabb(player.Shape, powerUp.Shape).Collision) {
+                if (CollisionDetection.Aabb((DynamicShape)powerUp.Shape, player.Shape).Collision) {
                     powerUp.Activate(player);
                     powerUp.DeleteEntity();
                 } else if (powerUp.Shape.Position.Y < 0.0f) {
@@ -293,7 +297,6 @@ namespace Breakout.BreakoutStates {
             SetStopWatch();
             TimeRender();
             CheckPowerUpCollisions();
-            powerUps.Iterate(powerUp => powerUp.Update());
         }
 
         public void NullInstance() {

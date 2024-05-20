@@ -109,6 +109,8 @@ namespace Breakout {
                         return BlockType.Unbreakable;
                     case BlockType.Hardened:
                         return BlockType.Hardened;
+                    case BlockType.PowerUp:
+                        return BlockType.PowerUp;
                 }
             }
 
@@ -126,6 +128,13 @@ namespace Breakout {
                     );
                 case BlockType.Hardened:
                     return new Hardened(
+                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.06f)),
+                        image,
+                        damagedImage,
+                        type
+                    );
+                case BlockType.PowerUp:
+                    return new PowerUpBlock(
                         new DynamicShape(new Vec2F(x, y), new Vec2F(0.09f, 0.06f)),
                         image,
                         damagedImage,

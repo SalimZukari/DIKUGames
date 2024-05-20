@@ -6,8 +6,8 @@ using Breakout;
 
 namespace Breakout.PowerUps {
     public class ExtraLife : PowerUp {
-        public ExtraLife(DynamicShape shape, IBaseImage image, float duration) 
-            : base(PowerUpType.ExtraLife, shape, image, duration) {
+        public ExtraLife(DynamicShape shape, IBaseImage image) 
+            : base(PowerUpType.ExtraLife, shape, image) {
         }
 
         public override void Activate(Player player) {

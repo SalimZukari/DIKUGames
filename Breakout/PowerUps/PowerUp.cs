@@ -9,10 +9,9 @@ namespace Breakout.PowerUps {
         public bool IsActive { get; private set; }
         private static readonly float speed = 0.01f; 
 
-        public PowerUp(PowerUpType type, DynamicShape shape, IBaseImage image, float duration)
+        public PowerUp(PowerUpType type, DynamicShape shape, IBaseImage image)
             : base(shape, image) {
             this.Type = type;
-            this.duration = duration;
             IsActive = true;
         }
 
@@ -31,9 +30,8 @@ namespace Breakout.PowerUps {
 
         public void Update() {
             if (IsActive) {
-                duration -= 1.0f;
                 Shape.MoveY(-speed); 
-                if (duration <= 0 || Shape.Position.Y < 0.0f) {
+                if (Shape.Position.Y < 0.0f) {
                     Deactivate();
                 }
             }
