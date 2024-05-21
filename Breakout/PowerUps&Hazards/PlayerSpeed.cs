@@ -7,18 +7,19 @@ using Breakout;
 
 namespace Breakout.PowerUps {
     public class PlayerSpeed : Effect {
-        private float originalSpeed;
 
         public PlayerSpeed(DynamicShape shape, IBaseImage image) 
             : base(EffectType.PlayerSpeed, shape, image) {
+                HasDuration = true;
         }
 
         public override void ActivatePlayer(Player player) {
-            originalSpeed = player.MovementSpeed;
             var currentTime = StaticTimer.GetElapsedSeconds();
-            player.MovementSpeed = 0.02f;
-            player.MovementSpeed = 0.01f;
-            Deactivate();
+            player.MovementSpeed *= 2;
+        }
+
+        public override void Deactivate(Player player) {
+            player.MovementSpeed /= 2;
         }
     }
 }

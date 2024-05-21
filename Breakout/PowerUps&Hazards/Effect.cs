@@ -5,16 +5,18 @@ using DIKUArcade.Timers;
 
 namespace Breakout.PowerUps {
     public class Effect : Entity {
-        public EffectType Type { get; private set; }
         protected int duration; 
-        public bool IsActive { get; private set; }
         private static readonly float speed = 0.01f; 
+        public bool HasDuration { get; protected set; }
+        public EffectType Type { get; private set; }
+        public bool IsActive { get; private set; }
 
         public Effect(EffectType type, DynamicShape shape, IBaseImage image)
             : base(shape, image) {
             this.Type = type;
             IsActive = true;
             this.duration = 5;
+            HasDuration = false;
         }
 
         public virtual void ActivatePlayer(Player player) {
@@ -25,7 +27,7 @@ namespace Breakout.PowerUps {
             IsActive = true;
         }
 
-        public void Deactivate() {
+        public virtual void Deactivate(Player player) {
             DeleteEntity();
             IsActive = false;
         }
@@ -34,7 +36,6 @@ namespace Breakout.PowerUps {
             if (IsActive) {
                 Shape.MoveY(-speed); 
                 if (Shape.Position.Y < 0.0f) {
-                    Deactivate();
                 }
             }
         }

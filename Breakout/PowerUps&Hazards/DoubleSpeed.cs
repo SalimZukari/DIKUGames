@@ -14,7 +14,6 @@ namespace Breakout.PowerUps {
         public override void ActivateBall(Ball ball) {
             var currentTime = StaticTimer.GetElapsedSeconds();
             ball.Direction *= 2;
-            Deactivate(); 
         }
     }
 }

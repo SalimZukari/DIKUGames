@@ -197,7 +197,7 @@ namespace Breakout.BreakoutStates {
                     && effect.Shape.Position.X < player.Shape.Position.X + player.Shape.Extent.X
                     && player.Shape.Position.Y < effect.Shape.Position.Y 
                     && effect.Shape.Position.Y < player.Shape.Position.Y + player.Shape.Extent.Y) {
-                        ApplyActivate(effect, player);
+                        ApplyEffect(effect);
                         effect.DeleteEntity();
                 } else if (effect.Shape.Position.Y < 0.0f) {
                     effect.DeleteEntity();
@@ -206,9 +206,26 @@ namespace Breakout.BreakoutStates {
         }
 
         public static void ApplyActivate(Effect effect, Player player) {
-            MethodInfo method = effect.GetType().GetMethod("ActivatePlayer");
+            MethodInfo? method = effect.GetType().GetMethod("ActivatePlayer");
             if (method != null) {
                 method.Invoke(effect, new object[] { player });
+            }
+        }
+
+        public void ApplyEffect(Effect effect) {
+            PropertyInfo? property = effect.GetType().GetProperty("HasDuration");
+            if (property != null && (bool)property.GetValue(effect)) {
+                var currentTime = StaticTimer.GetElapsedSeconds();
+                if (StaticTimer.GetElapsedSeconds() <= currentTime + 5) {
+                    ApplyActivate(effect, player);
+                } else {
+                    MethodInfo? method = effect.GetType().GetMethod("Deactivate");
+                    if (method != null) {
+                        method.Invoke(effect, new object[] { player });
+                    }
+                }
+            } else {
+                ApplyActivate(effect, player);
             }
         }
 

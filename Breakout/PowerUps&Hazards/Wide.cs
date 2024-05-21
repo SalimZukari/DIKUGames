@@ -16,7 +16,6 @@ namespace Breakout.PowerUps {
             while (StaticTimer.GetElapsedSeconds() <= currentTime + duration) {
                 player.Shape.Extent.X *= 2;
             }
-            Deactivate(); 
         }
     }
 }

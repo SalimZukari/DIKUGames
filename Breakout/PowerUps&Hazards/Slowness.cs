@@ -7,16 +7,17 @@ using Breakout;
 
 namespace Breakout.PowerUps {
     public class Slowness : Effect {
-        private float originalSpeed;
         public Slowness(DynamicShape shape, IBaseImage image) 
             : base(EffectType.ExtraLife, shape, image) {
+                HasDuration = true;
         }
 
         public override void ActivatePlayer(Player player) {
-            originalSpeed = player.MovementSpeed;
-            var currentTime = StaticTimer.GetElapsedSeconds();
-            player.MovementSpeed = 0.005f;
-            Deactivate();
+            player.MovementSpeed /= 2;
+        }
+
+        public override void Deactivate(Player player) {
+            player.MovementSpeed *= 2;
         }
     }
 }
