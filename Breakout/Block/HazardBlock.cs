@@ -36,7 +36,7 @@ namespace Breakout.IBlock {
             int index = random.Next(hazardImages.Length);
             string imagePath = hazardImages[index];
             Image hazardImage = new Image(imagePath);
-            EffectType type = (EffectType)(index + 1); 
+            EffectType type = (EffectType)(index + 4); 
             Effect hazard = new Effect(type, new DynamicShape(Shape.Position, Shape.Extent), hazardImage);
             GameRunning.Effects.AddEntity(hazard);
         }

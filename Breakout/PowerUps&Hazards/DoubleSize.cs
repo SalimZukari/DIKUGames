@@ -11,7 +11,7 @@ namespace Breakout.PowerUps {
             : base(EffectType.DoubleSize, shape, image) {
         }
 
-        public override void Activate(Ball ball) {
+        public override void ActivateBall(Ball ball) {
             var currentTime = StaticTimer.GetElapsedSeconds();
             while (StaticTimer.GetElapsedSeconds() <= currentTime + duration) {
                 ball.Shape.Extent *= 2;

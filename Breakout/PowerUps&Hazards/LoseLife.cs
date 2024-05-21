@@ -10,7 +10,7 @@ namespace Breakout.PowerUps {
             : base(EffectType.PlayerSpeed, shape, image) {
         }
 
-        public override void Activate(Player player) {
+        public override void ActivatePlayer(Player player) {
             GameRunning.LivesImage.Iterate(life => {
                     if (life.LifeNumber == player.Lives && life.IsFull) {
                         life.MakeEmtpy();

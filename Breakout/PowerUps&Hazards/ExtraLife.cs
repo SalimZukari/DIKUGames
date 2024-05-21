@@ -10,7 +10,8 @@ namespace Breakout.PowerUps {
             : base(EffectType.ExtraLife, shape, image) {
         }
 
-        public override void Activate(Player player) {
+        public override void ActivatePlayer(Player player) {
+            Console.WriteLine("This is happen");
             GameRunning.LivesImage.Iterate(life => {
                     if (life.LifeNumber == player.Lives && !life.IsFull) {
                         life.MakeFull();

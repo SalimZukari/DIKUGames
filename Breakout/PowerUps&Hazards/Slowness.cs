@@ -12,7 +12,7 @@ namespace Breakout.PowerUps {
             : base(EffectType.ExtraLife, shape, image) {
         }
 
-        public override void Activate(Player player) {
+        public override void ActivatePlayer(Player player) {
             originalSpeed = player.MovementSpeed;
             var currentTime = StaticTimer.GetElapsedSeconds();
             while (StaticTimer.GetElapsedSeconds() <= currentTime + duration) {

@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using Breakout.IBlock;
 using DIKUArcade.Math;
 using DIKUArcade.Input;
@@ -104,18 +105,6 @@ namespace Breakout.BreakoutStates {
             effects.AddEntity(powerUp);
         }
 
-        private void CheckEffectCollisions() {
-            effects.Iterate(effect => {
-                effect.Update();
-                if (CollisionDetection.Aabb((DynamicShape)effect.Shape, player.Shape).Collision) {
-                    effect.Activate(player);
-                    effect.DeleteEntity();
-                } else if (effect.Shape.Position.Y < 0.0f) {
-                    effect.DeleteEntity();
-                }
-            });
-        }
-
         public void TimeRender() {
             int timeLeft = (int)(timeInSec - StaticTimer.GetElapsedSeconds());
             string timeLeftString = timeLeft.ToString();
@@ -200,6 +189,29 @@ namespace Breakout.BreakoutStates {
                     }
                 });
             });
+        }
+
+        private void CheckEffectCollisions() {
+            effects.Iterate(effect => {
+                effect.Update();
+                /*if (CollisionDetection.Aabb((DynamicShape)effect.Shape, player.Shape).Collision) {*/
+                if (player.Shape.Position.X < effect.Shape.Position.X 
+                    && effect.Shape.Position.X < player.Shape.Position.X + player.Shape.Extent.X
+                    && player.Shape.Position.Y < effect.Shape.Position.Y 
+                    && effect.Shape.Position.Y < player.Shape.Position.Y + player.Shape.Extent.Y) {
+                        ApplyActivate(effect, player);
+                        effect.DeleteEntity();
+                } else if (effect.Shape.Position.Y < 0.0f) {
+                    effect.DeleteEntity();
+                }
+            });
+        }
+
+        public static void ApplyActivate(Effect effect, Player player) {
+            MethodInfo method = effect.GetType().GetMethod("ActivatePlayer");
+            if (method != null) {
+                method.Invoke(effect, new object[] { player });
+            }
         }
 
         public void DetractLife() {

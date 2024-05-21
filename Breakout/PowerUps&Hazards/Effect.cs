@@ -17,11 +17,11 @@ namespace Breakout.PowerUps {
             this.duration = 5;
         }
 
-        public virtual void Activate(Player player) {
+        public virtual void ActivatePlayer(Player player) {
             IsActive = true;
         }
 
-        public virtual void Activate(Ball ball) {
+        public virtual void ActivateBall(Ball ball) {
             IsActive = true;
         }
 

@@ -36,10 +36,11 @@ namespace Breakout.IBlock {
         }
 
         public void SpawnPowerUp() {
-            int index = random.Next(powerUpImages.Length);
+            int index = random.Next(powerUpImages.Length-2);
             string imagePath = powerUpImages[index];
             Image powerUpImage = new Image(imagePath);
-            EffectType type = (EffectType)(index + 1); 
+            Console.WriteLine("{0}", (EffectType)(index));
+            EffectType type = (EffectType)(index+1); 
             Effect powerUp = new Effect(type, new DynamicShape(Shape.Position, Shape.Extent), powerUpImage);
             GameRunning.Effects.AddEntity(powerUp);
             BreakoutBus.GetBus().RegisterEvent(new GameEvent {

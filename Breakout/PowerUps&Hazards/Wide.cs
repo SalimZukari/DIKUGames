@@ -11,7 +11,7 @@ namespace Breakout.PowerUps {
             : base(EffectType.Wide, shape, image) {
         }
 
-        public override void Activate(Player player) {
+        public override void ActivatePlayer(Player player) {
             var currentTime = StaticTimer.GetElapsedSeconds();
             while (StaticTimer.GetElapsedSeconds() <= currentTime + duration) {
                 player.Shape.Extent.X *= 2;
