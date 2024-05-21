@@ -15,9 +15,9 @@ namespace Breakout.PowerUps {
                     if (life.LifeNumber == player.Lives && life.IsFull) {
                         life.MakeEmtpy();
                         life.IsFull = false;
+                        player.Lives--;
                     }
             });
-            player.Lives--;
             Deactivate();
         }
     }

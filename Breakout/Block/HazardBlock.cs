@@ -36,9 +36,21 @@ namespace Breakout.IBlock {
             int index = random.Next(hazardImages.Length);
             string imagePath = hazardImages[index];
             Image hazardImage = new Image(imagePath);
-            EffectType type = (EffectType)(index + 4); 
-            Effect hazard = new Effect(type, new DynamicShape(Shape.Position, Shape.Extent), hazardImage);
+            EffectType type = (EffectType)(index + 5);
+            Console.WriteLine("{0}", type);
+            Effect hazard = HazardTypeToObject(type, hazardImage);
             GameRunning.Effects.AddEntity(hazard);
+        }
+
+        public Effect HazardTypeToObject(EffectType type, Image image) {
+            switch (type) {
+                case EffectType.LoseLife:
+                    return new LoseLife(new DynamicShape(Shape.Position, Shape.Extent), image);
+                case EffectType.Slowness:
+                    return new Slowness(new DynamicShape(Shape.Position, Shape.Extent), image);
+                default:
+                    return new Effect(type, new DynamicShape(Shape.Position, Shape.Extent), image);
+            }
         }
     }
 }

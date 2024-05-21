@@ -23,7 +23,6 @@ namespace Breakout.BreakoutStates {
         private IBaseImage ballsImage;
         private EntityContainer<Ball> balls;
         private BlockObserver blockObserver;
-        private int lives;
         private bool timeOut = false;
         private IDictionary<string, string> timeData;
         private int timeInSec;
@@ -78,9 +77,8 @@ namespace Breakout.BreakoutStates {
             BreakoutBus.GetBus().Subscribe(GameEventType.PlayerEvent, player);
 
             blockObserver = new BlockObserver();
-            lives = player.Lives;
             livesImage = new EntityContainer<Lives>();
-            for (int i = 0; i < lives; i++) {
+            for (int i = 0; i < player.Lives; i++) {
                 var Life = new Lives(new Vec2F(0.01f + i * 0.05f, 0.95f), 
                     new Image(Path.Combine("..", "Assets", "Images", "heart_filled.png")), 
                     new Image(Path.Combine("..", "Assets", "Images", "heart_empty.png")), i + 1);
@@ -215,16 +213,20 @@ namespace Breakout.BreakoutStates {
         }
 
         public void DetractLife() {
-            if (balls.CountEntities() == 0 && lives > 0) {
+            if (balls.CountEntities() == 0 && player.Lives > 0) {
                 livesImage.Iterate(life => {
-                    if (life.LifeNumber == lives && life.IsFull) {
+                    if (life.LifeNumber == player.Lives && life.IsFull) {
                         life.MakeEmtpy();
                         life.IsFull = false;
                     }
                 });
-                lives--;
-                if (lives > 0) {
+                player.Lives--;
+                if (player.Lives > 0) {
                     balls.AddEntity(new Ball(new Vec2F(0.45f, 0.3f), ballsImage));
+                    foreach (Ball ball in balls) {
+                        ball.Direction.Y = -0.01f;
+                        ball.Direction.X = 0.0f;
+                    }
                 }
             }
         }
@@ -243,7 +245,7 @@ namespace Breakout.BreakoutStates {
         }
         
         public bool IsGameOver () {
-            if (lives == 0 || TimeOut) {
+            if (player.Lives == 0 || TimeOut) {
                 BreakoutBus.GetBus().RegisterEvent(new GameEvent {
                     EventType = GameEventType.GameStateEvent,
                     Message = "CHANGE_STATE",
@@ -265,6 +267,10 @@ namespace Breakout.BreakoutStates {
                 player.ResetPosition();
                 balls.ClearContainer();
                 balls.AddEntity(new Ball(new Vec2F(0.45f, 0.3f), ballsImage));
+                foreach (Ball ball in balls) {
+                        ball.Direction.Y = -0.01f;
+                        ball.Direction.X = 0.0f;
+                    }
                 return true;
             }
             return false;

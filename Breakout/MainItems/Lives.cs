@@ -9,22 +9,26 @@ namespace Breakout {
         private Vec2F position;
         private Vec2F extent;
         public bool isFull = true;
+        public bool isEmpty = false;
+        private Image empty;
+        private Image full;
+        public int LifeNumber { get; private set; }
         public bool IsFull {
             get { return isFull; }
             set { isFull = value; }
         }
-        private Image empty;
+        public bool IsEmpty {
+            get { return isEmpty; }
+            set { isEmpty = value; }
+        }
         public Image Empty {
             get {return empty; }
         }
-        public int LifeNumber { get; private set; }
-
-            
         public Lives (Vec2F position, Image full, Image empty, int lifeNumber) : 
             base(new StationaryShape(position, new Vec2F(0.04f, 0.04f)), full) {
                 this.position = position;
                 this.extent = new Vec2F(0.04f, 0.04f);
-                this.Image = full;
+                this.full = full;
                 this.empty = empty;
                 this.LifeNumber = lifeNumber;
         }
@@ -32,11 +36,13 @@ namespace Breakout {
         public void MakeEmtpy() {
             this.Image = empty;
             isFull = false;
+            isEmpty = true;
         }
 
         public void MakeFull() {
-            this.Image = Image;
+            this.Image = full;
             isFull = true;
+            isEmpty = false;
         }
     }
 }

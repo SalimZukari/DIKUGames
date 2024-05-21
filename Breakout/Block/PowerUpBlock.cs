@@ -39,15 +39,31 @@ namespace Breakout.IBlock {
             int index = random.Next(powerUpImages.Length-2);
             string imagePath = powerUpImages[index];
             Image powerUpImage = new Image(imagePath);
-            Console.WriteLine("{0}", (EffectType)(index));
-            EffectType type = (EffectType)(index+1); 
-            Effect powerUp = new Effect(type, new DynamicShape(Shape.Position, Shape.Extent), powerUpImage);
+            EffectType type = (EffectType)(index); 
+            Effect powerUp = PowerUpTypeToObject(type, powerUpImage);
             GameRunning.Effects.AddEntity(powerUp);
             BreakoutBus.GetBus().RegisterEvent(new GameEvent {
                 EventType = GameEventType.GameStateEvent,
                 Message = "SPAWN_POWERUP",
                 ObjectArg1 = powerUp
             });
+        }
+
+        public Effect PowerUpTypeToObject(EffectType type, Image image) {
+            switch (type) {
+                case EffectType.DoubleSpeed:
+                    return new DoubleSpeed(new DynamicShape(Shape.Position, Shape.Extent), image);
+                case EffectType.ExtraLife:
+                    return new ExtraLife(new DynamicShape(Shape.Position, Shape.Extent), image);
+                case EffectType.PlayerSpeed:
+                    return new PlayerSpeed(new DynamicShape(Shape.Position, Shape.Extent), image);
+                case EffectType.DoubleSize:
+                    return new DoubleSize(new DynamicShape(Shape.Position, Shape.Extent), image);
+                case EffectType.Wide:
+                    return new Wide(new DynamicShape(Shape.Position, Shape.Extent), image);
+                default:
+                    return new Effect(type, new DynamicShape(Shape.Position, Shape.Extent), image);
+            }
         }
     }
 }

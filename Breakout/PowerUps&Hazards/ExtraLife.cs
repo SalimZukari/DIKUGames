@@ -11,14 +11,15 @@ namespace Breakout.PowerUps {
         }
 
         public override void ActivatePlayer(Player player) {
-            Console.WriteLine("This is happen");
-            GameRunning.LivesImage.Iterate(life => {
-                    if (life.LifeNumber == player.Lives && !life.IsFull) {
+            if (player.Lives < 3) {
+                GameRunning.LivesImage.Iterate(life => {
+                    if (life.LifeNumber == (player.Lives + 1) && life.IsEmpty) {
                         life.MakeFull();
-                        life.IsFull = false;
+                        life.IsFull = true;
+                        player.Lives++;
                     }
-            });
-            player.Lives++;
+                });
+            }
             Deactivate();
         }
     }

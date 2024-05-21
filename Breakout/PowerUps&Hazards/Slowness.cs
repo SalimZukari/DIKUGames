@@ -15,9 +15,7 @@ namespace Breakout.PowerUps {
         public override void ActivatePlayer(Player player) {
             originalSpeed = player.MovementSpeed;
             var currentTime = StaticTimer.GetElapsedSeconds();
-            while (StaticTimer.GetElapsedSeconds() <= currentTime + duration) {
-                player.MovementSpeed /= 2;
-            }
+            player.MovementSpeed = 0.005f;
             Deactivate();
         }
     }

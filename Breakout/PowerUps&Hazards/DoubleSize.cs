@@ -13,9 +13,7 @@ namespace Breakout.PowerUps {
 
         public override void ActivateBall(Ball ball) {
             var currentTime = StaticTimer.GetElapsedSeconds();
-            while (StaticTimer.GetElapsedSeconds() <= currentTime + duration) {
-                ball.Shape.Extent *= 2;
-            }
+            ball.Shape.Extent *= 2;
             Deactivate(); 
         }
     }
