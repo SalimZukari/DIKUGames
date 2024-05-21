@@ -9,11 +9,12 @@ namespace Breakout.PowerUps {
     public class DoubleSpeed : Effect {
         public DoubleSpeed(DynamicShape shape, IBaseImage image) 
             : base(EffectType.DoubleSpeed, shape, image) {
+                HasDuration = true;
         }
 
         public override void ActivateBall(Ball ball) {
-            var currentTime = StaticTimer.GetElapsedSeconds();
-            ball.Direction *= 2;
+            ball.Direction.X *= 2;
+            ball.Direction.Y *= 2;
         }
     }
 }

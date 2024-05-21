@@ -9,13 +9,11 @@ namespace Breakout.PowerUps {
     public class Wide : Effect {
         public Wide(DynamicShape shape, IBaseImage image) 
             : base(EffectType.Wide, shape, image) {
+                HasDuration = true;
         }
 
         public override void ActivatePlayer(Player player) {
-            var currentTime = StaticTimer.GetElapsedSeconds();
-            while (StaticTimer.GetElapsedSeconds() <= currentTime + duration) {
-                player.Shape.Extent.X *= 2;
-            }
+            player.Shape.Extent.X *= 2;
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Breakout.IBlock {
         }
 
         public void SpawnPowerUp() {
-            int index = random.Next(powerUpImages.Length-2);
+            int index = random.Next(powerUpImages.Length);
             string imagePath = powerUpImages[index];
             Image powerUpImage = new Image(imagePath);
             EffectType type = (EffectType)(index); 

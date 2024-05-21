@@ -9,11 +9,12 @@ namespace Breakout.PowerUps {
     public class DoubleSize : Effect {
         public DoubleSize(DynamicShape shape, IBaseImage image) 
             : base(EffectType.DoubleSize, shape, image) {
+                HasDuration = true;
         }
 
         public override void ActivateBall(Ball ball) {
-            var currentTime = StaticTimer.GetElapsedSeconds();
-            ball.Shape.Extent *= 2;
+            ball.Shape.Extent.X *= 2;
+            ball.Shape.Extent.Y *= 2;
         }
     }
 }

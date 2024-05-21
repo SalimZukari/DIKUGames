@@ -27,6 +27,10 @@ public class Ball : Entity {
         direction.Y = newDirY;
     }
 
+    public void SetExtent() {
+        extent = new Vec2F(0.035f, 0.035f);
+    }
+
     public void EnsureOppositeXDir() {
         if (direction.X < 0.0f) {
                 direction.X = (float)rnd.Next(-100, 0) * 0.000075f;

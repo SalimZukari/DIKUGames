@@ -205,11 +205,18 @@ namespace Breakout.BreakoutStates {
             });
         }
 
-        public static void ApplyActivate(Effect effect, Player player) {
-            MethodInfo? method = effect.GetType().GetMethod("ActivatePlayer");
-            if (method != null) {
-                method.Invoke(effect, new object[] { player });
+        public static void ApplyActivate(Effect effect, Player player, EntityContainer<Ball> balls1) {
+            MethodInfo? methodPlayer = effect.GetType().GetMethod("ActivatePlayer");
+            MethodInfo? methodBall = effect.GetType().GetMethod("ActivateBall");
+            if (methodPlayer != null) {
+                methodPlayer.Invoke(effect, new object[] { player });
             }
+
+            balls1.Iterate(ball => {
+                if (methodBall != null) {
+                    methodBall.Invoke(effect, new object[] { ball });
+                }
+            });
         }
 
         public void ApplyEffect(Effect effect) {
@@ -217,7 +224,7 @@ namespace Breakout.BreakoutStates {
             if (property != null && (bool)property.GetValue(effect)) {
                 var currentTime = StaticTimer.GetElapsedSeconds();
                 if (StaticTimer.GetElapsedSeconds() <= currentTime + 5) {
-                    ApplyActivate(effect, player);
+                    ApplyActivate(effect, player, balls);
                 } else {
                     MethodInfo? method = effect.GetType().GetMethod("Deactivate");
                     if (method != null) {
@@ -225,7 +232,7 @@ namespace Breakout.BreakoutStates {
                     }
                 }
             } else {
-                ApplyActivate(effect, player);
+                ApplyActivate(effect, player, balls);
             }
         }
 
@@ -321,6 +328,9 @@ namespace Breakout.BreakoutStates {
 
         public void ResetState() {
             StaticTimer.RestartTimer();
+            balls.Iterate(ball => {
+                ball.SetExtent();
+            });
         }
 
         public void UpdateState() {
