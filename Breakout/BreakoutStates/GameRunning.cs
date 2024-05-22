@@ -227,12 +227,12 @@ namespace Breakout.BreakoutStates {
         }
 
         public void EffectTime(Player player, EntityContainer<Ball> balls1) {
+            var currentTime = StaticTimer.GetElapsedSeconds();
             foreach (Effect effect in collidedEffects) {
-                var currentTime = StaticTimer.GetElapsedSeconds();
-                PropertyInfo? property = effect.GetType().GetProperty("HasDuration");
-                if (StaticTimer.GetElapsedSeconds() > currentTime + 5) {
+                if (!effect.IsDeactivated && currentTime > effect.ActivationTime + 5) {
                     MethodInfo? methodPlayer = effect.GetType().GetMethod("DeactivatePlayer");
                     MethodInfo? methodBall = effect.GetType().GetMethod("DeactivateBall");
+
                     if (methodPlayer != null) {
                         methodPlayer.Invoke(effect, new object[] { player });
                     }
@@ -242,6 +242,8 @@ namespace Breakout.BreakoutStates {
                             methodBall.Invoke(effect, new object[] { ball });
                         }
                     });
+
+                    effect.IsDeactivated = true; // Set the flag to indicate deactivation
                     effect.DeleteEntity();
                 }
             }
