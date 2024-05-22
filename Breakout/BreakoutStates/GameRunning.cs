@@ -243,7 +243,7 @@ namespace Breakout.BreakoutStates {
                         }
                     });
 
-                    effect.IsDeactivated = true; // Set the flag to indicate deactivation
+                    effect.IsDeactivated = true; 
                     effect.DeleteEntity();
                 }
             }
