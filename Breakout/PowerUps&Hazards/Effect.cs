@@ -27,7 +27,12 @@ namespace Breakout.PowerUps {
             IsActive = true;
         }
 
-        public virtual void Deactivate(Player player) {
+        public virtual void DeactivatePlayer(Player player) {
+            DeleteEntity();
+            IsActive = false;
+        }
+
+        public virtual void DeactivateBall(Ball ball) {
             DeleteEntity();
             IsActive = false;
         }

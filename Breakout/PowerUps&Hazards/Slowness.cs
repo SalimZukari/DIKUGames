@@ -16,7 +16,7 @@ namespace Breakout.PowerUps {
             player.MovementSpeed /= 2;
         }
 
-        public override void Deactivate(Player player) {
+        public override void DeactivatePlayer(Player player) {
             player.MovementSpeed *= 2;
         }
     }

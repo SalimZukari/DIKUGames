@@ -15,6 +15,10 @@ namespace Breakout.PowerUps {
         public override void ActivatePlayer(Player player) {
             player.Shape.Extent.X *= 2;
         }
+
+        public override void DeactivatePlayer(Player player) {
+            player.Shape.Extent.X /= 2;
+        }
     }
 }
 

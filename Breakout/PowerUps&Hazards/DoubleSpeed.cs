@@ -16,6 +16,11 @@ namespace Breakout.PowerUps {
             ball.Direction.X *= 2;
             ball.Direction.Y *= 2;
         }
+
+        public override void DeactivateBall(Ball ball) {
+            ball.Direction.X /= 2;
+            ball.Direction.Y /= 2;
+        }
     }
 }
 

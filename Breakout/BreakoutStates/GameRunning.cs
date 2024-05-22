@@ -197,7 +197,7 @@ namespace Breakout.BreakoutStates {
                     && effect.Shape.Position.X < player.Shape.Position.X + player.Shape.Extent.X
                     && player.Shape.Position.Y < effect.Shape.Position.Y 
                     && effect.Shape.Position.Y < player.Shape.Position.Y + player.Shape.Extent.Y) {
-                        ApplyEffect(effect);
+                        ApplyActivate(effect, player, balls);
                         effect.DeleteEntity();
                 } else if (effect.Shape.Position.Y < 0.0f) {
                     effect.DeleteEntity();
@@ -219,20 +219,29 @@ namespace Breakout.BreakoutStates {
             });
         }
 
-        public void ApplyEffect(Effect effect) {
-            PropertyInfo? property = effect.GetType().GetProperty("HasDuration");
-            if (property != null && (bool)property.GetValue(effect)) {
-                var currentTime = StaticTimer.GetElapsedSeconds();
-                if (StaticTimer.GetElapsedSeconds() <= currentTime + 5) {
-                    ApplyActivate(effect, player, balls);
-                } else {
-                    MethodInfo? method = effect.GetType().GetMethod("Deactivate");
-                    if (method != null) {
-                        method.Invoke(effect, new object[] { player });
+        public void ApplyEffect(Effect effect, Player player, EntityContainer<Ball> balls1) {
+            
+        }
+
+        public void EffectTime(Player player, EntityContainer<Ball> balls1) {
+            foreach (Effect effect in Effects) {
+                if (effect.IsDeleted()) {
+                    PropertyInfo? property = effect.GetType().GetProperty("HasDuration");
+                    var currentTime = StaticTimer.GetElapsedSeconds();
+                    if (StaticTimer.GetElapsedSeconds() > currentTime + 5) {
+                        MethodInfo? methodPlayer = effect.GetType().GetMethod("DeactivatePlayer");
+                        MethodInfo? methodBall = effect.GetType().GetMethod("DeactivateBall");
+                        if (methodPlayer != null) {
+                            methodPlayer.Invoke(effect, new object[] { player });
+                        }
+
+                        balls1.Iterate(ball => {
+                            if (methodBall != null) {
+                                methodBall.Invoke(effect, new object[] { ball });
+                            }
+                        });
                     }
                 }
-            } else {
-                ApplyActivate(effect, player, balls);
             }
         }
 
@@ -344,6 +353,7 @@ namespace Breakout.BreakoutStates {
             SetStopWatch();
             TimeRender();
             CheckEffectCollisions();
+            EffectTime(player, balls);
         }
 
         public void NullInstance() {
