@@ -14,12 +14,15 @@ namespace Breakout.PowerUps {
         }
 
         public override void ActivatePlayer(Player player) {
-            var currentTime = StaticTimer.GetElapsedSeconds();
-            player.MovementSpeed *= 2;
+            if (player.MovementSpeed < 0.02f) {
+                player.MovementSpeed *= 2;
+                IsActive = true;
+            }
         }
 
         public override void DeactivatePlayer(Player player) {
             player.MovementSpeed /= 2;
+            IsActive = false;
         }
     }
 }

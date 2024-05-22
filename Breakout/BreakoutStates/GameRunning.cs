@@ -25,9 +25,10 @@ namespace Breakout.BreakoutStates {
         private BlockObserver blockObserver;
         private bool timeOut = false;
         private IDictionary<string, string> timeData;
-        private int timeInSec;
+        private static int timeInSec;
         private Text timeLeftText;
         private static EntityContainer<Effect> effects;
+        private static EntityContainer<Effect> collidedEffects;
 
         public bool TimeOut {
             get {return timeOut;}
@@ -97,6 +98,7 @@ namespace Breakout.BreakoutStates {
 
             effects = new EntityContainer<Effect>(); 
             effects.ClearContainer();
+            collidedEffects = new EntityContainer<Effect>();
         }
 
         public void SpawnPowerUp(Effect powerUp) {
@@ -198,6 +200,7 @@ namespace Breakout.BreakoutStates {
                     && player.Shape.Position.Y < effect.Shape.Position.Y 
                     && effect.Shape.Position.Y < player.Shape.Position.Y + player.Shape.Extent.Y) {
                         ApplyActivate(effect, player, balls);
+                        collidedEffects.AddEntity(effect);
                         effect.DeleteEntity();
                 } else if (effect.Shape.Position.Y < 0.0f) {
                     effect.DeleteEntity();
@@ -224,23 +227,22 @@ namespace Breakout.BreakoutStates {
         }
 
         public void EffectTime(Player player, EntityContainer<Ball> balls1) {
-            foreach (Effect effect in Effects) {
-                if (effect.IsDeleted()) {
-                    PropertyInfo? property = effect.GetType().GetProperty("HasDuration");
-                    var currentTime = StaticTimer.GetElapsedSeconds();
-                    if (StaticTimer.GetElapsedSeconds() > currentTime + 5) {
-                        MethodInfo? methodPlayer = effect.GetType().GetMethod("DeactivatePlayer");
-                        MethodInfo? methodBall = effect.GetType().GetMethod("DeactivateBall");
-                        if (methodPlayer != null) {
-                            methodPlayer.Invoke(effect, new object[] { player });
-                        }
-
-                        balls1.Iterate(ball => {
-                            if (methodBall != null) {
-                                methodBall.Invoke(effect, new object[] { ball });
-                            }
-                        });
+            foreach (Effect effect in collidedEffects) {
+                var currentTime = StaticTimer.GetElapsedSeconds();
+                PropertyInfo? property = effect.GetType().GetProperty("HasDuration");
+                if (StaticTimer.GetElapsedSeconds() > currentTime + 5) {
+                    MethodInfo? methodPlayer = effect.GetType().GetMethod("DeactivatePlayer");
+                    MethodInfo? methodBall = effect.GetType().GetMethod("DeactivateBall");
+                    if (methodPlayer != null) {
+                        methodPlayer.Invoke(effect, new object[] { player });
                     }
+
+                    balls1.Iterate(ball => {
+                        if (methodBall != null) {
+                            methodBall.Invoke(effect, new object[] { ball });
+                        }
+                    });
+                    effect.DeleteEntity();
                 }
             }
         }
@@ -265,7 +267,6 @@ namespace Breakout.BreakoutStates {
         }
 
         public void SetStopWatch() {
-            int timeInSec = -1;
             if (timeData.ContainsKey("Time")) {
                 Int32.TryParse(timeData["Time"], out int t);
                 timeInSec = t;
@@ -275,6 +276,10 @@ namespace Breakout.BreakoutStates {
             if (StaticTimer.GetElapsedSeconds() >= timeInSec) {
                 TimeOut = true;
             }
+        }
+
+        public static void AddTime() {
+            timeInSec += 5;
         }
         
         public bool IsGameOver () {

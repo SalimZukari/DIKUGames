@@ -51,8 +51,8 @@ namespace Breakout.IBlock {
 
         public Effect PowerUpTypeToObject(EffectType type, Image image) {
             switch (type) {
-                case EffectType.DoubleSpeed:
-                    return new DoubleSpeed(new DynamicShape(Shape.Position, Shape.Extent), image);
+                case EffectType.MoreTime:
+                    return new MoreTime(new DynamicShape(Shape.Position, Shape.Extent), image);
                 case EffectType.ExtraLife:
                     return new ExtraLife(new DynamicShape(Shape.Position, Shape.Extent), image);
                 case EffectType.PlayerSpeed:

@@ -9,7 +9,7 @@ namespace Breakout.PowerUps {
         private static readonly float speed = 0.01f; 
         public bool HasDuration { get; protected set; }
         public EffectType Type { get; private set; }
-        public bool IsActive { get; private set; }
+        public bool IsActive { get; protected set; }
 
         public Effect(EffectType type, DynamicShape shape, IBaseImage image)
             : base(shape, image) {
