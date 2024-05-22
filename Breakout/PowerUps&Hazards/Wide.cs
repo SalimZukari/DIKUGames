@@ -20,8 +20,10 @@ namespace Breakout.PowerUps {
         }
 
         public override void DeactivatePlayer(Player player) {
-            player.Shape.Extent.X /= 2;
-            IsActive = false;
+            if (player.Shape.Extent.X > 0.2f) {
+                player.Shape.Extent.X /= 2;
+                IsActive = false;
+            }
         }
     }
 }

@@ -21,9 +21,11 @@ namespace Breakout.PowerUps {
         }
 
         public override void DeactivateBall(Ball ball) {
-            ball.Shape.Extent.X /= 2;
-            ball.Shape.Extent.Y /= 2;
-            IsActive = false;
+            if (ball.Shape.Extent.X > 0.035f && ball.Shape.Extent.Y > 0.035f) {
+                ball.Shape.Extent.X /= 2;
+                ball.Shape.Extent.Y /= 2;
+                IsActive = false;
+            }
         }
     }
 }
