@@ -29,6 +29,8 @@ namespace Breakout.BreakoutStates {
         private Text? timeLeftText;
         private static EntityContainer<Effect>? effects;
         private static EntityContainer<Effect>? collidedEffects;
+        private int timeLeft;
+        private string? timeLeftString;
 
         public bool TimeOut {
             get {return timeOut;}
@@ -117,9 +119,11 @@ namespace Breakout.BreakoutStates {
 
         public void TimeRender() {
             if (TimeLeftText != null) {
-                int timeLeft = (int)(timeInSec - StaticTimer.GetElapsedSeconds());
-                string timeLeftString = timeLeft.ToString();
-                TimeLeftText.SetText(timeLeftString);
+                timeLeft = (int)(timeInSec - StaticTimer.GetElapsedSeconds() + 0.04);
+                if (timeLeft >  (timeInSec - StaticTimer.GetElapsedSeconds())) {
+                    timeLeftString = timeLeft.ToString();
+                    TimeLeftText.SetText(timeLeftString);
+                }
             }
         }
 
