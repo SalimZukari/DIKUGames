@@ -17,7 +17,7 @@ namespace Breakout.BreakoutStates {
     public class GameRunning : IGameState {
         private static GameRunning? instance = null;
         private Entity backGroundImage;
-        private static EntityContainer<Lives> livesImage;
+        private static EntityContainer<Lives>? livesImage;
         private Player player;
         private LevelSetUp level;
         private IBaseImage ballsImage;
@@ -26,9 +26,9 @@ namespace Breakout.BreakoutStates {
         private bool timeOut = false;
         private IDictionary<string, string> timeData;
         private static int timeInSec;
-        private Text timeLeftText;
-        private static EntityContainer<Effect> effects;
-        private static EntityContainer<Effect> collidedEffects;
+        private Text? timeLeftText;
+        private static EntityContainer<Effect>? effects;
+        private static EntityContainer<Effect>? collidedEffects;
 
         public bool TimeOut {
             get {return timeOut;}
@@ -37,7 +37,7 @@ namespace Breakout.BreakoutStates {
         public EntityContainer<Ball> Ball {
             get { return balls; }
         }
-        public Text TimeLeftText {
+        public Text? TimeLeftText {
             get {return timeLeftText;}
             private set {timeLeftText = value;}
         }
@@ -47,10 +47,10 @@ namespace Breakout.BreakoutStates {
         public Player Player {
             get { return player; }
         }
-        public static EntityContainer<Effect> Effects {
+        public static EntityContainer<Effect>? Effects {
             get { return effects; }
         }
-        public static EntityContainer<Lives> LivesImage {
+        public static EntityContainer<Lives>? LivesImage {
             get {return livesImage;}
         }
 
@@ -107,13 +107,17 @@ namespace Breakout.BreakoutStates {
         }
 
         public void SpawnPowerUp(Effect powerUp) {
-            effects.AddEntity(powerUp);
+            if (effects != null) {
+                effects.AddEntity(powerUp);
+            }
         }
 
         public void TimeRender() {
-            int timeLeft = (int)(timeInSec - StaticTimer.GetElapsedSeconds());
-            string timeLeftString = timeLeft.ToString();
-            TimeLeftText.SetText(timeLeftString);
+            if (TimeLeftText != null) {
+                int timeLeft = (int)(timeInSec - StaticTimer.GetElapsedSeconds());
+                string timeLeftString = timeLeft.ToString();
+                TimeLeftText.SetText(timeLeftString);
+            }
         }
 
 
@@ -197,20 +201,22 @@ namespace Breakout.BreakoutStates {
         }
 
         private void CheckEffectCollisions() {
-            effects.Iterate(effect => {
-                effect.Update();
-                /*if (CollisionDetection.Aabb((DynamicShape)effect.Shape, player.Shape).Collision) {*/
-                if (player.Shape.Position.X < effect.Shape.Position.X 
-                    && effect.Shape.Position.X < player.Shape.Position.X + player.Shape.Extent.X
-                    && player.Shape.Position.Y < effect.Shape.Position.Y 
-                    && effect.Shape.Position.Y < player.Shape.Position.Y + player.Shape.Extent.Y) {
-                        ApplyActivate(effect, player, balls);
-                        collidedEffects.AddEntity(effect);
+            if (effects != null && collidedEffects != null) {
+                effects.Iterate(effect => {
+                    effect.Update();
+                    /*if (CollisionDetection.Aabb((DynamicShape)effect.Shape, player.Shape).Collision) {*/
+                    if (player.Shape.Position.X < effect.Shape.Position.X 
+                        && effect.Shape.Position.X < player.Shape.Position.X + player.Shape.Extent.X
+                        && player.Shape.Position.Y < effect.Shape.Position.Y 
+                        && effect.Shape.Position.Y < player.Shape.Position.Y + player.Shape.Extent.Y) {
+                            ApplyActivate(effect, player, balls);
+                            collidedEffects.AddEntity(effect);
+                            effect.DeleteEntity();
+                    } else if (effect.Shape.Position.Y < 0.0f) {
                         effect.DeleteEntity();
-                } else if (effect.Shape.Position.Y < 0.0f) {
-                    effect.DeleteEntity();
-                }
-            });
+                    }
+                });
+            }
         }
 
         public static void ApplyActivate(Effect effect, Player player, EntityContainer<Ball> balls1) {
@@ -227,43 +233,41 @@ namespace Breakout.BreakoutStates {
             });
         }
 
-        public void ApplyEffect(Effect effect, Player player, EntityContainer<Ball> balls1) {
-            
-        }
-
         private Dictionary<Type, double> lastActivationTimes = new Dictionary<Type, double>();
 
         public void EffectTime(Player player, EntityContainer<Ball> balls1) {
             var currentTime = StaticTimer.GetElapsedSeconds();
-            foreach (Effect effect in collidedEffects) {
-                Type effectType = effect.GetType();
-                if (!effect.IsDeactivated) {
-                    if (currentTime > effect.ActivationTime + 5) {
-                        MethodInfo? methodPlayer = effectType.GetMethod("DeactivatePlayer");
-                        MethodInfo? methodBall = effectType.GetMethod("DeactivateBall");
-                        if (methodPlayer != null) {
-                            methodPlayer.Invoke(effect, new object[] { player });
-                        }
-                        balls1.Iterate(ball => {
-                            if (methodBall != null) {
-                                methodBall.Invoke(effect, new object[] { ball });
+            if (collidedEffects != null) {
+                foreach (Effect effect in collidedEffects) {
+                    Type effectType = effect.GetType();
+                    if (!effect.IsDeactivated) {
+                        if (currentTime > effect.ActivationTime + 5) {
+                            MethodInfo? methodPlayer = effectType.GetMethod("DeactivatePlayer");
+                            MethodInfo? methodBall = effectType.GetMethod("DeactivateBall");
+                            if (methodPlayer != null) {
+                                methodPlayer.Invoke(effect, new object[] { player });
                             }
-                        });
-                        effect.IsDeactivated = true;
-                        effect.DeleteEntity();
-                    }
-                    else if (lastActivationTimes.ContainsKey(effectType) && lastActivationTimes[effectType] > effect.ActivationTime) {
-                        effect.DeleteEntity();
-                    }
-                    else {
-                        lastActivationTimes[effectType] = effect.ActivationTime;
+                            balls1.Iterate(ball => {
+                                if (methodBall != null) {
+                                    methodBall.Invoke(effect, new object[] { ball });
+                                }
+                            });
+                            effect.IsDeactivated = true;
+                            effect.DeleteEntity();
+                        }
+                        else if (lastActivationTimes.ContainsKey(effectType) && lastActivationTimes[effectType] > effect.ActivationTime) {
+                            effect.DeleteEntity();
+                        }
+                        else {
+                            lastActivationTimes[effectType] = effect.ActivationTime;
+                        }
                     }
                 }
             }
         }
 
         public void DetractLife() {
-            if (balls.CountEntities() == 0 && player.Lives > 0) {
+            if (balls.CountEntities() == 0 && player.Lives > 0 && livesImage != null) {
                 livesImage.Iterate(life => {
                     if (life.LifeNumber == player.Lives && life.IsFull) {
                         life.MakeEmpty();
@@ -344,9 +348,15 @@ namespace Breakout.BreakoutStates {
             player.Render();
             level.GetBlocks().RenderEntities();
             balls.RenderEntities();
-            TimeLeftText.RenderText();
-            livesImage.RenderEntities();
-            effects.RenderEntities();
+            if (TimeLeftText != null) {
+                TimeLeftText.RenderText();
+            }
+            if (livesImage != null) {
+                livesImage.RenderEntities();
+            }
+            if (effects != null) {
+                effects.RenderEntities();
+            }
         }
 
         public void ResetState() {

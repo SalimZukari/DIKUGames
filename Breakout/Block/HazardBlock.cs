@@ -38,7 +38,9 @@ namespace Breakout.IBlock {
             Image hazardImage = new Image(imagePath);
             EffectType type = (EffectType)(index + 5);
             Effect hazard = HazardTypeToObject(type, hazardImage);
-            GameRunning.Effects.AddEntity(hazard);
+            if (GameRunning.Effects != null) {
+                GameRunning.Effects.AddEntity(hazard);
+            }
         }
 
         public Effect HazardTypeToObject(EffectType type, Image image) {

@@ -12,7 +12,7 @@ namespace Breakout.PowerUps {
 
         public override void ActivatePlayer(Player player) {
             int oneLife = 0;
-            if (player.Lives < 3) {
+            if (player.Lives < 3 && GameRunning.LivesImage != null) {
                 GameRunning.LivesImage.Iterate(life => {
                     if (life.LifeNumber == (player.Lives + 1) && life.IsEmpty && oneLife == 0) {
                         life.MakeFull();

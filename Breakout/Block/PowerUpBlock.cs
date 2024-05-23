@@ -41,7 +41,9 @@ namespace Breakout.IBlock {
             Image powerUpImage = new Image(imagePath);
             EffectType type = (EffectType)(index); 
             Effect powerUp = PowerUpTypeToObject(type, powerUpImage);
-            GameRunning.Effects.AddEntity(powerUp);
+            if (GameRunning.Effects != null) {
+                GameRunning.Effects.AddEntity(powerUp);
+            }
             BreakoutBus.GetBus().RegisterEvent(new GameEvent {
                 EventType = GameEventType.GameStateEvent,
                 Message = "SPAWN_POWERUP",
