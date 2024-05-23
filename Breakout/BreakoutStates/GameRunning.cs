@@ -53,6 +53,9 @@ namespace Breakout.BreakoutStates {
         public static EntityContainer<Lives>? LivesImage {
             get {return livesImage;}
         }
+        public static int TimeInSec {
+            get {return timeInSec;}
+        }
 
         public static GameRunning GetInstance() {
             if (GameRunning.instance == null) {

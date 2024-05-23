@@ -125,5 +125,18 @@ namespace BreakoutTests {
             wide.DeactivatePlayer(player);
             Assert.AreEqual(player.Shape.Extent.X, 0.2f, 0.0005f);
         }
+
+        [Test]
+        public void TestMoreTime() {
+            MoreTime moreTime = new MoreTime(baseShape, new NoImage());
+            GameRunning gameRunning = new GameRunning(testFilePath);
+
+            gameRunning.TimeRender();
+
+            Assert.AreEqual(GameRunning.TimeInSec, 180);
+
+            moreTime.ActivateBall(ball);
+            Assert.AreEqual(GameRunning.TimeInSec, 185);
+        }
     }
 }
