@@ -89,8 +89,12 @@ public class CheckCollisionTest {
         var gameRunning = new GameRunning(Path.Combine("..", "..", "..", "..", "Assets", "Levels", "level1.txt"));
     
         Assert.IsTrue(gameRunning.Ball.CountEntities() > 0);
-
         gameRunning.Ball.ClearContainer();
+        gameRunning.DetractLife();
+        gameRunning.Ball.ClearContainer();
+        gameRunning.DetractLife();
+        gameRunning.Ball.ClearContainer();
+        gameRunning.DetractLife();
 
         Assert.IsTrue(gameRunning.IsGameOver());
     }

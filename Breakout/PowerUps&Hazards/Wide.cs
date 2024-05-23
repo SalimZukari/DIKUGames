@@ -13,14 +13,14 @@ namespace Breakout.PowerUps {
         }
 
         public override void ActivatePlayer(Player player) {
-            if (player.Shape.Extent.X < 0.4f) {
+            if (player.Shape.Extent.X < 0.38f) {
                 player.Shape.Extent.X *= 2;
                 IsActive = true;
             }
         }
 
         public override void DeactivatePlayer(Player player) {
-            if (player.Shape.Extent.X > 0.2f) {
+            if (player.Shape.Extent.X > 0.22f) {
                 player.Shape.Extent.X /= 2;
                 IsActive = false;
             }

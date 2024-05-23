@@ -20,8 +20,10 @@ namespace Breakout.PowerUps {
         }
 
         public override void DeactivatePlayer(Player player) {
-            player.MovementSpeed *= 2;
-            IsActive = false;
+            if (player.MovementSpeed < 0.009) {
+                player.MovementSpeed *= 2;
+                IsActive = false;
+            }
         }
     }
 }
