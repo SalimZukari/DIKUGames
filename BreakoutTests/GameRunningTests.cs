@@ -108,4 +108,30 @@ public class CheckCollisionTest {
         
         Assert.IsTrue(gameRunning.IsGameWon());
     }
+    [Test]
+    public void SetStopWatch_TimeNotExpired() {
+        // Arrange
+        var gameRunning = new GameRunning(Path.Combine("..", "..", "..", "..", "Assets", "Levels", "level1.txt"));
+
+        // Act
+        gameRunning.SetStopWatch();
+
+        // Assert
+        Assert.IsFalse(gameRunning.TimeOut);
+    }
+    [Test]
+    public void SetStopWatch_TimeExpired() {
+        // Arrange
+        var gameRunning = new GameRunning(Path.Combine("..", "..", "..", "..", "Assets", "Levels", "levelTest.txt"));
+
+        // Act
+        gameRunning.SetStopWatch();
+        gameRunning.SubtractTime();
+        gameRunning.SubtractTime();
+        gameRunning.SubtractTime();
+        gameRunning.UpdateState();
+        // Assert
+        Assert.IsTrue(gameRunning.TimeOut);
+    }
+    
 }
