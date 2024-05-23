@@ -297,6 +297,9 @@ namespace Breakout.BreakoutStates {
         public static void AddTime() {
             timeInSec += 5;
         }
+        public void SubtractTime() {
+            timeInSec -= 5;
+        }
         
         public bool IsGameOver () {
             if (player.Lives == 0 || TimeOut) {

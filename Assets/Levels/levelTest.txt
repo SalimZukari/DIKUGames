@@ -28,7 +28,7 @@ Map/
 
 Meta:
 Name: LEVEL 3
-Time: 180
+Time: 10
 PowerUp: #
 Unbreakable: Y
 Hardened: C
