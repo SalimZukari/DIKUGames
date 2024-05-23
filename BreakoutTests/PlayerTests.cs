@@ -19,7 +19,7 @@ namespace BreakoutTests {
         [SetUp]
         public void Setup() {
             DynamicShape shape = new DynamicShape(new Vec2F(0.5f, 0.1f), new Vec2F(0.1f, 0.1f));
-            player = new Player(shape, null);
+            player = new Player(shape, null,3);
             eventBus = new GameEventBus();
             eventBus.InitializeEventBus(new List<GameEventType> {GameEventType.PlayerEvent});
             eventBus.Subscribe(GameEventType.PlayerEvent, player);

@@ -231,25 +231,33 @@ namespace Breakout.BreakoutStates {
             
         }
 
+        private Dictionary<Type, double> lastActivationTimes = new Dictionary<Type, double>();
+
         public void EffectTime(Player player, EntityContainer<Ball> balls1) {
             var currentTime = StaticTimer.GetElapsedSeconds();
             foreach (Effect effect in collidedEffects) {
-                if (!effect.IsDeactivated && currentTime > effect.ActivationTime + 5) {
-                    MethodInfo? methodPlayer = effect.GetType().GetMethod("DeactivatePlayer");
-                    MethodInfo? methodBall = effect.GetType().GetMethod("DeactivateBall");
-
-                    if (methodPlayer != null) {
-                        methodPlayer.Invoke(effect, new object[] { player });
-                    }
-
-                    balls1.Iterate(ball => {
-                        if (methodBall != null) {
-                            methodBall.Invoke(effect, new object[] { ball });
+                Type effectType = effect.GetType();
+                if (!effect.IsDeactivated) {
+                    if (currentTime > effect.ActivationTime + 5) {
+                        MethodInfo? methodPlayer = effectType.GetMethod("DeactivatePlayer");
+                        MethodInfo? methodBall = effectType.GetMethod("DeactivateBall");
+                        if (methodPlayer != null) {
+                            methodPlayer.Invoke(effect, new object[] { player });
                         }
-                    });
-
-                    effect.IsDeactivated = true; 
-                    effect.DeleteEntity();
+                        balls1.Iterate(ball => {
+                            if (methodBall != null) {
+                                methodBall.Invoke(effect, new object[] { ball });
+                            }
+                        });
+                        effect.IsDeactivated = true;
+                        effect.DeleteEntity();
+                    }
+                    else if (lastActivationTimes.ContainsKey(effectType) && lastActivationTimes[effectType] > effect.ActivationTime) {
+                        effect.DeleteEntity();
+                    }
+                    else {
+                        lastActivationTimes[effectType] = effect.ActivationTime;
+                    }
                 }
             }
         }
@@ -258,7 +266,7 @@ namespace Breakout.BreakoutStates {
             if (balls.CountEntities() == 0 && player.Lives > 0) {
                 livesImage.Iterate(life => {
                     if (life.LifeNumber == player.Lives && life.IsFull) {
-                        life.MakeEmtpy();
+                        life.MakeEmpty();
                         life.IsFull = false;
                     }
                 });
@@ -266,7 +274,7 @@ namespace Breakout.BreakoutStates {
                 if (player.Lives > 0) {
                     balls.AddEntity(new Ball(new Vec2F(0.45f, 0.3f), ballsImage));
                     foreach (Ball ball in balls) {
-                        ball.Direction.Y = -0.01f;
+                        ball.Direction.Y = 0.01f;
                         ball.Direction.X = 0.0f;
                     }
                 }

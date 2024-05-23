@@ -91,8 +91,7 @@ public class CheckCollisionTest {
         Assert.IsTrue(gameRunning.Ball.CountEntities() > 0);
 
         gameRunning.Ball.ClearContainer();
-
-        Assert.IsTrue(gameRunning.IsGameOver());
+        Assert.IsTrue(gameRunning.IsGameOver());  
     }
 
     [Test]

@@ -14,7 +14,7 @@ namespace Breakout.PowerUps {
             int oneLife = 0;
             GameRunning.LivesImage.Iterate(life => {
                     if (life.LifeNumber == player.Lives && life.IsFull && oneLife == 0) {
-                        life.MakeEmtpy();
+                        life.MakeEmpty();
                         life.IsFull = false;
                         player.Lives--;
                         oneLife = 1;
