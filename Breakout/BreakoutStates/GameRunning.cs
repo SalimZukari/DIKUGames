@@ -99,6 +99,11 @@ namespace Breakout.BreakoutStates {
             effects = new EntityContainer<Effect>(); 
             effects.ClearContainer();
             collidedEffects = new EntityContainer<Effect>();
+
+            if (timeData.ContainsKey("Time")) {
+                Int32.TryParse(timeData["Time"], out int t);
+                timeInSec = t;
+            }
         }
 
         public void SpawnPowerUp(Effect powerUp) {
@@ -269,12 +274,6 @@ namespace Breakout.BreakoutStates {
         }
 
         public void SetStopWatch() {
-            if (timeData.ContainsKey("Time")) {
-                Int32.TryParse(timeData["Time"], out int t);
-                timeInSec = t;
-            }
-
-
             if (StaticTimer.GetElapsedSeconds() >= timeInSec) {
                 TimeOut = true;
             }
