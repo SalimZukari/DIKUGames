@@ -14,8 +14,8 @@ namespace Breakout.IBlock {
             Path.Combine("..", "Assets", "Images", "DoubleSpeedPowerUp.png"),
             Path.Combine("..", "Assets", "Images", "LifePickUp.png"),
             Path.Combine("..", "Assets", "Images", "SpeedPickUp.png"),
-            Path.Combine("..", "Assets", "Images", "ball2.png"),
-            Path.Combine("..", "Assets", "Images", "playerStride.png")
+            Path.Combine("..", "Assets", "Images", "BigPowerUp.png"),
+            Path.Combine("..", "Assets", "Images", "WidePowerUp.png")
         };
         private Random random;
 

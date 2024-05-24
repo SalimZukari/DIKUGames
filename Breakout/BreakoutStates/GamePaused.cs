@@ -12,6 +12,7 @@ public class GamePaused : IGameState {
     private static GamePaused? instance = null;
         private Text[] menuButtons;
         private Entity backGroundImage;
+        private Entity overLayImage;
         private int activeMenuButton;
         private int maxMenuButtons;
         private Text continueGameButton;
@@ -32,8 +33,9 @@ public class GamePaused : IGameState {
             mainMenuButton = new Text("Main Menu", new Vec2F(0.3f, 0.07f), new Vec2F(0.45f, 0.45f));
             backGroundImage = new Entity(new StationaryShape(0.0f, 0.0f, 1.0f, 1.0f), 
                 new Image(Path.Combine("..","Assets", "Images", "BreakoutTitleScreen.png")));
+            overLayImage = new Entity(new StationaryShape(0.0f, 0.0f, 1.0f, 1.0f), 
+                new Image(Path.Combine("..","Assets", "Images", "Overlay.png")));
             
-
 
             menuButtons[0] = continueGameButton;
             menuButtons[1] = mainMenuButton;
@@ -93,6 +95,7 @@ public class GamePaused : IGameState {
 
         public void RenderState() {
             backGroundImage.RenderEntity();
+            overLayImage.RenderEntity();
             foreach (var button in menuButtons) {
                 button.RenderText();
             }

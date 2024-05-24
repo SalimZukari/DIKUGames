@@ -11,6 +11,7 @@ namespace Breakout.BreakoutStates;
 public class GameWon : IGameState {
     private static GameWon? instance = null;
     private Entity backGroundImage;
+    private Entity overLayImage;
     private Text[] menuButtons;
     private int activeMenuButton;
     private int maxMenuButtons;
@@ -28,6 +29,8 @@ public class GameWon : IGameState {
     public GameWon() {
         backGroundImage = new Entity(new StationaryShape(0.0f, 0.0f, 1.0f, 1.0f), 
             new Image(Path.Combine("..","Assets", "Images", "BreakoutTitleScreen.png")));
+        overLayImage = new Entity(new StationaryShape(0.0f, 0.0f, 1.0f, 1.0f), 
+                new Image(Path.Combine("..","Assets", "Images", "Overlay.png")));
         activeMenuButton = 0;
         maxMenuButtons = 2;
         menuButtons = new Text[maxMenuButtons];
@@ -94,6 +97,7 @@ public class GameWon : IGameState {
 
     public void RenderState() {
         backGroundImage.RenderEntity();
+        overLayImage.RenderEntity();
         foreach (Text menuButton in menuButtons) {
             menuButton.RenderText();
         }

@@ -17,6 +17,7 @@ namespace Breakout.BreakoutStates {
     public class GameRunning : IGameState {
         private static GameRunning? instance = null;
         private Entity backGroundImage;
+        private Entity overLayImage;
         private static EntityContainer<Lives>? livesImage;
         private Player player;
         private LevelSetUp level;
@@ -78,6 +79,8 @@ namespace Breakout.BreakoutStates {
         public GameRunning(string levelFile) {
             backGroundImage = new Entity(new StationaryShape(0.0f, 0.0f, 1.0f, 1.0f), 
                 new Image(Path.Combine("..", "Assets", "Images", "SpaceBackground.png")));
+            overLayImage = new Entity(new StationaryShape(0.0f, 0.0f, 1.0f, 1.0f), 
+                new Image(Path.Combine("..","Assets", "Images", "Overlay.png")));
             player = new Player(
                 new DynamicShape(new Vec2F(0.45f, 0.1f), new Vec2F(0.2f, 0.04f)),
                 new Image(Path.Combine("..", "Assets", "Images", "player.png")), 3);
@@ -290,7 +293,12 @@ namespace Breakout.BreakoutStates {
                 if (player.Lives > 0) {
                     balls.AddEntity(new Ball(new Vec2F(0.45f, 0.3f), ballsImage));
                     foreach (Ball ball in balls) {
-                        ball.Direction.Y = 0.01f;
+                        float playerLeft = player.Shape.Position.X;
+                        float playerRight = player.Shape.Position.X + player.Shape.Extent.X;
+                        float playerMid = (playerRight + playerLeft) / 2.0f;
+                        ball.Position.Y = player.Shape.Position.Y + 0.16f;
+                        ball.Position.X = playerMid ;
+                        ball.Direction.Y = -0.01f;
                         ball.Direction.X = 0.0f;
                     }
                 }
@@ -360,6 +368,7 @@ namespace Breakout.BreakoutStates {
 
         public void RenderState() {
             backGroundImage.RenderEntity();
+            overLayImage.RenderEntity();
             player.Render();
             level.GetBlocks().RenderEntities();
             balls.RenderEntities();
