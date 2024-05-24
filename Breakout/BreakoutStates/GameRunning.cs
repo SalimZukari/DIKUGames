@@ -65,6 +65,9 @@ namespace Breakout.BreakoutStates {
         public Dictionary<Type, double> lastActivationTimes {
             get { return LastActivationTimes; }
         }   
+        public static EntityContainer<Effect>? CollidedEffects {
+            get { return collidedEffects; }
+        }
 
 
         public static GameRunning GetInstance() {

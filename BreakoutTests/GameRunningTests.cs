@@ -299,4 +299,24 @@ public class CheckCollisionTest {
         Assert.IsFalse(effect.IsDeactivated, "Effect should not be deactivated if current time is less than activation time.");
         Assert.IsFalse(effect.IsDeleted(), "Effect should not be deleted if not deactivated.");
     }
+
+    [Test]
+    public void EffectTypeInLastActivationTimes_CurrentTimeGreaterThanActivationTimePlusFive() {
+        // Arrange
+        stopwatch.Start();
+        var effect = new DoubleSize(baseShape, new Image(Path.Combine("..", "Assets", "Images", "playerStride.png")));
+        //effect.ActivationTime = StaticTimer.GetElapsedSeconds() - 10; 
+        GameRunning.CollidedEffects.AddEntity(effect);
+        gameRunning.lastActivationTimes[typeof(DoubleSize)] =  effect.ActivationTime; 
+
+        // Act
+        while (stopwatch.ElapsedMilliseconds/1000 <= effect.ActivationTime + 6) {
+            gameRunning.EffectTime(player, gameRunning.Ball);
+        }
+        stopwatch.Stop();
+
+        // Assert
+        Assert.IsTrue(effect.IsDeactivated, "Effect should be deactivated if current time is greater than activation time plus five.");
+        Assert.IsTrue(effect.IsDeleted(), "Effect should be deleted if deactivated.");
+    }
 }
