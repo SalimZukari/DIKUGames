@@ -31,6 +31,9 @@ namespace Breakout.BreakoutStates {
         private static EntityContainer<Effect>? collidedEffects;
         private int timeLeft;
         private string? timeLeftString;
+        private Dictionary<Type, double> LastActivationTimes = new Dictionary<Type, double>();
+
+
 
         public bool TimeOut {
             get {return timeOut;}
@@ -58,6 +61,10 @@ namespace Breakout.BreakoutStates {
         public static int TimeInSec {
             get {return timeInSec;}
         }
+        public Dictionary<Type, double> lastActivationTimes {
+            get { return LastActivationTimes; }
+        }   
+
 
         public static GameRunning GetInstance() {
             if (GameRunning.instance == null) {
@@ -207,7 +214,7 @@ namespace Breakout.BreakoutStates {
             });
         }
 
-        private void CheckEffectCollisions() {
+        public void CheckEffectCollisions() {
             if (effects != null && collidedEffects != null) {
                 effects.Iterate(effect => {
                     effect.Update();
@@ -239,8 +246,6 @@ namespace Breakout.BreakoutStates {
                 }
             });
         }
-
-        private Dictionary<Type, double> lastActivationTimes = new Dictionary<Type, double>();
 
         public void EffectTime(Player player, EntityContainer<Ball> balls1) {
             var currentTime = StaticTimer.GetElapsedSeconds();

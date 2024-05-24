@@ -9,11 +9,21 @@ using Breakout.BreakoutStates;
 using Breakout.IBlock;
 using Breakout;
 using System.Collections.Generic;
+using Breakout.PowerUps;
 using System;
+using System.Diagnostics;
+using DIKUArcade.Timers;
+
 
 
 namespace BreakoutTests;
 public class CheckCollisionTest {
+    DynamicShape baseShape;
+    private static EntityContainer<Effect>? effects;
+    private static EntityContainer<Effect>? collidedEffects;
+    private Player player;
+    private GameRunning gameRunning;
+    private Stopwatch stopwatch;
 
     [OneTimeSetUp]
     public void Init() {
@@ -22,6 +32,14 @@ public class CheckCollisionTest {
 
     [SetUp]
     public void Setup() {
+        baseShape = new DynamicShape(0.0f, 0.0f, 0.2f, 0.0f);
+        gameRunning = new GameRunning(Path.Combine(
+            "..", "..", "..", "..", "Assets", "Levels", "level1.txt"
+        ));
+        player = gameRunning.Player;
+        effects = GameRunning.Effects;
+        collidedEffects = new EntityContainer<Effect>();
+        stopwatch = new Stopwatch();
     }
 
     [Test]
@@ -29,6 +47,7 @@ public class CheckCollisionTest {
         GameRunning gameRunning = new GameRunning(Path.Combine(
                     "..", "..", "..", "..", "Assets", "Levels", "level1.txt"
                 ));
+        player = new Player(baseShape, null, 3);
         EntityContainer<Block> block = gameRunning.LevelSetUp.GetBlocks();
         EntityContainer<Ball> ball = gameRunning.Ball;
         ball.ClearContainer();
@@ -134,4 +153,150 @@ public class CheckCollisionTest {
         Assert.IsTrue(gameRunning.TimeOut);
     }
     
+    [Test]
+    public void TestEffectCollidesWithPlayer() {
+        var effect = new DoubleSize(baseShape, new Image(Path.Combine("..", "Assets", "Images", "playerStride.png")));
+        gameRunning.SpawnPowerUp(effect);
+
+        // Position the effect to collide with the player
+        effect.Shape.Position = new Vec2F(player.Shape.Position.X + 0.1f, player.Shape.Position.Y + 0.1f);
+        for (int i = 0; i < 50; i++) {
+            effect.Shape.MoveY(-0.01f);
+            gameRunning.CheckEffectCollisions();
+        }
+
+        Assert.IsTrue(effect.IsDeleted(), "Effect should be deleted after collision with player.");
+    }
+
+    [Test]
+    public void TestEffectFallsOffScreen() {
+        var effect = new DoubleSize(baseShape, new Image(Path.Combine("..", "Assets", "Images", "playerStride.png")));
+        gameRunning.SpawnPowerUp(effect);
+
+        effect.Shape.Position = new Vec2F(player.Shape.Position.X, -0.05f);
+        gameRunning.CheckEffectCollisions();
+
+        Assert.IsTrue(effect.IsDeleted(), "Effect should be deleted after falling off screen.");
+    }
+
+    [Test]
+    public void TestEffectNoCollision() {
+        var effect = new DoubleSize(baseShape, new Image(Path.Combine("..", "Assets", "Images", "playerStride.png")));
+        gameRunning.SpawnPowerUp(effect);
+
+        effect.Shape.Position = new Vec2F(player.Shape.Position.X + 0.5f, player.Shape.Position.Y + 0.5f);
+        gameRunning.CheckEffectCollisions();
+
+        Assert.IsFalse(effect.IsDeleted(), "Effect should not be deleted if no collision occurs.");
+        Assert.AreEqual(1, GameRunning.Effects.CountEntities(), "Effect should remain in the effects container.");
+    }
+
+    [Test]
+    public void TestEffectOutOfBounds() {
+        var effect = new DoubleSize(baseShape, new Image(Path.Combine("..", "Assets", "Images", "playerStride.png")));
+        gameRunning.SpawnPowerUp(effect);
+
+        effect.Shape.Position = new Vec2F(-0.1f, -0.1f);
+        gameRunning.CheckEffectCollisions();
+
+        Assert.IsTrue(effect.IsDeleted(), "Effect should be deleted if out of bounds.");
+    }
+
+    [Test]
+    public void EffectTime_CollidedEffectsIsNull() {
+        // Arrange
+        collidedEffects = null;
+        // Act
+        gameRunning.EffectTime(player, gameRunning.Ball);
+        // Assert
+        // No exception should be thrown
+    }
+
+    [Test]
+    public void EffectTime_CollidedEffectsIsEmpty() {
+        // Arrange
+        collidedEffects = new EntityContainer<Effect>();
+        // Act
+        gameRunning.EffectTime(player, gameRunning.Ball);
+        // Assert
+        // No exception should be thrown
+    }
+
+    [Test]
+    public void EffectNotDeactivated_CurrentTimeLessThanActivationTimePlusFive() {
+        // Arrange
+        var effect = new DoubleSize(baseShape, new Image(Path.Combine("..", "Assets", "Images", "playerStride.png")));
+        effect.ActivationTime = StaticTimer.GetElapsedSeconds();
+        collidedEffects.AddEntity(effect);
+        // Act
+        gameRunning.EffectTime(player, gameRunning.Ball);
+        // Assert
+        Assert.IsFalse(effect.IsDeactivated);
+        Assert.IsFalse(effect.IsDeleted());
+    }
+
+    [Test]
+    public void EffectTime_LastActivationTimesDictionaryEmpty() {
+        // Arrange
+        gameRunning.lastActivationTimes.Clear();
+        var effect = new DoubleSize(baseShape, new Image(Path.Combine("..", "Assets", "Images", "playerStride.png")));
+        effect.ActivationTime = StaticTimer.GetElapsedSeconds(); // Set activation time to current time
+        collidedEffects.AddEntity(effect);
+        
+        // Act
+        gameRunning.EffectTime(player, gameRunning.Ball);
+        
+        // Assert
+        // No assertion needed since the test should not throw any exceptions
+    }
+
+    [Test]
+    public void EffectTypeNotInLastActivationTimes() {
+        // Arrange
+        gameRunning.lastActivationTimes.Clear();
+        var effect = new DoubleSize(baseShape, new Image(Path.Combine("..", "Assets", "Images", "playerStride.png")));
+        effect.ActivationTime = StaticTimer.GetElapsedSeconds() - 10; 
+        collidedEffects.AddEntity(effect);
+        gameRunning.lastActivationTimes.Add(typeof(DoubleSize), StaticTimer.GetElapsedSeconds() - 20); 
+        
+        // Act
+        gameRunning.EffectTime(player, gameRunning.Ball);
+        
+        // Assert
+        // No assertion needed since the test should not throw any exceptions
+    }
+
+    [Test]
+    public void EffectTypeInLastActivationTimes_CurrentTimeGreaterThanActivationTime() {
+        // Arrange
+        var effect = new DoubleSize(baseShape, new Image(Path.Combine("..", "Assets", "Images", "playerStride.png")));
+        effect.ActivationTime = StaticTimer.GetElapsedSeconds() - 10; 
+        collidedEffects.AddEntity(effect);
+        gameRunning.lastActivationTimes.Add(typeof(DoubleSize), StaticTimer.GetElapsedSeconds() - 20); 
+        
+        // Act
+        gameRunning.EffectTime(player, gameRunning.Ball);
+        
+        // Assert
+        Assert.IsFalse(effect.IsDeactivated, "Effect should not be deactivated if current time is not greater than activation time.");
+        Assert.IsFalse(effect.IsDeleted(), "Effect should not be deleted if not deactivated.");
+    }
+
+    [Test]
+    public void EffectTypeInLastActivationTimes_CurrentTimeLessThanActivationTime() {
+        // Arrange
+        var effect = new DoubleSize(baseShape, new Image(Path.Combine("..", "Assets", "Images", "playerStride.png")));
+        effect.ActivationTime = StaticTimer.GetElapsedSeconds() - 10; 
+        collidedEffects.AddEntity(effect);
+        gameRunning.lastActivationTimes.Add(typeof(DoubleSize), StaticTimer.GetElapsedSeconds() - 5); 
+        stopwatch.Start();
+
+        // Act
+        gameRunning.EffectTime(player, gameRunning.Ball);
+        stopwatch.Stop();
+
+        // Assert
+        Assert.IsFalse(effect.IsDeactivated, "Effect should not be deactivated if current time is less than activation time.");
+        Assert.IsFalse(effect.IsDeleted(), "Effect should not be deleted if not deactivated.");
+    }
 }
