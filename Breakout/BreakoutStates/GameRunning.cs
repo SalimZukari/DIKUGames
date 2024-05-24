@@ -72,7 +72,7 @@ namespace Breakout.BreakoutStates {
 
         public static GameRunning GetInstance() {
             if (GameRunning.instance == null) {
-                GameRunning.instance = new GameRunning("../Assets/Levels/level3.txt");
+                GameRunning.instance = new GameRunning("../Assets/Levels/level1.txt");
                 GameRunning.instance.ResetState();
 
                 }
