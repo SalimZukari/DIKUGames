@@ -33,6 +33,9 @@ namespace Breakout.BreakoutStates {
         private int timeLeft;
         private string? timeLeftString;
         private Dictionary<Type, double> LastActivationTimes = new Dictionary<Type, double>();
+        private static int score;
+        private static int prevScore;
+        private Text scoreText;
 
 
 
@@ -67,6 +70,9 @@ namespace Breakout.BreakoutStates {
         }   
         public static EntityContainer<Effect>? CollidedEffects {
             get { return collidedEffects; }
+        }
+        public static int Score {
+            get {return score;}
         }
 
 
@@ -122,6 +128,12 @@ namespace Breakout.BreakoutStates {
                 Int32.TryParse(timeData["Time"], out int t);
                 timeInSec = t;
             }
+
+            score = 0;
+            prevScore = score;
+            scoreText = new Text("", new Vec2F(0.2f, 0.65f), new Vec2F(0.35f, 0.35f));
+            scoreText.SetColor(System.Drawing.Color.White);
+
         }
 
         public void SpawnPowerUp(Effect powerUp) {
@@ -137,6 +149,13 @@ namespace Breakout.BreakoutStates {
                     timeLeftString = timeLeft.ToString();
                     TimeLeftText.SetText(timeLeftString);
                 }
+            }
+        }
+
+        public void ScoreRender() {
+            if (prevScore < score) {
+                prevScore = score;
+                scoreText.SetText(prevScore.ToString());
             }
         }
 
@@ -207,6 +226,9 @@ namespace Breakout.BreakoutStates {
                             powerUpBlock.Damage();
                         } else {
                             block.Damage();
+                        }
+                        if (block.Health == 0) {
+                            score += 10;
                         }
                         ball.HitsBlockMove();
                     } else if (collidePlayer.Collision) {
@@ -354,8 +376,8 @@ namespace Breakout.BreakoutStates {
         }
 
         public bool IsGameWon() {
-            if (level.GetBlocks().CountEntities() == 0) {
-                if (!SwitchLevelIfWon()) {
+            if (level.GetBlocks().CountEntities() == 0 || score == 1000) {
+                if (!SwitchLevelIfWon() || score == 1000) {
                     BreakoutBus.GetBus().RegisterEvent(new GameEvent {
                         EventType = GameEventType.GameStateEvent,
                         Message = "CHANGE_STATE",
@@ -377,6 +399,9 @@ namespace Breakout.BreakoutStates {
             balls.RenderEntities();
             if (TimeLeftText != null) {
                 TimeLeftText.RenderText();
+            }
+            if (scoreText != null) {
+                scoreText.RenderText();
             }
             if (livesImage != null) {
                 livesImage.RenderEntities();
@@ -403,6 +428,7 @@ namespace Breakout.BreakoutStates {
             DetractLife();
             SetStopWatch();
             TimeRender();
+            ScoreRender();
             CheckEffectCollisions();
             EffectTime(player, balls);
         }

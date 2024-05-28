@@ -38,12 +38,15 @@ namespace Breakout {
                         var damagedImagePath = Path.Combine("..", "Assets", "Images", 
                             colorEntry.Replace(".png", "") + "-damaged.png"
                         );
-                        firstContainer.AddEntity(new Block(
-                            new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)),
-                            new Image(Path.Combine("..", "Assets", "Images", colorEntry)),
-                            new Image(damagedImagePath),
-                            StringToBlockType(coolBlockKey[colorEntry])
-                        ));
+                        BlockType blockType = new BlockType();
+                        if (BlockType.TryParse(coolBlockKey[colorEntry], out blockType)) {
+                            firstContainer.AddEntity(new Block(
+                                new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)),
+                                new Image(Path.Combine("..", "Assets", "Images", colorEntry)),
+                                new Image(damagedImagePath),
+                                blockType
+                            ));
+                        }
                     }
                 } else if (positions.TryGetValue(colorEntry,
                     out List<(float, float)>? positionsList)
@@ -105,24 +108,6 @@ namespace Breakout {
             foreach (KeyValuePair<char, string> entry2 in legend) {
                 coolBlockKey.TryAdd(entry2.Value, "Normal");
             }
-        }
-
-        public BlockType StringToBlockType(string type) {
-            BlockType blockType = new BlockType();
-            if (BlockType.TryParse(type, out blockType)) {
-                switch (blockType) {
-                    case BlockType.Normal:
-                        return BlockType.Normal;
-                    case BlockType.Unbreakable:
-                        return BlockType.Unbreakable;
-                    case BlockType.Hardened:
-                        return BlockType.Hardened;
-                    case BlockType.PowerUp:
-                        return BlockType.PowerUp;
-                }
-            }
-
-            return BlockType.Normal;
         }
 
         public Block CreateNewBlock(float x, float y, Image image, Image damagedImage, BlockType type) {
