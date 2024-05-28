@@ -109,25 +109,17 @@ namespace Breakout.BreakoutStates {
                     new Image(Path.Combine("..", "Assets", "Images", "heart_empty.png")), i + 1);
                 livesImage.AddEntity(Life);
             }
-
+            effects = new EntityContainer<Effect>(); 
+            effects.ClearContainer();
+            collidedEffects = new EntityContainer<Effect>();
             timeData = level.Layout.GetMetaOrganized();
             timeInSec = -1;
             if (timeData.ContainsKey("Time")) {
                 Int32.TryParse(timeData["Time"], out int t);
                 timeInSec = t;
-            }          
-
+            }
             TimeLeftText = new Text("", new Vec2F(0.8f, 0.65f), new Vec2F(0.35f, 0.35f));
             TimeLeftText.SetColor(System.Drawing.Color.White);
-
-            effects = new EntityContainer<Effect>(); 
-            effects.ClearContainer();
-            collidedEffects = new EntityContainer<Effect>();
-
-            if (timeData.ContainsKey("Time")) {
-                Int32.TryParse(timeData["Time"], out int t);
-                timeInSec = t;
-            }
 
             score = 0;
             prevScore = score;
@@ -363,14 +355,20 @@ namespace Breakout.BreakoutStates {
             if (File.Exists(nextLevelFile)) {
                 StaticTimer.RestartTimer();
                 level.LoadLevel(nextLevelFile);
+                timeData = level.Layout.GetMetaOrganized();
+                if (timeData.ContainsKey("Time")) {
+                    Int32.TryParse(timeData["Time"], out int t);
+                    timeInSec = t;
+                }
                 
+
                 player.ResetPosition();
                 balls.ClearContainer();
                 balls.AddEntity(new Ball(new Vec2F(0.45f, 0.3f), ballsImage));
                 foreach (Ball ball in balls) {
-                        ball.Direction.Y = -0.01f;
-                        ball.Direction.X = 0.0f;
-                    }
+                    ball.Direction.Y = -0.01f;
+                    ball.Direction.X = 0.0f;
+                }
                 return true;
             }
             return false;
