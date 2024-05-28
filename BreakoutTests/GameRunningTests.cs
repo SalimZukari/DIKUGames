@@ -289,11 +289,9 @@ public class CheckCollisionTest {
         effect.ActivationTime = StaticTimer.GetElapsedSeconds() - 10; 
         collidedEffects.AddEntity(effect);
         gameRunning.lastActivationTimes.Add(typeof(DoubleSize), StaticTimer.GetElapsedSeconds() - 5); 
-        stopwatch.Start();
 
         // Act
         gameRunning.EffectTime(player, gameRunning.Ball);
-        stopwatch.Stop();
 
         // Assert
         Assert.IsFalse(effect.IsDeactivated, "Effect should not be deactivated if current time is less than activation time.");
@@ -305,15 +303,12 @@ public class CheckCollisionTest {
         // Arrange
         stopwatch.Start();
         var effect = new DoubleSize(baseShape, new Image(Path.Combine("..", "Assets", "Images", "playerStride.png")));
-        //effect.ActivationTime = StaticTimer.GetElapsedSeconds() - 10; 
+        effect.ActivationTime = StaticTimer.GetElapsedSeconds() - 10; 
         GameRunning.CollidedEffects.AddEntity(effect);
         gameRunning.lastActivationTimes[typeof(DoubleSize)] =  effect.ActivationTime; 
 
         // Act
-        while (stopwatch.ElapsedMilliseconds/1000 <= effect.ActivationTime + 6) {
-            gameRunning.EffectTime(player, gameRunning.Ball);
-        }
-        stopwatch.Stop();
+        gameRunning.EffectTime(player, gameRunning.Ball);
 
         // Assert
         Assert.IsTrue(effect.IsDeactivated, "Effect should be deactivated if current time is greater than activation time plus five.");
