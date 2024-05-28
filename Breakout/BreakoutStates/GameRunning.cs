@@ -104,7 +104,7 @@ namespace Breakout.BreakoutStates {
             blockObserver = new BlockObserver();
             livesImage = new EntityContainer<Lives>();
             for (int i = 0; i < player.Lives; i++) {
-                var Life = new Lives(new Vec2F(0.01f + i * 0.05f, 0.95f), 
+                var Life = new Lives(new Vec2F(0.01f + i * 0.05f, 0.22f), 
                     new Image(Path.Combine("..", "Assets", "Images", "heart_filled.png")), 
                     new Image(Path.Combine("..", "Assets", "Images", "heart_empty.png")), i + 1);
                 livesImage.AddEntity(Life);
@@ -131,7 +131,7 @@ namespace Breakout.BreakoutStates {
 
             score = 0;
             prevScore = score;
-            scoreText = new Text("Score: 0", new Vec2F(0.2f, 0.65f), new Vec2F(0.35f, 0.35f));
+            scoreText = new Text("Score: 0", new Vec2F(0.01f, 0.01f), new Vec2F(0.2f, 0.2f));
             scoreText.SetColor(System.Drawing.Color.White);
 
         }
@@ -361,6 +361,7 @@ namespace Breakout.BreakoutStates {
             string nextLevelFile = level.GetNextLevelFile();
 
             if (File.Exists(nextLevelFile)) {
+                StaticTimer.RestartTimer();
                 level.LoadLevel(nextLevelFile);
                 
                 player.ResetPosition();
@@ -409,6 +410,7 @@ namespace Breakout.BreakoutStates {
             if (effects != null) {
                 effects.RenderEntities();
             }
+            level.GetBlocks().RenderEntities();
         }
 
         public void ResetState() {

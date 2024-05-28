@@ -30,6 +30,6 @@ public class Hardened : Block {
     }
 
     public void SetDamagedImage(Image image) {
-        BlocksImage = image;
+        this.Image = image;
     }
 }
