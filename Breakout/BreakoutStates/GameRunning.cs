@@ -78,7 +78,7 @@ namespace Breakout.BreakoutStates {
 
         public static GameRunning GetInstance() {
             if (GameRunning.instance == null) {
-                GameRunning.instance = new GameRunning("../Assets/Levels/level3.txt");
+                GameRunning.instance = new GameRunning("../Assets/Levels/level1.txt");
                 GameRunning.instance.ResetState();
 
                 }
@@ -131,7 +131,7 @@ namespace Breakout.BreakoutStates {
 
             score = 0;
             prevScore = score;
-            scoreText = new Text("", new Vec2F(0.2f, 0.65f), new Vec2F(0.35f, 0.35f));
+            scoreText = new Text("Score: 0", new Vec2F(0.2f, 0.65f), new Vec2F(0.35f, 0.35f));
             scoreText.SetColor(System.Drawing.Color.White);
 
         }
@@ -155,7 +155,7 @@ namespace Breakout.BreakoutStates {
         public void ScoreRender() {
             if (prevScore < score) {
                 prevScore = score;
-                scoreText.SetText(prevScore.ToString());
+                scoreText.SetText($"Score: {prevScore}");
             }
         }
 
@@ -376,8 +376,8 @@ namespace Breakout.BreakoutStates {
         }
 
         public bool IsGameWon() {
-            if (level.GetBlocks().CountEntities() == 0 || score == 1000) {
-                if (!SwitchLevelIfWon() || score == 1000) {
+            if (level.GetBlocks().CountEntities() == 0 || score == 10000) {
+                if (!SwitchLevelIfWon() || score == 10000) {
                     BreakoutBus.GetBus().RegisterEvent(new GameEvent {
                         EventType = GameEventType.GameStateEvent,
                         Message = "CHANGE_STATE",

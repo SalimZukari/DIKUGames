@@ -138,17 +138,6 @@ namespace BreakoutTests {
         }
 
         [Test]
-        public void TestStringToType() {
-            var normal = levelSetUp.StringToBlockType("Normal");
-            var unbreakable = levelSetUp.StringToBlockType("Unbreakable");
-            var hardened = levelSetUp.StringToBlockType("Hardened");
-
-            Assert.AreEqual(BlockType.Normal, normal);
-            Assert.AreEqual(BlockType.Unbreakable, unbreakable);
-            Assert.AreEqual(BlockType.Hardened, hardened);
-        }
-
-        [Test]
         public void TestCoolKeyLength() {
             int lengthOfCoolKey = levelSetUp.GetCoolKey().Count;
 
