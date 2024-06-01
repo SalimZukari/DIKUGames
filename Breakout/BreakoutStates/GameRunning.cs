@@ -36,6 +36,7 @@ namespace Breakout.BreakoutStates {
         private static int score;
         private static int prevScore;
         private Text scoreText;
+        private CollisionHandler collisionHandler;
 
 
 
@@ -125,6 +126,7 @@ namespace Breakout.BreakoutStates {
             prevScore = score;
             scoreText = new Text("Score: 0", new Vec2F(0.01f, 0.01f), new Vec2F(0.2f, 0.2f));
             scoreText.SetColor(System.Drawing.Color.White);
+            collisionHandler = new CollisionHandler(player, level, balls, effects, collidedEffects, score);
 
         }
 
@@ -203,54 +205,12 @@ namespace Breakout.BreakoutStates {
         }
 
         private void CheckCollisions() {
-            float playerLeft = player.Shape.Position.X;
-            float playerRight = player.Shape.Position.X + player.Shape.Extent.X;
-            float playerMid = (playerRight + playerLeft) / 2.0f;
-            balls.Iterate(ball => {
-                float ballPos = ball.Shape.Position.X + (ball.Shape.Extent.X / 2.0f);
-                ball.Movement();
-                ball.CheckDeleteBall();
-                level.GetBlocks().Iterate(block => {
-                    var collideBlock = CollisionDetection.Aabb((DynamicShape)ball.Shape, block.Shape);
-                    var collidePlayer = CollisionDetection.Aabb((DynamicShape)ball.Shape, player.Shape);
-                    if (collideBlock.Collision) {
-                        if (block is PowerUpBlock powerUpBlock) {
-                            powerUpBlock.Damage();
-                        } else {
-                            block.Damage();
-                        }
-                        if (block.Health == 0) {
-                            score += 10;
-                        }
-                        ball.HitsBlockMove();
-                    } else if (collidePlayer.Collision) {
-                        if (playerLeft <= ballPos && ballPos < playerMid) {
-                            ball.GoLeft();
-                        } else if (playerMid <= ballPos && ballPos < playerRight) {
-                            ball.GoRight();
-                        }
-                    }
-                });
-            });
+            collisionHandler.CheckCollisions();
+            score = collisionHandler.GetScore();
         }
 
         public void CheckEffectCollisions() {
-            if (effects != null && collidedEffects != null) {
-                effects.Iterate(effect => {
-                    effect.Update();
-                    /*if (CollisionDetection.Aabb((DynamicShape)effect.Shape, player.Shape).Collision) {*/
-                    if (player.Shape.Position.X < effect.Shape.Position.X 
-                        && effect.Shape.Position.X < player.Shape.Position.X + player.Shape.Extent.X
-                        && player.Shape.Position.Y < effect.Shape.Position.Y 
-                        && effect.Shape.Position.Y < player.Shape.Position.Y + player.Shape.Extent.Y) {
-                            ApplyActivate(effect, player, balls);
-                            collidedEffects.AddEntity(effect);
-                            effect.DeleteEntity();
-                    } else if (effect.Shape.Position.Y < 0.0f) {
-                        effect.DeleteEntity();
-                    }
-                });
-            }
+            collisionHandler.CheckEffectCollisions();
         }
 
         public static void ApplyActivate(Effect effect, Player player, EntityContainer<Ball> balls1) {
