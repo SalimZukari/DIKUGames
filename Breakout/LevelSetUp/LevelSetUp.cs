@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics; 
 using DIKUArcade.Math;
@@ -8,19 +10,35 @@ namespace Breakout {
     public class LevelSetUp {
         private InterpretData layout;
         private EntityContainer<Block> blocks;
+        public string CurrentLevelFile { get; private set; }
         private IDictionary<string, string> coolBlockKey = new Dictionary<string, string>();
-        public string CurrentLevelFile { get; private set; } 
+        private IDictionary<BlockType, Func<float, float, Image, Image, Block>> blockCreators;
 
         public InterpretData Layout {
-            get {return layout;}
-        } 
+            get { return layout; }
+        }
 
         public LevelSetUp(string file) {
             CurrentLevelFile = file;
             layout = new InterpretData(file);
             blocks = new EntityContainer<Block>();
-
+            InitializeBlockCreators();
             SetUp();
+        }
+
+        private void InitializeBlockCreators() {
+            blockCreators = new Dictionary<BlockType, Func<float, float, Image, Image, Block>> {
+                { BlockType.Unbreakable, (x, y, img, dmgImg) => 
+                    new Unbreakable(new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)), img, dmgImg, BlockType.Unbreakable)}, 
+                { BlockType.Hardened, (x, y, img, dmgImg) => 
+                    new Hardened(new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)), img, dmgImg, BlockType.Hardened)},
+                { BlockType.PowerUp, (x, y, img, dmgImg) => 
+                    new PowerUpBlock( new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)), img, dmgImg, BlockType.PowerUp)}, 
+                { BlockType.Hazard, (x, y, img, dmgImg) => 
+                    new HazardBlock(new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)), img, dmgImg, BlockType.Hazard)},
+                { BlockType.Normal, (x, y, img, dmgImg) => 
+                    new Block(new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)), img, dmgImg, BlockType.Normal)}
+            };
         }
 
         public void SetUp() {
@@ -38,14 +56,9 @@ namespace Breakout {
                         var damagedImagePath = Path.Combine("..", "Assets", "Images", 
                             colorEntry.Replace(".png", "") + "-damaged.png"
                         );
-                        BlockType blockType = new BlockType();
-                        if (BlockType.TryParse(coolBlockKey[colorEntry], out blockType)) {
-                            firstContainer.AddEntity(new Block(
-                                new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)),
-                                new Image(Path.Combine("..", "Assets", "Images", colorEntry)),
-                                new Image(damagedImagePath),
-                                blockType
-                            ));
+                        if (coolBlockKey.TryGetValue(colorEntry, out string blockTypeString) 
+                        && BlockType.TryParse(blockTypeString, out BlockType blockType)) {
+                            firstContainer.AddEntity(CreateNewBlock(x, y, new Image(imagePath), new Image(damagedImagePath), blockType));
                         }
                     }
                 } else if (positions.TryGetValue(colorEntry,
@@ -111,42 +124,15 @@ namespace Breakout {
         }
 
         public Block CreateNewBlock(float x, float y, Image image, Image damagedImage, BlockType type) {
-            switch (type) {
-                case BlockType.Unbreakable:
-                    return new Unbreakable(
-                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)),
-                        image,
-                        damagedImage,
-                        type
-                    );
-                case BlockType.Hardened:
-                    return new Hardened(
-                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)),
-                        image,
-                        damagedImage,
-                        type
-                    );
-                case BlockType.PowerUp:
-                    return new PowerUpBlock(
-                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)),
-                        image,
-                        damagedImage,
-                        type
-                    );
-                case BlockType.Hazard:
-                    return new HazardBlock(
-                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)),
-                        image,
-                        damagedImage,
-                        type
-                    );
-                default:
-                    return new Block(
-                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)),
-                        image,
-                        damagedImage,
-                        type
-                    );
+            if (blockCreators.TryGetValue(type, out var creator)) {
+                return creator(x, y, image, damagedImage);
+            } else {
+                return new Block(
+                    new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)),
+                    image,
+                    damagedImage,
+                    type
+                );
             }
         }
 
