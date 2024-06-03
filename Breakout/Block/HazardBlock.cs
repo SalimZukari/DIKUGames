@@ -12,12 +12,13 @@ namespace Breakout.IBlock {
         };
         private Random random;
 
-        public HazardBlock(DynamicShape shape, Image blocksImage, Image damagedImage, BlockType type) 
-            : base(shape, blocksImage, damagedImage, type) {
-                this.blocksImage = blocksImage;
-                this.shape = shape;
-                health = 10;
-                random = new Random();
+        public HazardBlock(DynamicShape shape, Image blocksImage, Image damagedImage, 
+            BlockType type) 
+                : base(shape, blocksImage, damagedImage, type) {
+                    this.blocksImage = blocksImage;
+                    this.shape = shape;
+                    health = 10;
+                    random = new Random();
         }
 
         public override void Damage() {

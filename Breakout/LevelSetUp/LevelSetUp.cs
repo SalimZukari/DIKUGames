@@ -11,14 +11,10 @@ namespace Breakout {
         private EntityContainer<Block> blocks;
         public string CurrentLevelFile { get; private set; }
         private IDictionary<string, string> coolBlockKey = new Dictionary<string, string>();
-        private IDictionary<BlockType, Func<float, float, Image, Image, Block>> blockCreators;
-        private static IDictionary<BlockType, Block> blockDic;
+        private IDictionary<BlockType, Func<float, float, Image, Image, Block>>? blockCreators;
 
         public InterpretData Layout {
             get { return layout; }
-        }
-        public static IDictionary<BlockType, Block> BlockDic {
-            get { return blockDic; }
         }
 
         public LevelSetUp(string file) {
@@ -64,7 +60,7 @@ namespace Breakout {
                         var damagedImagePath = Path.Combine("..", "Assets", "Images", 
                             colorEntry.Replace(".png", "") + "-damaged.png"
                         );
-                        if (coolBlockKey.TryGetValue(colorEntry, out string blockTypeString) 
+                        if (coolBlockKey.TryGetValue(colorEntry, out string? blockTypeString) 
                         && BlockType.TryParse(blockTypeString, out BlockType blockType)) {
                             firstContainer.AddEntity(CreateNewBlock(x, y, new Image(imagePath), 
                                 new Image(damagedImagePath), blockType));
@@ -134,7 +130,7 @@ namespace Breakout {
 
         public Block CreateNewBlock(float x, float y, Image image, Image damagedImage, 
             BlockType type) {
-                if (blockCreators.TryGetValue(type, out var creator)) {
+                if (blockCreators != null && blockCreators.TryGetValue(type, out var creator)) {
                     return creator(x, y, image, damagedImage);
                 } else {
                     return new Block(
