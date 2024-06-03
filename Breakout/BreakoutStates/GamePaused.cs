@@ -1,11 +1,11 @@
 using System;
-using DIKUArcade.State;
-using DIKUArcade.Graphics;
 using DIKUArcade.Math;
-using DIKUArcade.Events;
+using DIKUArcade.State;
 using DIKUArcade.Input;
-using DIKUArcade.Entities;
 using DIKUArcade.Timers;
+using DIKUArcade.Events;
+using DIKUArcade.Entities;
+using DIKUArcade.Graphics;
 
 namespace Breakout.BreakoutStates;
 public class GamePaused : IGameState {

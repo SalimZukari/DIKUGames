@@ -1,17 +1,7 @@
-using System;
-using Breakout.IBlock;
-using DIKUArcade.Math;
-using DIKUArcade.Input;
 using DIKUArcade.State;
 using DIKUArcade.Events;
-using DIKUArcade.Physics;
-using DIKUArcade.Entities;
-using DIKUArcade.Graphics;
-using DIKUArcade.Timers;
-using DIKUArcade.Utilities;
-using Breakout.BreakoutStates;
 using Breakout.PowerUps;
-using Breakout;
+using Breakout.BreakoutStates;
 
 namespace Breakout.BreakoutStates {
     public class StateMachine : IGameEventProcessor {

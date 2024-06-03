@@ -1,7 +1,7 @@
 using System;
+using DIKUArcade.Math;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
-using DIKUArcade.Math;
 
 
 namespace Breakout.IBlock;

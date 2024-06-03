@@ -1,11 +1,9 @@
+using DIKUArcade.Math;
+using Breakout.PowerUps;
+using DIKUArcade.Events;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
-using DIKUArcade.Events;
-using DIKUArcade.Math;
-using DIKUArcade;
-using System.IO;
 using Breakout.BreakoutStates;
-using Breakout.PowerUps;
 
 namespace Breakout.IBlock {
     public class PowerUpBlock : Block {

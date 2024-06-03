@@ -1,17 +1,15 @@
 using System;
-using System.Reflection;
+using Breakout;
 using Breakout.IBlock;
 using DIKUArcade.Math;
 using DIKUArcade.Input;
 using DIKUArcade.State;
+using System.Reflection;
 using DIKUArcade.Events;
-using DIKUArcade.Physics;
-using DIKUArcade.Entities;
-using DIKUArcade.Graphics;
 using DIKUArcade.Timers;
-using DIKUArcade.Utilities;
 using Breakout.PowerUps;
-using Breakout;
+using DIKUArcade.Graphics;
+using DIKUArcade.Entities;
 
 namespace Breakout.BreakoutStates {
     public class GameRunning : IGameState {

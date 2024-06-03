@@ -1,9 +1,8 @@
-using DIKUArcade.Entities;
-using DIKUArcade.Physics;
-using DIKUArcade.Math;
 using Breakout;
-using Breakout.PowerUps;
 using Breakout.IBlock;
+using Breakout.PowerUps;
+using DIKUArcade.Physics;
+using DIKUArcade.Entities;
 using Breakout.BreakoutStates;
 
 namespace Breakout {

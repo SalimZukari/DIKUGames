@@ -1,9 +1,8 @@
+using Breakout;
+using DIKUArcade.Math;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
-using DIKUArcade.Math;
 using Breakout.BreakoutStates;
-using DIKUArcade.Timers;
-using Breakout;
 
 namespace Breakout.PowerUps {
     public class PlayerSpeed : Effect {

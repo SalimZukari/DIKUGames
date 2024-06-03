@@ -1,12 +1,11 @@
 using System;
+using DIKUArcade.Math;
 using DIKUArcade.State;
+using DIKUArcade.Input;
+using DIKUArcade.Events;
+using DIKUArcade.Timers;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics;
-using DIKUArcade.Math;
-using DIKUArcade.Events;
-using DIKUArcade.Input;
-using DIKUArcade.Timers;
-
 
 namespace Breakout.BreakoutStates;
 

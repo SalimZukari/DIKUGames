@@ -1,7 +1,9 @@
-using DIKUArcade.Entities;
-using DIKUArcade.Graphics;
+using Breakout;
 using DIKUArcade.Math;
 using DIKUArcade.Timers;
+using DIKUArcade.Entities;
+using DIKUArcade.Graphics;
+using Breakout.BreakoutStates;
 
 namespace Breakout.PowerUps {
     public class Effect : Entity {

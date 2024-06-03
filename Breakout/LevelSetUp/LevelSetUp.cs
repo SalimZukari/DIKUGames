@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
+using Breakout.IBlock;
+using DIKUArcade.Math;
 using DIKUArcade.Entities;
 using DIKUArcade.Graphics; 
-using DIKUArcade.Math;
-using Breakout.IBlock;
+using System.Collections.Generic;
 
 namespace Breakout {
     public class LevelSetUp {
