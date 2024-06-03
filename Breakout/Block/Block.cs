@@ -5,7 +5,7 @@ using DIKUArcade.Graphics;
 
 
 namespace Breakout.IBlock;
-public class Block : Entity, IBlock {
+public class Block : Entity {
     private Vec2F startPos; 
     protected int health;
     protected Image blocksImage;

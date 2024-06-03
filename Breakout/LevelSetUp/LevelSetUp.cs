@@ -12,9 +12,13 @@ namespace Breakout {
         public string CurrentLevelFile { get; private set; }
         private IDictionary<string, string> coolBlockKey = new Dictionary<string, string>();
         private IDictionary<BlockType, Func<float, float, Image, Image, Block>> blockCreators;
+        private static IDictionary<BlockType, Block> blockDic;
 
         public InterpretData Layout {
             get { return layout; }
+        }
+        public static IDictionary<BlockType, Block> BlockDic {
+            get { return blockDic; }
         }
 
         public LevelSetUp(string file) {
@@ -28,15 +32,20 @@ namespace Breakout {
         private void InitializeBlockCreators() {
             blockCreators = new Dictionary<BlockType, Func<float, float, Image, Image, Block>> {
                 { BlockType.Unbreakable, (x, y, img, dmgImg) => 
-                    new Unbreakable(new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)), img, dmgImg, BlockType.Unbreakable)}, 
+                    new Unbreakable(new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)),
+                        img, dmgImg, BlockType.Unbreakable)}, 
                 { BlockType.Hardened, (x, y, img, dmgImg) => 
-                    new Hardened(new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)), img, dmgImg, BlockType.Hardened)},
+                    new Hardened(new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)), 
+                        img, dmgImg, BlockType.Hardened)},
                 { BlockType.PowerUp, (x, y, img, dmgImg) => 
-                    new PowerUpBlock( new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)), img, dmgImg, BlockType.PowerUp)}, 
+                    new PowerUpBlock( new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)), 
+                        img, dmgImg, BlockType.PowerUp)}, 
                 { BlockType.Hazard, (x, y, img, dmgImg) => 
-                    new HazardBlock(new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)), img, dmgImg, BlockType.Hazard)},
+                    new HazardBlock(new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)), 
+                        img, dmgImg, BlockType.Hazard)},
                 { BlockType.Normal, (x, y, img, dmgImg) => 
-                    new Block(new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)), img, dmgImg, BlockType.Normal)}
+                    new Block(new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)), 
+                        img, dmgImg, BlockType.Normal)}
             };
         }
 
@@ -57,7 +66,8 @@ namespace Breakout {
                         );
                         if (coolBlockKey.TryGetValue(colorEntry, out string blockTypeString) 
                         && BlockType.TryParse(blockTypeString, out BlockType blockType)) {
-                            firstContainer.AddEntity(CreateNewBlock(x, y, new Image(imagePath), new Image(damagedImagePath), blockType));
+                            firstContainer.AddEntity(CreateNewBlock(x, y, new Image(imagePath), 
+                                new Image(damagedImagePath), blockType));
                         }
                     }
                 } else if (positions.TryGetValue(colorEntry,
@@ -122,18 +132,19 @@ namespace Breakout {
             }
         }
 
-        public Block CreateNewBlock(float x, float y, Image image, Image damagedImage, BlockType type) {
-            if (blockCreators.TryGetValue(type, out var creator)) {
-                return creator(x, y, image, damagedImage);
-            } else {
-                return new Block(
-                    new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)),
-                    image,
-                    damagedImage,
-                    type
-                );
+        public Block CreateNewBlock(float x, float y, Image image, Image damagedImage, 
+            BlockType type) {
+                if (blockCreators.TryGetValue(type, out var creator)) {
+                    return creator(x, y, image, damagedImage);
+                } else {
+                    return new Block(
+                        new DynamicShape(new Vec2F(x, y), new Vec2F(0.08f, 0.04f)),
+                        image,
+                        damagedImage,
+                        type
+                    );
+                }
             }
-        }
 
 
         public int GetLevelNumber() {
@@ -143,7 +154,8 @@ namespace Breakout {
             
             int currentLevelNumber = int.Parse(currentLevelFile.Substring(
                 currentLevelFile.IndexOf(standardLevelName) + standardLevelName.Length,
-                currentLevelFile.IndexOf(fileExtension) - currentLevelFile.IndexOf(standardLevelName) - standardLevelName.Length
+                currentLevelFile.IndexOf(fileExtension) - currentLevelFile.IndexOf(
+                    standardLevelName) - standardLevelName.Length
             ));
 
             return currentLevelNumber;
@@ -151,7 +163,8 @@ namespace Breakout {
 
         public string GetNextLevelFile() {
             int nextLevelNumber = GetLevelNumber() + 1;
-            string nextLevelFile = Path.Combine("..", "Assets", "Levels", $"level{nextLevelNumber}.txt");
+            string nextLevelFile = Path.Combine("..", "Assets", "Levels", 
+                $"level{nextLevelNumber}.txt");
             return nextLevelFile;
         }
 

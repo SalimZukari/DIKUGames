@@ -5,9 +5,10 @@ using DIKUArcade.Graphics;
 namespace Breakout.IBlock;
 public class Unbreakable : Block {
     bool CanBreak = false;
-    public Unbreakable(DynamicShape shape, Image blocksImage, Image damagedImage, BlockType type) 
-        : base(shape, blocksImage, damagedImage, type) {
-            this.blocksImage = blocksImage;
+    public Unbreakable(DynamicShape shape, Image blocksImage, Image damagedImage, 
+        BlockType type) 
+            : base(shape, blocksImage, damagedImage, type) {
+                this.blocksImage = blocksImage;
     }
 
     public override void Damage() {

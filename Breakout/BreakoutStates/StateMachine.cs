@@ -19,19 +19,19 @@ namespace Breakout.BreakoutStates {
 
         public void SwitchState(GameStateType state) {
             switch (state) {
-                case GameStateType.GameRunning:
+                case GameStateType.GAME_RUNNING:
                     ActiveState = GameRunning.GetInstance();
                     break;
-                case GameStateType.GamePaused:
+                case GameStateType.GAME_PAUSED:
                     ActiveState = GamePaused.GetInstance();
                     break;
-                case GameStateType.MainMenu:
+                case GameStateType.MAIN_MENU:
                     ActiveState = MainMenu.GetInstance();
                     break;
-                case GameStateType.GameLost:
+                case GameStateType.GAME_LOST:
                     ActiveState = GameLost.GetInstance();
                     break;
-                case GameStateType.GameWon:
+                case GameStateType.GAME_WON:
                     ActiveState = GameWon.GetInstance();
                     break;
                 default:

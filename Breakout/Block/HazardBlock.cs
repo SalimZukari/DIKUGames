@@ -46,7 +46,8 @@ namespace Breakout.IBlock {
                 case EffectType.Slowness:
                     return new Slowness(new DynamicShape(Shape.Position, Shape.Extent), image);
                 default:
-                    return new Effect(type, new DynamicShape(Shape.Position, Shape.Extent), image);
+                    return new Effect(type, new DynamicShape(Shape.Position, Shape.Extent), 
+                        image);
             }
         }
     }
