@@ -6,6 +6,9 @@ using Breakout.BreakoutStates;
 
 namespace Breakout.PowerUps {
     public class ExtraLife : Effect {
+        /// <summary>
+        /// Gives the player an extra life
+        /// </summary>
         public ExtraLife(DynamicShape shape, IBaseImage image) 
             : base(EffectType.ExtraLife, shape, image) {
         }

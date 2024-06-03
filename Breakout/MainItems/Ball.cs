@@ -5,6 +5,9 @@ using DIKUArcade.Graphics;
 
 namespace Breakout;
 public class Ball : Entity {
+    /// <summary>
+    /// Used for the ball's movement
+    /// </summary>
     private Random rnd = new Random();
     private Vec2F position;
     private static Vec2F extent = new Vec2F(0.035f, 0.035f);

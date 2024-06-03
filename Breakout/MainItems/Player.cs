@@ -6,6 +6,9 @@ using DIKUArcade.Graphics;
 
 namespace Breakout;
 public class Player : IGameEventProcessor {
+    /// <summary>
+    /// Defines attributes for the board the player controls
+    /// </summary>
     private Entity entity;
     private DynamicShape shape;
     private float moveRight = 0.0f;

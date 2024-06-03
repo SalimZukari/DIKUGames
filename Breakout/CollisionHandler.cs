@@ -7,6 +7,9 @@ using Breakout.BreakoutStates;
 
 namespace Breakout {
     public class CollisionHandler {
+    /// <summary>
+    /// Defines methods for handling different types of collisions
+    /// </summary>
         private Player player;
         private LevelSetUp level;
         private EntityContainer<Ball> balls;
@@ -33,6 +36,9 @@ namespace Breakout {
             });
         }
 
+        /// <summary>
+        /// For collisions between the ball and the blocks.
+        /// </summary>
         private void CheckBlockCollisions(Ball ball) {
             level.GetBlocks().Iterate(block => {
                 var collideBlock = CollisionDetection.Aabb((DynamicShape)ball.Shape, block.Shape);
@@ -50,6 +56,9 @@ namespace Breakout {
             });
         }
 
+        /// <summary>
+        /// For collisions between the player and the ball.
+        /// </summary>
         private void CheckPlayerCollisions(Ball ball) {
             float playerLeft = player.Shape.Position.X;
             float playerRight = player.Shape.Position.X + player.Shape.Extent.X;
@@ -65,6 +74,9 @@ namespace Breakout {
             }
         }
 
+        /// <summary>
+        /// For collisions between the player and the effect entities.
+        /// </summary>
         public void CheckEffectCollisions() {
             if (effects != null && collidedEffects != null) {
                 effects.Iterate(effect => {

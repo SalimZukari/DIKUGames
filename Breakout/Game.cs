@@ -8,6 +8,9 @@ using Breakout.BreakoutStates;
 
 namespace Breakout;
 public class Game : DIKUGame, IGameEventProcessor {
+    /// <summary>
+    /// Sets up the game
+    /// </summary>
     private StateMachine stateMachine;
 
     public Game(WindowArgs windowArgs) : base(windowArgs) {

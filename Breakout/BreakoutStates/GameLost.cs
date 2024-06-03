@@ -9,6 +9,9 @@ using DIKUArcade.Input;
 
 namespace Breakout.BreakoutStates;
 public class GameLost : IGameState {
+    /// <summary>
+    /// Sets up the Game Lost menu
+    /// </summary>
     private static GameLost? instance = null;
     private Entity backGroundImage;
     private Entity overLayImage;
@@ -26,6 +29,9 @@ public class GameLost : IGameState {
         return GameLost.instance;
     }
 
+    /// <summary>
+    /// The constructor is where the text objects are defined.
+    /// </summary>
     public GameLost() {
         backGroundImage = new Entity(new StationaryShape(0.0f, 0.0f, 1.0f, 1.0f), 
             new Image(Path.Combine("..","Assets", "Images", "BreakoutTitleScreen.png")));
@@ -53,12 +59,18 @@ public class GameLost : IGameState {
         });
     }
 
+    /// <summary>
+    /// Made so the event bus registers and manages the event.
+    /// </summary>
     public void HandleKeyEvent(KeyboardAction action, KeyboardKey key) {
         if (action == KeyboardAction.KeyPress && GameLost.instance != null) {
             KeyPress(key);
         }
     }
 
+    /// <summary>
+    /// Pressing the up or down keys will change the selected menu button.
+    /// </summary>
     public void KeyPress(KeyboardKey key) {
         switch (key) {
             case KeyboardKey.Up:

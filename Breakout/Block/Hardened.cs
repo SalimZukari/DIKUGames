@@ -4,7 +4,9 @@ using DIKUArcade.Graphics;
 
 namespace Breakout.IBlock;
 public class Hardened : Block {
-
+    /// <summary>
+    /// These blocks take two hits to break
+    /// </summary>
     protected new Image damagedImage;
     public Image DamagedImage {
         get { return damagedImage; }

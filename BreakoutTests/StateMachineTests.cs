@@ -47,19 +47,19 @@ public class StateMachineTest {
 
     [Test]
     public void TestSwitchState() {
-        stateMachine.SwitchState(GameStateType.GameRunning);
+        stateMachine.SwitchState(GameStateType.GAME_RUNNING);
         Assert.That(stateMachine.ActiveState, Is.InstanceOf<GameRunning>());
 
-        stateMachine.SwitchState(GameStateType.MainMenu);
+        stateMachine.SwitchState(GameStateType.MAIN_MENU);
         Assert.That(stateMachine.ActiveState, Is.InstanceOf<MainMenu>());
 
-        stateMachine.SwitchState(GameStateType.GamePaused);
+        stateMachine.SwitchState(GameStateType.GAME_PAUSED);
         Assert.That(stateMachine.ActiveState, Is.InstanceOf<GamePaused>());
 
-        stateMachine.SwitchState(GameStateType.GameLost);
+        stateMachine.SwitchState(GameStateType.GAME_LOST);
         Assert.That(stateMachine.ActiveState, Is.InstanceOf<GameLost>());
 
-        stateMachine.SwitchState(GameStateType.GameWon);
+        stateMachine.SwitchState(GameStateType.GAME_WON);
         Assert.That(stateMachine.ActiveState, Is.InstanceOf<GameWon>());
     }
 

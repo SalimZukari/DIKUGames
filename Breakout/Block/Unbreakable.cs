@@ -4,6 +4,10 @@ using DIKUArcade.Graphics;
 
 namespace Breakout.IBlock;
 public class Unbreakable : Block {
+    /// <summary>
+    /// These blocks can't be broken unless they are
+    /// the only blocks remaining
+    /// </summary>
     bool CanBreak = false;
     public Unbreakable(DynamicShape shape, Image blocksImage, Image damagedImage, 
         BlockType type) 

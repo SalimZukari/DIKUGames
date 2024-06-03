@@ -6,6 +6,9 @@ using DIKUArcade.Graphics;
 
 namespace Breakout {
     public class Lives : Entity {
+        /// <summary>
+        /// Lives given as entities to be rendered in the game.
+        /// </summary>
         private Vec2F position;
         private Vec2F extent;
         public bool isFull = true;

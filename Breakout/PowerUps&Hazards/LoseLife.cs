@@ -6,6 +6,9 @@ using Breakout.BreakoutStates;
 
 namespace Breakout.PowerUps {
     public class LoseLife : Effect {
+        /// <summary>
+        /// Causes the player to lose a life
+        /// </summary>
         public LoseLife(DynamicShape shape, IBaseImage image) 
             : base(EffectType.PlayerSpeed, shape, image) {
         }

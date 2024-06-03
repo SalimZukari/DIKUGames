@@ -5,6 +5,9 @@ using DIKUArcade.Graphics;
 
 namespace Breakout.PowerUps {
     public class Wide : Effect {
+        /// <summary>
+        /// Makes the board the player controls twice as wide.
+        /// </summary>
         public Wide(DynamicShape shape, IBaseImage image) 
             : base(EffectType.Wide, shape, image) {
                 HasDuration = true;

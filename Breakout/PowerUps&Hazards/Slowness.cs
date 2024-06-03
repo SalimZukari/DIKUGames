@@ -6,6 +6,9 @@ using Breakout.BreakoutStates;
 
 namespace Breakout.PowerUps {
     public class Slowness : Effect {
+        /// <summary>
+        /// Decreases the player's speed
+        /// </summary>
         public Slowness(DynamicShape shape, IBaseImage image) 
             : base(EffectType.ExtraLife, shape, image) {
                 HasDuration = true;

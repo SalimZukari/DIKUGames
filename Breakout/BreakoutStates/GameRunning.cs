@@ -13,6 +13,10 @@ using DIKUArcade.Entities;
 
 namespace Breakout.BreakoutStates {
     public class GameRunning : IGameState {
+        /// <summary>
+        /// The main chunk of the game
+        /// This is where the game mechanics are managed while the game runs
+        /// </summary>
         private static GameRunning? instance = null;
         private Entity backGroundImage;
         private Entity overLayImage;
@@ -36,8 +40,9 @@ namespace Breakout.BreakoutStates {
         private Text scoreText;
         private CollisionHandler collisionHandler;
 
-
-
+        /// <summary>
+        /// Property that says if time has run out
+        /// </summary>
         public bool TimeOut {
             get {return timeOut;}
             private set {timeOut = value;}
@@ -49,6 +54,9 @@ namespace Breakout.BreakoutStates {
             get {return timeLeftText;}
             private set {timeLeftText = value;}
         }
+        /// <summary>
+        /// The information for the level set up
+        /// </summary>
         public LevelSetUp LevelSetUp {
             get { return level; }
         }
@@ -58,12 +66,18 @@ namespace Breakout.BreakoutStates {
         public static EntityContainer<Effect>? Effects {
             get { return effects; }
         }
+        /// <summary>
+        /// Lives as entities to be rendered
+        /// </summary>
         public static EntityContainer<Lives>? LivesImage {
             get {return livesImage;}
         }
         public static int TimeInSec {
             get {return timeInSec;}
         }
+        /// <summary>
+        /// Gives data on effects and activation times
+        /// </summary>
         public Dictionary<Type, double> lastActivationTimes {
             get { return LastActivationTimes; }
         }   
@@ -84,6 +98,10 @@ namespace Breakout.BreakoutStates {
             return GameRunning.instance;
             }
 
+        /// <summary>
+        /// Constructor is in charge of a lot.
+        /// Many properties are defined in the constructor.
+        /// </summary>
         public GameRunning(string levelFile) {
             backGroundImage = new Entity(new StationaryShape(0.0f, 0.0f, 1.0f, 1.0f), 
                 new Image(Path.Combine("..", "Assets", "Images", "SpaceBackground.png")));
@@ -127,7 +145,7 @@ namespace Breakout.BreakoutStates {
             collisionHandler = new CollisionHandler(player, level, balls, effects, collidedEffects, score);
 
         }
-
+        
         public void SpawnPowerUp(Effect powerUp) {
             if (effects != null) {
                 effects.AddEntity(powerUp);
@@ -202,15 +220,25 @@ namespace Breakout.BreakoutStates {
             }
         }
 
+        /// <summary>
+        /// For collisions between ball and player,
+        /// as well as ball and blocks.
+        /// </summary>
         private void CheckCollisions() {
             collisionHandler.CheckCollisions();
             score = collisionHandler.GetScore();
         }
 
+        /// <summary>
+        /// For collisions between the player and the effects.
+        /// </summary>
         public void CheckEffectCollisions() {
             collisionHandler.CheckEffectCollisions();
         }
 
+        /// <summary>
+        /// For activating effects upon collision
+        /// </summary>
         public static void ApplyActivate(Effect effect, Player player, EntityContainer<Ball> balls1) {
             MethodInfo? methodPlayer = effect.GetType().GetMethod("ActivatePlayer");
             MethodInfo? methodBall = effect.GetType().GetMethod("ActivateBall");
@@ -225,6 +253,9 @@ namespace Breakout.BreakoutStates {
             });
         }
 
+        /// <summary>
+        /// For managing how long an effect lasts
+        /// </summary>
         public void EffectTime(Player player, EntityContainer<Ball> balls1) {
             var currentTime = StaticTimer.GetElapsedSeconds();
             if (collidedEffects != null) {
@@ -293,6 +324,10 @@ namespace Breakout.BreakoutStates {
             timeInSec -= 5;
         }
         
+        /// <summary>
+        /// Either if the player is out of lives, or if the 
+        /// timer runs out.
+        /// </summary>
         public bool IsGameOver () {
             if (player.Lives == 0 || TimeOut) {
                 BreakoutBus.GetBus().RegisterEvent(new GameEvent {
@@ -307,6 +342,11 @@ namespace Breakout.BreakoutStates {
             return false;
         }
 
+        /// <summary>
+        /// If the user beats a level, the game automatically
+        /// moves onto the next level until there are no levels
+        /// left.
+        /// </summary>
         public bool SwitchLevelIfWon() {
             string nextLevelFile = level.GetNextLevelFile();
 
@@ -332,6 +372,9 @@ namespace Breakout.BreakoutStates {
             return false;
         }
 
+        /// <summary>
+        /// Game is won if all levels are beat, or if a certain score is reached
+        /// </summary>
         public bool IsGameWon() {
             if (level.GetBlocks().CountEntities() == 0 || score == 10000) {
                 if (!SwitchLevelIfWon() || score == 10000) {
@@ -348,6 +391,10 @@ namespace Breakout.BreakoutStates {
             return false;
         }
 
+        /// <summary>
+        /// Everything from the ball, to player lives, to effects
+        /// are rendered.
+        /// </summary>
         public void RenderState() {
             backGroundImage.RenderEntity();
             overLayImage.RenderEntity();
@@ -369,6 +416,9 @@ namespace Breakout.BreakoutStates {
             level.GetBlocks().RenderEntities();
         }
 
+        /// <summary>
+        /// The timer also gets reset.
+        /// </summary>
         public void ResetState() {
             StaticTimer.RestartTimer();
             balls.Iterate(ball => {

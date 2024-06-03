@@ -9,6 +9,9 @@ using DIKUArcade.Graphics;
 
 namespace Breakout.BreakoutStates;
 public class GamePaused : IGameState {
+    /// <summary>
+    /// Sets up the menu for when the game is paused
+    /// </summary>
     private static GamePaused? instance = null;
         private Text[] menuButtons;
         private Entity backGroundImage;
@@ -25,6 +28,10 @@ public class GamePaused : IGameState {
             return GamePaused.instance;
         }
 
+        /// <summary>
+        /// The constructor is where the "Main Menu" and "Continue Game"
+        /// buttons are defined.
+        /// </summary>
         public GamePaused() {
             activeMenuButton = 0;
             maxMenuButtons = 2;
@@ -48,12 +55,18 @@ public class GamePaused : IGameState {
             });
         }
 
+        /// <summary>
+        /// This method handles events should a certain key be pressed.
+        /// </summary>
         public void HandleKeyEvent(KeyboardAction action, KeyboardKey key) {
             if (action == KeyboardAction.KeyPress && GamePaused.instance != null) {
                 KeyPress(key);
             }
         }
 
+        /// <summary>
+        /// Defines the different key presses
+        /// </summary>
         public void KeyPress(KeyboardKey key) {
             switch (key) {
                 case KeyboardKey.Up:

@@ -5,6 +5,9 @@ using Breakout.BreakoutStates;
 
 namespace Breakout.BreakoutStates {
     public class StateMachine : IGameEventProcessor {
+        /// <summary>
+        /// Keeps track of the current state and any state changes
+        /// </summary>
         public IGameState ActiveState { get; private set; }
         
         public StateMachine() {
@@ -17,6 +20,9 @@ namespace Breakout.BreakoutStates {
             GameWon.GetInstance();
         }
 
+        /// <summary>
+        /// Activates the appropriate state.
+        /// </summary>
         public void SwitchState(GameStateType state) {
             switch (state) {
                 case GameStateType.GAME_RUNNING:
@@ -39,6 +45,9 @@ namespace Breakout.BreakoutStates {
             }
         }
 
+        /// <summary>
+        /// Processes events so that the state can be changed.
+        /// </summary>
         public void ProcessEvent(GameEvent gameEvent) {
             if (gameEvent.EventType == GameEventType.GameStateEvent) {
                 if (gameEvent.Message == "CHANGE_STATE") {

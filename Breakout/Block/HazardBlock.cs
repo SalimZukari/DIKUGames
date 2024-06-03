@@ -5,6 +5,9 @@ using Breakout.BreakoutStates;
 
 namespace Breakout.IBlock {
     public class HazardBlock : Block {
+        /// <summary>
+        /// These blocks spawn hazards when hit
+        /// </summary>
         private DynamicShape shape;
         private static readonly string[] hazardImages = {
             Path.Combine("..", "Assets", "Images", "LoseLife.png"),

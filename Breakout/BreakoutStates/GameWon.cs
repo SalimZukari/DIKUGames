@@ -9,6 +9,9 @@ using DIKUArcade.Graphics;
 
 namespace Breakout.BreakoutStates;
 public class GameWon : IGameState {
+    /// <summary>
+    /// Sets up the game won menu.
+    /// </summary>
     private static GameWon? instance = null;
     private Entity backGroundImage;
     private Entity overLayImage;
@@ -26,6 +29,9 @@ public class GameWon : IGameState {
         return GameWon.instance;
     }
 
+    /// <summary>
+    /// Menu buttons are defined in the constructor.
+    /// </summary>
     public GameWon() {
         backGroundImage = new Entity(new StationaryShape(0.0f, 0.0f, 1.0f, 1.0f), 
             new Image(Path.Combine("..","Assets", "Images", "BreakoutTitleScreen.png")));
@@ -53,12 +59,19 @@ public class GameWon : IGameState {
         });
     }
 
+    /// <summary>
+    /// Handles the appropriate key presses
+    /// </summary>
     public void HandleKeyEvent(KeyboardAction action, KeyboardKey key) {
         if (action == KeyboardAction.KeyPress && GameWon.instance != null) {
             KeyPress(key);
         }
     }
 
+    /// <summary>
+    /// Method that says what to do in the event of a given
+    /// key press.
+    /// </summary>
     public void KeyPress(KeyboardKey key) {
         switch (key) {
             case KeyboardKey.Up:

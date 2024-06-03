@@ -6,6 +6,9 @@ using Breakout.BreakoutStates;
 
 namespace Breakout.PowerUps {
     public class DoubleSize : Effect {
+        /// <summary>
+        /// Doubles the size of the ball
+        /// </summary>
         public DoubleSize(DynamicShape shape, IBaseImage image) 
             : base(EffectType.DoubleSize, shape, image) {
                 HasDuration = true;

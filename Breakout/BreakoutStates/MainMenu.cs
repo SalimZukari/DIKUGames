@@ -10,6 +10,9 @@ using DIKUArcade.Graphics;
 namespace Breakout.BreakoutStates;
 
 public class MainMenu : IGameState {
+    /// <summary>
+    /// Defines the game's main menu
+    /// </summary>
     private static MainMenu? instance = null;
     private Entity backGroundImage;
     private Entity overLayImage;
@@ -26,6 +29,10 @@ public class MainMenu : IGameState {
         return MainMenu.instance;
     }
 
+    /// <summary>
+    /// This is where the main menu buttons are defined
+    /// as text objects.
+    /// </summary>
     public MainMenu() {
         backGroundImage = new Entity(new StationaryShape(0.0f, 0.0f, 1.0f, 1.0f), 
             new Image(Path.Combine("..","Assets", "Images", "BreakoutTitleScreen.png")));
@@ -49,12 +56,18 @@ public class MainMenu : IGameState {
         });
     }
 
+    /// <summary>
+    /// Handles events when keys are pressed
+    /// </summary>
     public void HandleKeyEvent(KeyboardAction action, KeyboardKey key) {
         if (action == KeyboardAction.KeyPress && MainMenu.instance != null) {
             KeyPress(key);
         }
     }
 
+    /// <summary>
+    /// What to do when certain keys are pressed
+    /// </summary>
     public void KeyPress(KeyboardKey key) {
         switch (key) {
             case KeyboardKey.Up:

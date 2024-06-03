@@ -6,7 +6,9 @@ using Breakout.BreakoutStates;
 
 namespace Breakout.PowerUps {
     public class PlayerSpeed : Effect {
-
+        /// <summary>
+        /// Doubles the player's speed
+        /// </summary>
         public PlayerSpeed(DynamicShape shape, IBaseImage image) 
             : base(EffectType.PlayerSpeed, shape, image) {
                 HasDuration = true;

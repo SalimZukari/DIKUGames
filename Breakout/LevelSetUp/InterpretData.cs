@@ -2,6 +2,9 @@ using System;
 
 namespace Breakout; 
 public class InterpretData {
+    /// <summary>
+    /// Reads from an ASCII map and organizes the provided data
+    /// </summary>
     private readonly string[] levelContents;
     readonly IDictionary<string, List<string>> organizedData;
     readonly IDictionary<char, string> legendOrganized;
@@ -27,6 +30,10 @@ public class InterpretData {
         ReadMeta();
     }
 
+    /// <summary>
+    /// Puts all data from the ASCII map and .txt file
+    /// into an easy to navigate dictionary.
+    /// </summary>
     public void OrganizingData() {
         try {
             if (levelContents != null) {
@@ -75,6 +82,9 @@ public class InterpretData {
         return Array.IndexOf(levelContents, "Legend/");
     }
 
+    /// <summary>
+    /// Puts the legend data into it's own dictionary.
+    /// </summary>
     public void ReadLegend() {
         try {
             List<string> legend = organizedData["Legend"];
@@ -87,6 +97,9 @@ public class InterpretData {
         }
     }
 
+    /// <summary>
+    /// Puts the map data into it's own dictionary.
+    /// </summary>
     public void ReadMap() {
         try {
             List<string> map = organizedData["Map"];
@@ -112,6 +125,9 @@ public class InterpretData {
         }
     }
 
+    /// <summary>
+    /// Puts the meta data into it's own dictionary.
+    /// </summary>
     public void ReadMeta() {
         try {
             List<string> meta = organizedData["Meta"];

@@ -7,6 +7,11 @@ using System.Collections.Generic;
 
 namespace Breakout {
     public class LevelSetUp {
+        /// <summary>
+        /// This sets the level up such that
+        /// blocks are of the appropriate type with the 
+        /// appropriate position.
+        /// </summary>
         private InterpretData layout;
         private EntityContainer<Block> blocks;
         public string CurrentLevelFile { get; private set; }
@@ -25,6 +30,9 @@ namespace Breakout {
             SetUp();
         }
 
+        /// <summary>
+        /// A dictionary where different block types can be constructed.
+        /// </summary>
         private void InitializeBlockCreators() {
             blockCreators = new Dictionary<BlockType, Func<float, float, Image, Image, Block>> {
                 { BlockType.Unbreakable, (x, y, img, dmgImg) => 
@@ -45,6 +53,10 @@ namespace Breakout {
             };
         }
 
+        /// <summary>
+        /// Constructs the appropriate blocks and puts them in the appropriate
+        /// positions on screen.
+        /// </summary>
         public void SetUp() {
             ColorOfSpecialBlocks();
             var colors = layout.GetLegendOrganized().Values;
@@ -78,6 +90,8 @@ namespace Breakout {
                 }
             }
 
+            // Ensures that some random "Normal" blocks
+            // become "Hazard" blocks.
             int i = 0;
             foreach (Block block in firstContainer) {
                 i++;
@@ -94,6 +108,8 @@ namespace Breakout {
                 }
             }
 
+            // Ensures the right constructor is used for
+            // the appropriate block type.
             foreach (Block block in firstContainer) {
                 if (block.IsDeleted()) {
                     blocks.AddEntity(CreateNewBlock(
@@ -108,6 +124,9 @@ namespace Breakout {
             }
         }
 
+        /// <summary>
+        /// Sets up the level.
+        /// </summary>
         public void LoadLevel(string file) {
             CurrentLevelFile = file;
             layout = new InterpretData(file);
@@ -115,6 +134,9 @@ namespace Breakout {
             SetUp();
         }
 
+        /// <summary>
+        /// Gives each color the appropriate color.
+        /// </summary>
         public void ColorOfSpecialBlocks() {
             var legend = layout.GetLegendOrganized();
             var meta = layout.GetMetaOrganized();
@@ -128,6 +150,9 @@ namespace Breakout {
             }
         }
 
+        /// <summary>
+        /// Creates a new block of a certain type.
+        /// </summary>
         public Block CreateNewBlock(float x, float y, Image image, Image damagedImage, 
             BlockType type) {
                 if (blockCreators != null && blockCreators.TryGetValue(type, out var creator)) {
@@ -142,7 +167,9 @@ namespace Breakout {
                 }
             }
 
-
+        /// <summary>
+        /// To be used to change the level.
+        /// </summary>
         public int GetLevelNumber() {
             string currentLevelFile = CurrentLevelFile;
             string standardLevelName = "level";
@@ -157,6 +184,9 @@ namespace Breakout {
             return currentLevelNumber;
         }
 
+        /// <summary>
+        /// So that the level can be changed.
+        /// </summary>
         public string GetNextLevelFile() {
             int nextLevelNumber = GetLevelNumber() + 1;
             string nextLevelFile = Path.Combine("..", "Assets", "Levels", 

@@ -7,6 +7,9 @@ using Breakout.BreakoutStates;
 
 namespace Breakout.PowerUps {
     public class Effect : Entity {
+        /// <summary>
+        /// The base effect, no special attributes
+        /// </summary>
         protected int duration;
         private static readonly float speed = 0.01f;
         public bool HasDuration { get; protected set; }

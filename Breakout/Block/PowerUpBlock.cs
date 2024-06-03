@@ -7,6 +7,9 @@ using Breakout.BreakoutStates;
 
 namespace Breakout.IBlock {
     public class PowerUpBlock : Block {
+    /// <summary>
+    /// These blocks spawn power ups when hit
+    /// </summary>
         private DynamicShape shape;
         private static readonly string[] powerUpImages = {
             Path.Combine("..", "Assets", "Images", "DoubleSpeedPowerUp.png"),
