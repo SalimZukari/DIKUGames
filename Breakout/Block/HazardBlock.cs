@@ -32,6 +32,9 @@ namespace Breakout.IBlock {
             }
         }
 
+        /// <summary>
+        /// Spawns a hazard when the block is destroyed
+        /// </summary>
         public void SpawnPowerUp() {
             int index = random.Next(hazardImages.Length);
             string imagePath = hazardImages[index];
@@ -43,6 +46,9 @@ namespace Breakout.IBlock {
             }
         }
 
+        /// <summary>
+        /// Converts the hazard type to an object
+        /// </summary>
         public Effect HazardTypeToObject(EffectType type, Image image) {
             switch (type) {
                 case EffectType.LoseLife:

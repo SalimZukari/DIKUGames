@@ -8,15 +8,18 @@ public class Hardened : Block {
     /// These blocks take two hits to break
     /// </summary>
     protected new Image damagedImage;
+    
     public Image DamagedImage {
         get { return damagedImage; }
     }
+
     public Hardened(DynamicShape shape, Image blocksImage, Image damagedImage, BlockType type) 
         : base(shape, blocksImage, damagedImage, type) {
             this.damagedImage = damagedImage;
             this.Image = blocksImage;
             health = 20;
     }
+
     public override void Damage() {
         health -= 10;
         if (health <= 0) {

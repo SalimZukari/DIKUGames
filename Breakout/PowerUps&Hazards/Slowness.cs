@@ -14,6 +14,9 @@ namespace Breakout.PowerUps {
                 HasDuration = true;
         }
 
+        /// <summary>
+        /// Halves the player's speed
+        /// </summary>
         public override void ActivatePlayer(Player player) {
             if (player.MovementSpeed > 0.005f) {
                 player.MovementSpeed /= 2;
@@ -21,6 +24,9 @@ namespace Breakout.PowerUps {
             }
         }
 
+        /// <summary>
+        /// Doubles the player's speed
+        /// </summary>
         public override void DeactivatePlayer(Player player) {
             if (player.MovementSpeed < 0.009) {
                 player.MovementSpeed *= 2;

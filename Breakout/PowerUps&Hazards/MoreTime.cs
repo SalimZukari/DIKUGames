@@ -15,6 +15,9 @@ namespace Breakout.PowerUps {
                 HasDuration = true;
         }
 
+        /// <summary>
+        /// Adds 10 seconds to the game's timer
+        /// </summary>
         public override void ActivateBall(Ball ball) {
             GameRunning.AddTime();
         }

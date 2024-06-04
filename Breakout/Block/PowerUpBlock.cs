@@ -36,6 +36,9 @@ namespace Breakout.IBlock {
             }
         }
 
+        /// <summary>
+        /// Spawns a power up when the block is destroyed
+        /// </summary>
         public void SpawnPowerUp() {
             int index = random.Next(powerUpImages.Length);
             string imagePath = powerUpImages[index];
@@ -52,6 +55,9 @@ namespace Breakout.IBlock {
             });
         }
 
+        /// <summary>
+        /// Converts the power up type to an object
+        /// </summary>
         public Effect PowerUpTypeToObject(EffectType type, Image image) {
             switch (type) {
                 case EffectType.MoreTime:

@@ -152,6 +152,9 @@ namespace Breakout.BreakoutStates {
             }
         }
 
+        /// <summary>
+        /// Renders the time left on the game screen
+        /// </summary>
         public void TimeRender() {
             if (TimeLeftText != null) {
                 timeLeft = (int)(timeInSec - StaticTimer.GetElapsedSeconds() + 0.04);
@@ -287,6 +290,10 @@ namespace Breakout.BreakoutStates {
             }
         }
 
+        /// <summary>
+        /// If the player loses a life, the life is removed
+        /// and a new ball is added.
+        /// </summary>
         public void DetractLife() {
             if (balls.CountEntities() == 0 && player.Lives > 0 && livesImage != null) {
                 livesImage.Iterate(life => {
@@ -311,15 +318,25 @@ namespace Breakout.BreakoutStates {
             }
         }
 
+        /// <summary>
+        /// If the timer runs out, the game is over.
+        /// </summary>
         public void SetStopWatch() {
             if (StaticTimer.GetElapsedSeconds() >= timeInSec) {
                 TimeOut = true;
             }
         }
 
+        /// <summary>
+        /// Add time to the timer
+        /// </summary>
         public static void AddTime() {
             timeInSec += 5;
         }
+
+        /// <summary> 
+        /// Subtract time from the timer
+        /// </summary>
         public void SubtractTime() {
             timeInSec -= 5;
         }

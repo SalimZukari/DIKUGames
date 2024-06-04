@@ -27,6 +27,9 @@ namespace Breakout {
             this.score = Score;
         }
 
+        /// <summary>
+        /// For collisions between the balls and the blocks and the player.
+        /// </summary>
         public void CheckCollisions() {
             balls.Iterate(ball => {
                 ball.Movement();

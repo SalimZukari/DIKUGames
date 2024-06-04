@@ -13,6 +13,9 @@ namespace Breakout.PowerUps {
                 HasDuration = true;
         }
 
+        /// <summary>
+        /// Doubles the width of the player's board.
+        /// </summary>
         public override void ActivatePlayer(Player player) {
             if (player.Shape.Extent.X < 0.38f) {
                 player.Shape.Extent.X *= 2;
@@ -20,6 +23,9 @@ namespace Breakout.PowerUps {
             }
         }
 
+        /// <summary>
+        /// Halves the width of the player's board.
+        /// </summary>
         public override void DeactivatePlayer(Player player) {
             if (player.Shape.Extent.X > 0.22f) {
                 player.Shape.Extent.X /= 2;

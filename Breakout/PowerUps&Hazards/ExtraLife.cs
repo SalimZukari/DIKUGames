@@ -13,6 +13,9 @@ namespace Breakout.PowerUps {
             : base(EffectType.ExtraLife, shape, image) {
         }
 
+        /// <summary>
+        /// If the player has less than 3 lives, we give the player an extra life
+        /// </summary>
         public override void ActivatePlayer(Player player) {
             int oneLife = 0;
             if (player.Lives < 3 && GameRunning.LivesImage != null) {

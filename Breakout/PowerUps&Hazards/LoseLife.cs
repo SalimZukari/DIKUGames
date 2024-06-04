@@ -13,6 +13,9 @@ namespace Breakout.PowerUps {
             : base(EffectType.PlayerSpeed, shape, image) {
         }
 
+        /// <summary>
+        /// If the player has more than 0 lives, we remove a life from the player
+        /// </summary>
         public override void ActivatePlayer(Player player) {
             int oneLife = 0;
             if (GameRunning.LivesImage != null) {

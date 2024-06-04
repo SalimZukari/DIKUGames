@@ -24,7 +24,7 @@ namespace Breakout.PowerUps {
             IsActive = true;
             this.duration = 5;
             HasDuration = false;
-            ActivationTime = StaticTimer.GetElapsedSeconds(); // Gemmer activation time
+            ActivationTime = StaticTimer.GetElapsedSeconds(); // Saves activation time
             IsDeactivated = false; 
         }
 
@@ -46,6 +46,9 @@ namespace Breakout.PowerUps {
             IsActive = false;
         }
 
+        /// <summary>
+        /// Updates the effect, moving it down the screen
+        /// </summary>
         public void Update() {
             if (IsActive) {
                 Shape.MoveY(-speed);

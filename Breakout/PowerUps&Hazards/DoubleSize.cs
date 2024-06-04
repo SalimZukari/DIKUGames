@@ -14,6 +14,9 @@ namespace Breakout.PowerUps {
                 HasDuration = true;
         }
 
+        /// <summary>
+        /// Doubles the size of the ball
+        /// </summary>
         public override void ActivateBall(Ball ball) {
             if (ball.Shape.Extent.X < 0.07f && ball.Shape.Extent.Y < 0.07f) {
                 ball.Shape.Extent.X *= 2;
@@ -22,6 +25,9 @@ namespace Breakout.PowerUps {
             }
         }
 
+        /// <summary>
+        /// Halves the size of the ball
+        /// </summary>
         public override void DeactivateBall(Ball ball) {
             if (ball.Shape.Extent.X > 0.035f && ball.Shape.Extent.Y > 0.035f) {
                 ball.Shape.Extent.X /= 2;
